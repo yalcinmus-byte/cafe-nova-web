@@ -67,8 +67,15 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
+    enquiries: Enquiry;
+    'menu-items': MenuItem;
+    'menu-categories': MenuCategory;
+    events: Event;
+    posts: Post;
+    jobs: Job;
     media: Media;
+    themes: Theme;
+    users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -76,19 +83,32 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
+    enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
+    'menu-items': MenuItemsSelect<false> | MenuItemsSelect<true>;
+    'menu-categories': MenuCategoriesSelect<false> | MenuCategoriesSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
+    jobs: JobsSelect<false> | JobsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    themes: ThemesSelect<false> | ThemesSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'service-control': ServiceControl;
+    'site-settings': SiteSetting;
+  };
+  globalsSelect: {
+    'service-control': ServiceControlSelect<false> | ServiceControlSelect<true>;
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -119,10 +139,243 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries".
+ */
+export interface Enquiry {
+  id: number;
+  kind: 'general' | 'event' | 'careers';
+  name: string;
+  email: string;
+  phone?: string | null;
+  /**
+   * For events
+   */
+  date?: string | null;
+  guests?: number | null;
+  message: string;
+  status?: ('new' | 'replied' | 'booked' | 'closed') | null;
+  website?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "menu-items".
+ */
+export interface MenuItem {
+  id: number;
+  name: string;
+  localName?: string | null;
+  slug: string;
+  description?: string | null;
+  /**
+   * GBP, e.g. 13.50. Leave empty if not decided — the dish stays hidden.
+   */
+  price?: number | null;
+  category: number | MenuCategory;
+  order?: number | null;
+  available?: boolean | null;
+  signature?: boolean | null;
+  orderable?: boolean | null;
+  dietary?: ('v' | 'vg' | 'gf')[] | null;
+  /**
+   * Kitchen-confirmed only. Empty = not yet confirmed (shown as "ask our team").
+   */
+  allergens?:
+    | (
+        | 'celery'
+        | 'cereals containing gluten'
+        | 'crustaceans'
+        | 'eggs'
+        | 'fish'
+        | 'lupin'
+        | 'milk'
+        | 'molluscs'
+        | 'mustard'
+        | 'peanuts'
+        | 'sesame'
+        | 'soya'
+        | 'sulphites'
+        | 'tree nuts'
+      )[]
+    | null;
+  /**
+   * e.g. "Add a poached egg £2.50"
+   */
+  extras?: string | null;
+  photo?: (number | null) | Media;
+  /**
+   * Static image path (used until a photo is uploaded)
+   */
+  photoPath?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "menu-categories".
+ */
+export interface MenuCategory {
+  id: number;
+  name: string;
+  slug: string;
+  group: 'breakfast' | 'turkish' | 'lunch' | 'sweet' | 'drinks' | 'kids';
+  /**
+   * Shown under the section title, e.g. "Served with sourdough toast"
+   */
+  note?: string | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt: string;
+  /**
+   * Who took it / licence
+   */
+  credit?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    thumb?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  title: string;
+  slug: string;
+  startsAt: string;
+  endsAt?: string | null;
+  kind?: ('nova' | 'nearby') | null;
+  highlight?: boolean | null;
+  summary?: string | null;
+  /**
+   * Organiser or booking link
+   */
+  link?: string | null;
+  photo?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  slug: string;
+  status?: ('draft' | 'published') | null;
+  publishedAt?: string | null;
+  /**
+   * One or two sentences for the journal list and Google.
+   */
+  excerpt?: string | null;
+  cover?: (number | null) | Media;
+  /**
+   * Or a photo already on the site, e.g. /img/place/bridge.webp
+   */
+  coverPath?: string | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jobs".
+ */
+export interface Job {
+  id: number;
+  title: string;
+  slug: string;
+  open?: boolean | null;
+  hours?: ('full-time' | 'part-time' | 'weekends' | 'seasonal') | null;
+  summary?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Auto themes switch on and off by themselves (London time). "On" overrides; "Off" disables.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "themes".
+ */
+export interface Theme {
+  id: number;
+  name: string;
+  mode?: ('auto' | 'on' | 'off') | null;
+  startsAt?: string | null;
+  /**
+   * Theme stops at this moment
+   */
+  endsAt?: string | null;
+  /**
+   * One accent colour (hex). Brand colours stay the same.
+   */
+  accent?: string | null;
+  /**
+   * Short line shown at the top of the site
+   */
+  banner?: string | null;
+  priority?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
+  name?: string | null;
+  role?: ('owner' | 'manager' | 'staff') | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -130,6 +383,7 @@ export interface User {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -144,29 +398,10 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: string;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -183,20 +418,48 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: string | User;
+        relationTo: 'enquiries';
+        value: number | Enquiry;
+      } | null)
+    | ({
+        relationTo: 'menu-items';
+        value: number | MenuItem;
+      } | null)
+    | ({
+        relationTo: 'menu-categories';
+        value: number | MenuCategory;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
+      } | null)
+    | ({
+        relationTo: 'posts';
+        value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'jobs';
+        value: number | Job;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'themes';
+        value: number | Theme;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -206,10 +469,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -229,7 +492,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -237,25 +500,102 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
+ * via the `definition` "enquiries_select".
  */
-export interface UsersSelect<T extends boolean = true> {
+export interface EnquiriesSelect<T extends boolean = true> {
+  kind?: T;
+  name?: T;
+  email?: T;
+  phone?: T;
+  date?: T;
+  guests?: T;
+  message?: T;
+  status?: T;
+  website?: T;
   updatedAt?: T;
   createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "menu-items_select".
+ */
+export interface MenuItemsSelect<T extends boolean = true> {
+  name?: T;
+  localName?: T;
+  slug?: T;
+  description?: T;
+  price?: T;
+  category?: T;
+  order?: T;
+  available?: T;
+  signature?: T;
+  orderable?: T;
+  dietary?: T;
+  allergens?: T;
+  extras?: T;
+  photo?: T;
+  photoPath?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "menu-categories_select".
+ */
+export interface MenuCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  group?: T;
+  note?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  startsAt?: T;
+  endsAt?: T;
+  kind?: T;
+  highlight?: T;
+  summary?: T;
+  link?: T;
+  photo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  status?: T;
+  publishedAt?: T;
+  excerpt?: T;
+  cover?: T;
+  coverPath?: T;
+  body?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jobs_select".
+ */
+export interface JobsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  open?: T;
+  hours?: T;
+  summary?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -263,6 +603,7 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  credit?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -274,6 +615,70 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+  sizes?:
+    | T
+    | {
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        thumb?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "themes_select".
+ */
+export interface ThemesSelect<T extends boolean = true> {
+  name?: T;
+  mode?: T;
+  startsAt?: T;
+  endsAt?: T;
+  accent?: T;
+  banner?: T;
+  priority?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -314,6 +719,158 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "service-control".
+ */
+export interface ServiceControl {
+  id: number;
+  /**
+   * One tap. Existing orders are not affected.
+   */
+  emergencyPause?: boolean | null;
+  pauseMessage?: string | null;
+  directOrdering?: boolean | null;
+  collection?: boolean | null;
+  delivery?: boolean | null;
+  coffeeShop?: boolean | null;
+  slotCapacity?: number | null;
+  /**
+   * Shows/hides each app on our website. Pausing inside the app itself is still done on its tablet.
+   */
+  marketplaces?:
+    | {
+        name: 'Deliveroo' | 'Uber Eats' | 'Just Eat';
+        url?: string | null;
+        showOnSite?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  name?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  hours?:
+    | {
+        days: string;
+        time: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional line at the top of every page (e.g. holiday hours)
+   */
+  announcement?: string | null;
+  /**
+   * Shown on the site as you enter it. Update when the numbers change.
+   */
+  reviews?: {
+    googleRating?: number | null;
+    googleCount?: number | null;
+    asOf?: string | null;
+  };
+  facilities?:
+    | {
+        title: string;
+        link?: string | null;
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  links?: {
+    googleMaps?: string | null;
+    tripadvisor?: string | null;
+    fsa?: string | null;
+    instagram?: string | null;
+    wanderlog?: string | null;
+    visitRichmond?: string | null;
+    pawpal?: string | null;
+    tiktok?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "service-control_select".
+ */
+export interface ServiceControlSelect<T extends boolean = true> {
+  emergencyPause?: T;
+  pauseMessage?: T;
+  directOrdering?: T;
+  collection?: T;
+  delivery?: T;
+  coffeeShop?: T;
+  slotCapacity?: T;
+  marketplaces?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        showOnSite?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  name?: T;
+  address?: T;
+  phone?: T;
+  email?: T;
+  hours?:
+    | T
+    | {
+        days?: T;
+        time?: T;
+        id?: T;
+      };
+  announcement?: T;
+  reviews?:
+    | T
+    | {
+        googleRating?: T;
+        googleCount?: T;
+        asOf?: T;
+      };
+  facilities?:
+    | T
+    | {
+        title?: T;
+        link?: T;
+        text?: T;
+        id?: T;
+      };
+  links?:
+    | T
+    | {
+        googleMaps?: T;
+        tripadvisor?: T;
+        fsa?: T;
+        instagram?: T;
+        wanderlog?: T;
+        visitRichmond?: T;
+        pawpal?: T;
+        tiktok?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

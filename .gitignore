@@ -48,3 +48,14 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# local data & secrets
+.env
+.env*.local
+*.db
+*.db-*
+/media
+/_to_delete
+shot*.mjs
+.docs
+.vercel
