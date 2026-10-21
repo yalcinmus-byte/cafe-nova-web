@@ -115,4 +115,9 @@ export const MENU: C[] = [
     ['Kids’ English Breakfast', null, 'Egg, bacon and chips.', 5.5], ['Chicken Nuggets & Chips', null, '', 5.5], ['Kids’ Pancake', null, 'Nutella or fruit, with cream and maple syrup.', 6.6, ['v']],
     ['Meatballs with Rice', null, '', 7.5], ['Kids’ Pasta', null, 'Tomato sauce or cheese.', 6.9, ['v']], ['Cheese Toastie', null, '', 5, ['v']], ['Babyccino', null, 'With cream, marshmallow and sprinkles.', 1.5, ['v']],
   ]},
+  { name: 'Coffee to take home', slug: 'coffee-to-take-home', group: 'shop', note: 'Whole-bean Alchemy speciality coffee — the same beans we pour. Ask us to grind it for you.', items: [
+    ['Alchemy Coffee — Burundi Migoti Hill', null, 'Whole-bean speciality coffee from Alchemy, London.', 15],
+    ['Alchemy Coffee — Kenya Nandi AB', null, 'Whole-bean speciality coffee from Alchemy, London.', 16],
+    ['Alchemy Coffee — Colombia La Esmeralda', null, 'Whole-bean speciality coffee from Alchemy, London.', 18],
+  ]},
 ]

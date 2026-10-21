@@ -31,9 +31,14 @@ export default async function AboutPage() {
             <p className="about__sign">Come as a guest, leave as a friend.<br /><span>Süleyman Demir, Founder &amp; Owner</span></p>
           </div>
         </section>
+        <section className="about__mission wrap" aria-labelledby="mission-title">
+          <p className="eyebrow">Our mission</p>
+          <h2 id="mission-title">To be the neighbourhood’s favourite place to start the day.</h2>
+          <p>Delicious food, happy faces, a peaceful corner and fresh ingredients — a local hub where everyone feels at home.</p>
+        </section>
         <section className="about__values" aria-label="What we stand for">
           <div className="wrap about__values-grid">
-            {[['Wholesome', 'Fresh, real ingredients, cooked with care.'], ['Neighbourly', 'A local hub for East Twickenham and Richmond.'], ['Welcoming', 'Families, dogs, runners and regulars alike.'], ['Radiant', 'Good mornings, good coffee, good feeling.']].map(([t, d]) => (
+            {[['Wholesome', 'Fresh, real ingredients made with love — pure, positive food that leaves you feeling good.'], ['Grateful', 'Kindness and positive energy, with the community first. Every returning face matters to us.'], ['Radiant', 'Shining with happiness: bright mornings, warm welcomes, good coffee.'], ['Neighbourly', 'A local hub for East Twickenham and Richmond — home-made, friendly and welcoming.']].map(([t, d]) => (
               <div key={t}><h2>{t}</h2><p>{d}</p></div>
             ))}
           </div>

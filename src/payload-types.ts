@@ -67,12 +67,15 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    orders: Order;
     enquiries: Enquiry;
     'menu-items': MenuItem;
     'menu-categories': MenuCategory;
     events: Event;
     posts: Post;
     jobs: Job;
+    reviews: Review;
+    partners: Partner;
     media: Media;
     themes: Theme;
     users: User;
@@ -83,12 +86,15 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    orders: OrdersSelect<false> | OrdersSelect<true>;
     enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
     'menu-items': MenuItemsSelect<false> | MenuItemsSelect<true>;
     'menu-categories': MenuCategoriesSelect<false> | MenuCategoriesSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     jobs: JobsSelect<false> | JobsSelect<true>;
+    reviews: ReviewsSelect<false> | ReviewsSelect<true>;
+    partners: PartnersSelect<false> | PartnersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     themes: ThemesSelect<false> | ThemesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -138,6 +144,45 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * Live orders from the website. The Kitchen screen (/kitchen) shows the same list, large.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders".
+ */
+export interface Order {
+  id: number;
+  ref: string;
+  status: 'new' | 'accepted' | 'preparing' | 'ready' | 'completed' | 'cancelled';
+  fulfilment: 'collection' | 'delivery';
+  slot?: string | null;
+  items: {
+    slug?: string | null;
+    name: string;
+    qty: number;
+    unitPrice: number;
+    id?: string | null;
+  }[];
+  subtotal: number;
+  deliveryFee?: number | null;
+  total: number;
+  payment: 'unpaid' | 'paid' | 'counter' | 'refunded';
+  stripeSession?: string | null;
+  customer: {
+    name: string;
+    phone: string;
+    email: string;
+    address?: string | null;
+    postcode?: string | null;
+  };
+  /**
+   * Guest notes, including allergies
+   */
+  notes?: string | null;
+  token?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "enquiries".
  */
@@ -152,6 +197,12 @@ export interface Enquiry {
    */
   date?: string | null;
   guests?: number | null;
+  /**
+   * Events: preferred start time
+   */
+  startTime?: string | null;
+  occasion?: string | null;
+  equipment?: ('sound' | 'mic' | 'projector' | 'tv')[] | null;
   message: string;
   status?: ('new' | 'replied' | 'booked' | 'closed') | null;
   website?: string | null;
@@ -219,7 +270,7 @@ export interface MenuCategory {
   id: number;
   name: string;
   slug: string;
-  group: 'breakfast' | 'turkish' | 'lunch' | 'sweet' | 'drinks' | 'kids';
+  group: 'breakfast' | 'turkish' | 'lunch' | 'sweet' | 'drinks' | 'kids' | 'shop';
   /**
    * Shown under the section title, e.g. "Served with sourdough toast"
    */
@@ -279,6 +330,10 @@ export interface Event {
   slug: string;
   startsAt: string;
   endsAt?: string | null;
+  /**
+   * Shown instead of the date, e.g. "September — date to be announced"
+   */
+  dateNote?: string | null;
   kind?: ('nova' | 'nearby') | null;
   highlight?: boolean | null;
   summary?: string | null;
@@ -342,6 +397,48 @@ export interface Job {
   createdAt: string;
 }
 /**
+ * Short quotes copied from real public reviews, with a link to the original. Never edit a guest’s words.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reviews".
+ */
+export interface Review {
+  id: number;
+  title?: string | null;
+  quote: string;
+  author: string;
+  source: 'google' | 'tripadvisor' | 'other';
+  date?: string | null;
+  /**
+   * Link to the original review or listing
+   */
+  url?: string | null;
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Add a logo only with the supplier’s permission. Without a logo the name is shown as text.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners".
+ */
+export interface Partner {
+  id: number;
+  name: string;
+  /**
+   * e.g. Coffee roaster
+   */
+  role?: string | null;
+  description?: string | null;
+  url?: string | null;
+  logo?: (number | null) | Media;
+  showOnSite?: boolean | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Auto themes switch on and off by themselves (London time). "On" overrides; "Off" disables.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -361,9 +458,25 @@ export interface Theme {
    */
   accent?: string | null;
   /**
+   * Decoration style used on the banner, header and homepage while the theme is on.
+   */
+  decor?: ('none' | 'halloween' | 'christmas' | 'easter' | 'summer') | null;
+  /**
    * Short line shown at the top of the site
    */
   banner?: string | null;
+  /**
+   * Optional link for the banner, e.g. /events
+   */
+  bannerLink?: string | null;
+  /**
+   * Homepage seasonal card title
+   */
+  headline?: string | null;
+  /**
+   * Homepage seasonal card text
+   */
+  blurb?: string | null;
   priority?: number | null;
   updatedAt: string;
   createdAt: string;
@@ -421,6 +534,10 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
+        relationTo: 'orders';
+        value: number | Order;
+      } | null)
+    | ({
         relationTo: 'enquiries';
         value: number | Enquiry;
       } | null)
@@ -443,6 +560,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'jobs';
         value: number | Job;
+      } | null)
+    | ({
+        relationTo: 'reviews';
+        value: number | Review;
+      } | null)
+    | ({
+        relationTo: 'partners';
+        value: number | Partner;
       } | null)
     | ({
         relationTo: 'media';
@@ -500,6 +625,43 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders_select".
+ */
+export interface OrdersSelect<T extends boolean = true> {
+  ref?: T;
+  status?: T;
+  fulfilment?: T;
+  slot?: T;
+  items?:
+    | T
+    | {
+        slug?: T;
+        name?: T;
+        qty?: T;
+        unitPrice?: T;
+        id?: T;
+      };
+  subtotal?: T;
+  deliveryFee?: T;
+  total?: T;
+  payment?: T;
+  stripeSession?: T;
+  customer?:
+    | T
+    | {
+        name?: T;
+        phone?: T;
+        email?: T;
+        address?: T;
+        postcode?: T;
+      };
+  notes?: T;
+  token?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "enquiries_select".
  */
 export interface EnquiriesSelect<T extends boolean = true> {
@@ -509,6 +671,9 @@ export interface EnquiriesSelect<T extends boolean = true> {
   phone?: T;
   date?: T;
   guests?: T;
+  startTime?: T;
+  occasion?: T;
+  equipment?: T;
   message?: T;
   status?: T;
   website?: T;
@@ -560,6 +725,7 @@ export interface EventsSelect<T extends boolean = true> {
   slug?: T;
   startsAt?: T;
   endsAt?: T;
+  dateNote?: T;
   kind?: T;
   highlight?: T;
   summary?: T;
@@ -594,6 +760,36 @@ export interface JobsSelect<T extends boolean = true> {
   open?: T;
   hours?: T;
   summary?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reviews_select".
+ */
+export interface ReviewsSelect<T extends boolean = true> {
+  title?: T;
+  quote?: T;
+  author?: T;
+  source?: T;
+  date?: T;
+  url?: T;
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners_select".
+ */
+export interface PartnersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  description?: T;
+  url?: T;
+  logo?: T;
+  showOnSite?: T;
+  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -650,7 +846,11 @@ export interface ThemesSelect<T extends boolean = true> {
   startsAt?: T;
   endsAt?: T;
   accent?: T;
+  decor?: T;
   banner?: T;
+  bannerLink?: T;
+  headline?: T;
+  blurb?: T;
   priority?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -737,6 +937,19 @@ export interface ServiceControl {
   coffeeShop?: boolean | null;
   slotCapacity?: number | null;
   /**
+   * 24h, London time
+   */
+  firstSlot?: string | null;
+  lastSlot?: string | null;
+  prepMinutes?: number | null;
+  payAtCounter?: boolean | null;
+  deliveryFee?: number | null;
+  deliveryMinimum?: number | null;
+  /**
+   * Comma separated, e.g. TW1, TW9
+   */
+  deliveryPostcodes?: string | null;
+  /**
    * Shows/hides each app on our website. Pausing inside the app itself is still done on its tablet.
    */
   marketplaces?:
@@ -756,6 +969,7 @@ export interface ServiceControl {
  */
 export interface SiteSetting {
   id: number;
+  contentVersion?: number | null;
   name?: string | null;
   address?: string | null;
   phone?: string | null;
@@ -778,6 +992,11 @@ export interface SiteSetting {
     googleRating?: number | null;
     googleCount?: number | null;
     asOf?: string | null;
+    tripadvisorCount?: number | null;
+    /**
+     * e.g. #3 of 67 Coffee & Tea in Richmond-upon-Thames
+     */
+    tripadvisorRank?: string | null;
   };
   facilities?:
     | {
@@ -795,6 +1014,9 @@ export interface SiteSetting {
     wanderlog?: string | null;
     visitRichmond?: string | null;
     pawpal?: string | null;
+    staycation?: string | null;
+    myRichmond?: string | null;
+    facebook?: string | null;
     tiktok?: string | null;
   };
   updatedAt?: string | null;
@@ -812,6 +1034,13 @@ export interface ServiceControlSelect<T extends boolean = true> {
   delivery?: T;
   coffeeShop?: T;
   slotCapacity?: T;
+  firstSlot?: T;
+  lastSlot?: T;
+  prepMinutes?: T;
+  payAtCounter?: T;
+  deliveryFee?: T;
+  deliveryMinimum?: T;
+  deliveryPostcodes?: T;
   marketplaces?:
     | T
     | {
@@ -829,6 +1058,7 @@ export interface ServiceControlSelect<T extends boolean = true> {
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
+  contentVersion?: T;
   name?: T;
   address?: T;
   phone?: T;
@@ -847,6 +1077,8 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         googleRating?: T;
         googleCount?: T;
         asOf?: T;
+        tripadvisorCount?: T;
+        tripadvisorRank?: T;
       };
   facilities?:
     | T
@@ -866,6 +1098,9 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         wanderlog?: T;
         visitRichmond?: T;
         pawpal?: T;
+        staycation?: T;
+        myRichmond?: T;
+        facebook?: T;
         tiktok?: T;
       };
   updatedAt?: T;

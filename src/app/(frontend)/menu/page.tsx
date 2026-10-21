@@ -1,14 +1,16 @@
 import type { Metadata } from 'next'
 import { Header, Footer } from '@/components/Chrome'
 import { RestaurantJsonLd } from '@/components/JsonLd'
-import { getMenu, getSettings, gbp } from '@/lib/data'
+import { getMenu, getService, getSettings, gbp, orderingState } from '@/lib/data'
+import { AddToBasket, BasketBar } from '@/components/AddToBasket'
 
 export const metadata: Metadata = { title: 'Menu', description: 'Full breakfast, Turkish, lunch, drinks and kids’ menu with prices — Cafe Nova Bistro, East Twickenham.' }
 
 const DIET: Record<string, string> = { v: 'Vegetarian', vg: 'Vegan', gf: 'Gluten-free' }
 
 export default async function MenuPage() {
-  const [menu, settings] = await Promise.all([getMenu(), getSettings()])
+  const [menu, settings, svc] = await Promise.all([getMenu(), getSettings(), getService()])
+  const live = orderingState(svc).live
   return (
     <>
       <Header />
@@ -33,6 +35,7 @@ export default async function MenuPage() {
                       <div className="menu-item__top">
                         <h3>{i.name}{i.localName && <span className="dish__local"> {i.localName}</span>}</h3>
                         <span className="menu-item__price">{gbp(i.price)}</span>
+                        {live && i.available && i.orderable && i.price != null && <AddToBasket slug={i.slug} name={i.name} price={i.price} compact />}
                       </div>
                       {i.description && <p>{i.description}</p>}
                       <p className="menu-item__meta">
@@ -48,6 +51,7 @@ export default async function MenuPage() {
           </div>
         </div>
       </main>
+      {live && <BasketBar />}
       <Footer s={settings} />
     </>
   )

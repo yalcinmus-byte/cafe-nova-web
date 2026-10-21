@@ -4,10 +4,11 @@ import { Header, Footer } from '@/components/Chrome'
 import { RestaurantJsonLd } from '@/components/JsonLd'
 import { PlatesCarousel, type Plate } from '@/components/PlatesCarousel'
 import type { Media } from '@/payload-types'
-import { getEvents, getService, getSettings, getSignatures, orderingState } from '@/lib/data'
+import { getActiveTheme, getEvents, getPartners, getReviews, getService, getSettings, getShop, getSignatures, orderingState } from '@/lib/data'
+import { Products, Reviews, Seasonal, Values, Welcome } from '@/components/HomeSections'
 
 export default async function Home() {
-  const [settings, svc, dishes, events] = await Promise.all([getSettings(), getService(), getSignatures(), getEvents(true)])
+  const [settings, svc, dishes, events, theme, reviews, partners, shop] = await Promise.all([getSettings(), getService(), getSignatures(), getEvents(true), getActiveTheme(), getReviews(), getPartners(), getShop()])
   const order = orderingState(svc)
   const ORDER = ['istanbul-special-breakfast', 'full-english-breakfast', 'shakshuka-with-eggs', 'smashed-avocado-on-toast', 'turkish-eggs', 'roasted-mixed-vegetables-plate', 'chef-s-salad']
   const rank = (slug: string) => { const i = ORDER.indexOf(slug); return i < 0 ? 99 : i }
@@ -26,6 +27,7 @@ export default async function Home() {
         <HeroFilm orderLive={order.live} />
 
         <PlatesCarousel orderLive={order.live} plates={plates} />
+        <Seasonal theme={theme} />
 
         {events.length > 0 && (
           <section className="events-strip" aria-labelledby="events-title">
@@ -38,7 +40,7 @@ export default async function Home() {
                 {events.map((e) => (
                   <li key={e.id}>
                     <time dateTime={e.startsAt}>
-                      <span className="d">{new Date(e.startsAt).toLocaleDateString('en-GB', { day: 'numeric', timeZone: 'Europe/London' })}</span>
+                      <span className="d">{e.dateNote ? '—' : new Date(e.startsAt).toLocaleDateString('en-GB', { day: 'numeric', timeZone: 'Europe/London' })}</span>
                       <span className="m">{new Date(e.startsAt).toLocaleDateString('en-GB', { month: 'short', timeZone: 'Europe/London' })}</span>
                     </time>
                     <div>
@@ -52,20 +54,10 @@ export default async function Home() {
           </section>
         )}
 
-        <section className="sourcing" aria-labelledby="sourcing-title">
-          <div className="wrap sourcing__inner">
-            <img src="/img/dishes/latte-heart.webp" alt="A latte with a heart in the foam in Nova's turquoise cup" className="sourcing__img" loading="lazy" />
-            <div>
-              <h2 id="sourcing-title">Coffee & ingredients</h2>
-              <dl className="sourcing__list">
-                <div><dt>Coffee</dt><dd>Alchemy speciality coffee in every cup.</dd></div>
-                <div><dt>Milk</dt><dd>Milk from Waitrose.</dd></div>
-                <div><dt>Produce</dt><dd>Fresh vegetables and herbs from local markets, plus selected essentials from Costco.</dd></div>
-                <div><dt>Bread</dt><dd>Sourdough for toast and sandwiches; ask us about vegan and gluten-free bread.</dd></div>
-              </dl>
-            </div>
-          </div>
-        </section>
+        <Products partners={partners} shop={shop} orderLive={order.live} />
+        <Values />
+        <Reviews reviews={reviews} s={settings} />
+        <Welcome facilities={settings.facilities ?? []} links={settings.links ?? {}} />
 
         <section className="place" aria-labelledby="place-title">
           <img src="/img/place/drone.webp" alt="Cafe Nova's corner frontage on Richmond Road with striped awnings and outdoor tables" className="place__img" loading="lazy" />
@@ -81,21 +73,13 @@ export default async function Home() {
           </div>
         </section>
 
-        <section className="trust" aria-label="Reviews and food hygiene">
-          <div className="wrap trust__inner">
-            {l.googleMaps && <a href={l.googleMaps} className="trust__item"><b>Google{settings.reviews?.googleRating ? ` ★ ${settings.reviews.googleRating.toFixed(1)}` : ''}</b><span>{settings.reviews?.googleCount ? `${settings.reviews.googleCount} reviews` : 'Read what guests say'}</span></a>}
-            {l.tripadvisor && <a href={l.tripadvisor} className="trust__item"><b>Tripadvisor</b><span>Reviews and photos</span></a>}
-            {l.fsa && <a href={l.fsa} className="trust__item"><b>Food hygiene</b><span>See our FSA rating</span></a>}
-          </div>
-        </section>
-
         <section className="hire" aria-labelledby="hire-title">
           <div className="wrap hire__inner">
             <div>
               <h2 id="hire-title">Evenings at Nova</h2>
               <p>After 5pm the café is yours: birthday brunches, Turkish meze nights, team breakfasts-for-dinner or a match on the big screen — with sound system, microphone and projector. Tell us your date and guest numbers.</p>
             </div>
-            <Link className="btn btn--river" href="/contact?kind=event">Ask about a date</Link>
+            <Link className="btn btn--river" href="/private-hire">Book an evening</Link>
           </div>
         </section>
       </main>

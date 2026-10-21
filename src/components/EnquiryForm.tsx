@@ -11,6 +11,9 @@ export function EnquiryForm({ initialKind = 'general', lockKind = false }: { ini
     e.preventDefault()
     const f = new FormData(e.currentTarget)
     const data: Record<string, unknown> = Object.fromEntries(f.entries())
+    data.equipment = f.getAll('equipment')
+    if (!data.startTime) delete data.startTime
+    if (!data.occasion) delete data.occasion
     data.kind = kind
     if (!data.date) delete data.date
     if (data.guests) data.guests = Number(data.guests); else delete data.guests
@@ -44,10 +47,22 @@ export function EnquiryForm({ initialKind = 'general', lockKind = false }: { ini
       </div>
       <label>Phone <span className="opt">(optional)</span><input name="phone" type="tel" autoComplete="tel" maxLength={40} /></label>
       {kind === 'event' && (
-        <div className="enquiry__row">
-          <label>Date<input name="date" type="date" /></label>
-          <label>Guests<input name="guests" type="number" min={1} max={200} inputMode="numeric" /></label>
-        </div>
+        <>
+          <div className="enquiry__row">
+            <label>Occasion<input name="occasion" maxLength={80} placeholder="Birthday, team party, quiz night…" /></label>
+            <label>Guests<input name="guests" type="number" min={1} max={200} inputMode="numeric" /></label>
+          </div>
+          <div className="enquiry__row">
+            <label>Date<input name="date" type="date" /></label>
+            <label>Start time<input name="startTime" type="time" min="17:00" /></label>
+          </div>
+          <fieldset className="enquiry__kinds">
+            <legend>What would you like to use?</legend>
+            {[['sound', 'Sound system'], ['mic', 'Microphone'], ['projector', 'Projector'], ['tv', 'Big-screen TV']].map(([v, l]) => (
+              <label key={v}><input type="checkbox" name="equipment" value={v} /> {l}</label>
+            ))}
+          </fieldset>
+        </>
       )}
       <label>{kind === 'careers' ? 'Tell us about you and the hours you’re after' : kind === 'event' ? 'What are you planning?' : 'Message'}
         <textarea name="message" required rows={5} maxLength={4000} />

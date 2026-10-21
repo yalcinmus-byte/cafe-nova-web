@@ -16,6 +16,7 @@ export const Events: CollectionConfig = {
         { name: 'endsAt', type: 'date', admin: { date: { pickerAppearance: 'dayAndTime' }, width: '50%' } },
       ],
     },
+    { name: 'dateNote', type: 'text', admin: { description: 'Shown instead of the date, e.g. "September — date to be announced"' } },
     {
       name: 'kind',
       type: 'select',

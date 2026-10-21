@@ -31,7 +31,20 @@ export const Themes: CollectionConfig = {
       ],
     },
     { name: 'accent', type: 'text', defaultValue: '#B23A3A', admin: { description: 'One accent colour (hex). Brand colours stay the same.' } },
+    {
+      name: 'decor',
+      type: 'select',
+      defaultValue: 'none',
+      options: [
+        { label: 'None', value: 'none' }, { label: 'Halloween (moon & bats)', value: 'halloween' }, { label: 'Christmas (snow & lights)', value: 'christmas' },
+        { label: 'Easter (spring blossom)', value: 'easter' }, { label: 'Summer (sunshine)', value: 'summer' },
+      ],
+      admin: { description: 'Decoration style used on the banner, header and homepage while the theme is on.' },
+    },
     { name: 'banner', type: 'text', admin: { description: 'Short line shown at the top of the site' } },
+    { name: 'bannerLink', type: 'text', admin: { description: 'Optional link for the banner, e.g. /events' } },
+    { name: 'headline', type: 'text', admin: { description: 'Homepage seasonal card title' } },
+    { name: 'blurb', type: 'textarea', admin: { description: 'Homepage seasonal card text' } },
     { name: 'priority', type: 'number', defaultValue: 0 },
   ],
 }

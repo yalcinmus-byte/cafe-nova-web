@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useEffect, useRef } from 'react'
+import { AddToBasket } from './AddToBasket'
 
 export type Plate = { id: string | number; slug: string; name: string; localName?: string | null; description?: string | null; price?: number | null; photo: string; alt: string }
 
@@ -78,7 +79,7 @@ export function PlatesCarousel({ plates, orderLive }: { plates: Plate[]; orderLi
                 </Link>
                 <span className="plate__foot">
                   <span className="plate__price">{gbp(d.price)}</span>
-                  {orderLive && <Link className="plate__add" href={`/order?add=${d.slug}:1`} aria-label={`Add ${d.name} to your order`}>Add to order</Link>}
+                  {orderLive && d.price != null && <AddToBasket slug={d.slug} name={d.name} price={d.price} />}
                 </span>
               </li>
             ))}

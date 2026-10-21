@@ -4,6 +4,7 @@ import '@fontsource-variable/fraunces/full-italic.css'
 import '@fontsource-variable/instrument-sans/index.css'
 import React from 'react'
 import { getActiveTheme, getSettings } from '@/lib/data'
+import { SeasonArt } from '@/components/HomeSections'
 import './styles.css'
 
 
@@ -19,12 +20,19 @@ export const dynamic = 'force-dynamic'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [theme, settings] = await Promise.all([getActiveTheme(), getSettings()])
-  const style = theme?.accent ? ({ '--accent': theme.accent } as React.CSSProperties) : undefined
+  const style = theme?.accent ? ({ '--accent': theme.accent, '--banner-bg': theme.accent, '--banner-fg': '#fff' } as React.CSSProperties) : undefined
+  const bannerText = settings.announcement || theme?.banner
+  const decor = theme?.decor && theme.decor !== 'none' ? theme.decor : undefined
   return (
-    <html lang="en-GB" style={style} data-theme={theme?.name?.toLowerCase() ?? 'everyday'}>
+    <html lang="en-GB" style={style} data-theme={theme?.name?.toLowerCase() ?? 'everyday'} data-decor={decor ?? 'none'} className={bannerText ? 'has-banner' : undefined}>
       <body>
         <a className="skip" href="#main">Skip to content</a>
-        {(theme?.banner || settings.announcement) && <div className="banner">{settings.announcement || theme?.banner}</div>}
+        {bannerText && (
+          <div className="banner" role="note">
+            {decor && <SeasonArt decor={decor} small />}
+            {theme?.bannerLink && !settings.announcement ? <a href={theme.bannerLink}>{bannerText}</a> : <span>{bannerText}</span>}
+          </div>
+        )}
         {children}
       </body>
     </html>

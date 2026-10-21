@@ -6,6 +6,7 @@ export const SiteSettings: GlobalConfig = {
   admin: { group: 'Settings' },
   access: { read: () => true },
   fields: [
+    { name: 'contentVersion', type: 'number', defaultValue: 0, admin: { hidden: true } },
     { name: 'name', type: 'text', defaultValue: 'Cafe Nova Bistro' },
     { name: 'address', type: 'textarea', defaultValue: '424 Richmond Road\nEast Twickenham, Twickenham' },
     { type: 'row', fields: [{ name: 'phone', type: 'text' }, { name: 'email', type: 'text' }] },
@@ -24,6 +25,9 @@ export const SiteSettings: GlobalConfig = {
         { name: 'googleRating', type: 'number', min: 0, max: 5, admin: { step: 0.1, width: '33%' } },
         { name: 'googleCount', type: 'number', admin: { width: '33%' } },
         { name: 'asOf', type: 'date', admin: { width: '33%' } },
+      ] }, { type: 'row', fields: [
+        { name: 'tripadvisorCount', type: 'number', admin: { width: '33%' } },
+        { name: 'tripadvisorRank', type: 'text', admin: { width: '66%', description: 'e.g. #3 of 67 Coffee & Tea in Richmond-upon-Thames' } },
       ] }],
     },
     {
@@ -43,6 +47,9 @@ export const SiteSettings: GlobalConfig = {
         { name: 'wanderlog', type: 'text' },
         { name: 'visitRichmond', type: 'text' },
         { name: 'pawpal', type: 'text', label: 'PawPal (dog-friendly listing)' },
+        { name: 'staycation', type: 'text' },
+        { name: 'myRichmond', type: 'text', label: 'My Richmond offer' },
+        { name: 'facebook', type: 'text' },
         { name: 'tiktok', type: 'text' },
       ],
     },

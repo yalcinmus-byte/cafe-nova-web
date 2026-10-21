@@ -24,6 +24,23 @@ export const ServiceControl: GlobalConfig = {
     },
     { name: 'slotCapacity', type: 'number', defaultValue: 6, label: 'Orders per 15 minutes' },
     {
+      type: 'row',
+      fields: [
+        { name: 'firstSlot', type: 'text', defaultValue: '08:30', label: 'First order time', admin: { width: '25%', description: '24h, London time' } },
+        { name: 'lastSlot', type: 'text', defaultValue: '16:15', label: 'Last order time', admin: { width: '25%' } },
+        { name: 'prepMinutes', type: 'number', defaultValue: 20, label: 'Prep time (min)', admin: { width: '25%' } },
+        { name: 'payAtCounter', type: 'checkbox', defaultValue: true, label: 'Allow pay at the counter (collection)', admin: { width: '25%' } },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        { name: 'deliveryFee', type: 'number', defaultValue: 3.5, label: 'Delivery fee £', admin: { width: '25%' } },
+        { name: 'deliveryMinimum', type: 'number', defaultValue: 15, label: 'Delivery minimum £', admin: { width: '25%' } },
+        { name: 'deliveryPostcodes', type: 'text', defaultValue: 'TW1, TW2, TW9, TW10', label: 'Delivery postcode areas', admin: { width: '50%', description: 'Comma separated, e.g. TW1, TW9' } },
+      ],
+    },
+    {
       name: 'marketplaces',
       type: 'array',
       labels: { singular: 'Delivery app', plural: 'Delivery apps' },

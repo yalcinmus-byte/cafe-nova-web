@@ -102,3 +102,28 @@ h1, h2, h3, .render-title, .doc-header__title, .list-header h1, .collection-list
 
 @media (max-width: 1100px) { .nova-today__grid { grid-template-columns: 1fr 1fr; } .nova-card--service { grid-row: auto; grid-column: 1 / -1; } }
 @media (max-width: 640px) { .nova-today__grid { grid-template-columns: 1fr; } .nova-today__head { flex-direction: column; align-items: flex-start; } }
+
+/* Kitchen screen */
+.nova-navextra { display: grid; gap: 2px; margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.12); }
+.kitchen-board { padding: 32px clamp(16px, 3vw, 48px); }
+.kitchen-board__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 24px; }
+.kitchen-board__head h1 { font-size: 48px; margin: 0; color: var(--nova-ink); }
+.kitchen-board__head p { margin: 4px 0 0; color: #5d6e77; }
+.kitchen-board__sound { display: flex; gap: 8px; align-items: center; font-weight: 600; }
+.kitchen-board__cols { display: grid; grid-template-columns: repeat(4, minmax(240px, 1fr)); gap: 16px; align-items: start; }
+.kcol { background: #ebe7dc; border-radius: 18px; padding: 14px; min-height: 60vh; }
+.kcol h2 { font-size: 18px; margin: 4px 6px 12px; display: flex; justify-content: space-between; }
+.kcol h2 span { background: var(--nova-ink); color: #fff; border-radius: 999px; padding: 0 10px; font-size: 14px; }
+.kcol--new { background: #d9efed; }
+.kcol__empty { color: #8a969c; margin: 6px; }
+.kticket { background: #fff; border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 8px 20px -14px rgba(18,41,58,.5); }
+.kticket header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.kticket header b { font-size: 22px; font-family: 'Fraunces', Georgia, serif; }
+.kticket__mode { font-size: 13px; font-weight: 700; border-radius: 999px; padding: 3px 10px; background: #e3ece9; }
+.kticket__mode--delivery { background: #fde9c8; }
+.kticket ul { list-style: none; margin: 0 0 8px; padding: 0; font-size: 17px; line-height: 1.45; }
+.kticket__notes { background: #fff3cd; border-radius: 8px; padding: 6px 10px; font-weight: 600; margin: 6px 0; }
+.kticket__who, .kticket__pay { font-size: 14px; color: #3c4d57; margin: 4px 0; }
+.kticket__actions { display: flex; gap: 8px; margin-top: 10px; }
+.kticket__actions .nova-btn { border: 0; cursor: pointer; font: inherit; font-weight: 600; }
+@media (max-width: 1100px) { .kitchen-board__cols { grid-template-columns: 1fr 1fr; } }

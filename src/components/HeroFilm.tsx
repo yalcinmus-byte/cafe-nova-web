@@ -10,12 +10,12 @@ const CHAPTERS = [
   { id: 'latte', label: 'Latte', at: 20 },
   { id: 'river', label: 'River', at: 25 },
 ]
-type Line = { from: number; to: number; title: string; body?: string; cta?: boolean }
+type Line = { from: number; to: number; title: string; body?: string; cta?: boolean; center?: boolean }
 const LINES: Line[] = [
   { from: 3.2, to: 9.6, title: 'Sourdough, smashed avocado and two poached eggs.', body: 'Cooked to order in our kitchen, every morning from eight.' },
-  { from: 10.4, to: 14.8, title: 'Coffee from Alchemy.', body: 'Poured with organic milk, the way our regulars like it.' },
+  { from: 10.4, to: 14.8, title: 'Coffee from Alchemy.', body: 'Speciality beans, roasted by hand in London.', center: true },
   { from: 15.4, to: 19.8, title: 'Pulled for you, not before.' },
-  { from: 20.6, to: 24.6, title: 'A little milk. A little patience.' },
+  { from: 20.6, to: 24.6, title: 'A little milk. A little patience.', body: 'Organic milk from Waitrose, steamed for every cup.' },
   { from: 26, to: 30.6, title: 'Breakfast first. Then the river.' },
   { from: 31, to: 34.6, title: 'A short walk from Richmond Bridge.', cta: true },
 ]
@@ -103,7 +103,7 @@ export function HeroFilm({ orderLive }: { orderLive: boolean }) {
         {LINES.map((l) => {
           const o = fade(l)
           return (
-            <div key={l.title} className="film__line" style={{ opacity: o, clipPath: `inset(${(1 - o) * 100}% 0 0 0)`, pointerEvents: o > 0.5 ? 'auto' : 'none' }} aria-hidden={o < 0.5}>
+            <div key={l.title} className={`film__line ${l.center ? 'film__line--center' : ''}`} style={{ opacity: o, transform: `translateY(${(1 - o) * 28}px)`, filter: o < 1 ? `blur(${(1 - o) * 6}px)` : undefined, pointerEvents: o > 0.5 ? 'auto' : 'none' }} aria-hidden={o < 0.5}>
               <p className="film__line-title">{l.title}</p>
               {l.body && <p className="film__line-body">{l.body}</p>}
               {l.cta && (

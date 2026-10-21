@@ -90,3 +90,20 @@ export const getJobs = cache(async () => {
   const r = await p.find({ collection: 'jobs', where: { open: { equals: true } }, limit: 20 })
   return r.docs
 })
+
+export const getReviews = cache(async () => {
+  const p = await db()
+  return (await p.find({ collection: 'reviews', where: { featured: { equals: true } }, sort: '-date', limit: 8, depth: 0 })).docs
+})
+
+export const getPartners = cache(async () => {
+  const p = await db()
+  return (await p.find({ collection: 'partners', where: { showOnSite: { equals: true } }, sort: 'order', limit: 12, depth: 1 })).docs
+})
+
+export const getShop = cache(async () => {
+  const p = await db()
+  const cat = await p.find({ collection: 'menu-categories', where: { group: { equals: 'shop' } }, limit: 1, depth: 0 })
+  if (!cat.docs[0]) return []
+  return (await p.find({ collection: 'menu-items', where: { category: { equals: cat.docs[0].id }, price: { exists: true } }, sort: 'order', limit: 12, depth: 0 })).docs
+})

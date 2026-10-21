@@ -12,13 +12,17 @@ const Pill = ({ on, label }: { on: boolean; label: string }) => (
 )
 
 export async function Today({ payload }: Props) {
-  const [svc, items, events, themes, enq] = await Promise.all([
+  const startOfDay = new Date(); startOfDay.setUTCHours(0, 0, 0, 0)
+  const [svc, items, events, themes, enq, orders] = await Promise.all([
     payload.findGlobal({ slug: 'service-control' }),
     payload.find({ collection: 'menu-items', limit: 0, pagination: false, depth: 0 }),
     payload.find({ collection: 'events', where: { startsAt: { greater_than: new Date().toISOString() } }, limit: 3, sort: 'startsAt', depth: 0 }),
     payload.find({ collection: 'themes', limit: 20, depth: 0 }),
     payload.find({ collection: 'enquiries', where: { status: { equals: 'new' } }, limit: 3, sort: '-createdAt', depth: 0, overrideAccess: true }),
+    payload.find({ collection: 'orders', where: { createdAt: { greater_than: startOfDay.toISOString() }, status: { not_equals: 'cancelled' } }, limit: 200, depth: 0, overrideAccess: true }),
   ])
+  const openOrders = orders.docs.filter((o) => ['new', 'accepted', 'preparing', 'ready'].includes(o.status) && o.payment !== 'unpaid').length
+  const takings = orders.docs.filter((o) => o.payment !== 'unpaid').reduce((s, o) => s + o.total, 0)
   const all = items.docs
   const soldOut = all.filter((d) => !d.available).length
   const noPrice = all.filter((d) => d.price == null).length
@@ -82,6 +86,13 @@ export async function Today({ payload }: Props) {
             </ul>
           )}
           <Link className="nova-btn nova-btn--ghost" href="/admin/collections/events/create">Add an event</Link>
+        </article>
+
+        <article className="nova-card">
+          <h2>Online orders today</h2>
+          <p className="nova-big">{orders.docs.length}</p>
+          <p className="nova-muted">{openOrders} open · £{takings.toFixed(2)} ordered today</p>
+          <a className="nova-btn" href="/admin/kitchen">Open kitchen screen</a>
         </article>
 
         <article className="nova-card">

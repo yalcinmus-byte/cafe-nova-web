@@ -15,7 +15,7 @@ export const Enquiries: CollectionConfig = {
     beforeChange: [({ data, req, operation }) => {
       if (operation === 'create' && !req.user) {
         if (data.website) throw new APIError('Invalid submission', 400) // honeypot
-        const keep = ['kind', 'name', 'email', 'phone', 'date', 'guests', 'message'] as const
+        const keep = ['kind', 'name', 'email', 'phone', 'date', 'guests', 'message', 'startTime', 'occasion', 'equipment'] as const
         const clean: Record<string, unknown> = { status: 'new' }
         for (const k of keep) if (data[k] !== undefined) clean[k] = data[k]
         return clean
@@ -29,6 +29,13 @@ export const Enquiries: CollectionConfig = {
     ] },
     { type: 'row', fields: [{ name: 'name', type: 'text', required: true, maxLength: 120 }, { name: 'email', type: 'email', required: true }, { name: 'phone', type: 'text', maxLength: 40 }] },
     { type: 'row', fields: [{ name: 'date', type: 'date', admin: { description: 'For events' } }, { name: 'guests', type: 'number', min: 1, max: 200 }] },
+    { type: 'row', fields: [
+      { name: 'startTime', type: 'text', maxLength: 20, admin: { description: 'Events: preferred start time' } },
+      { name: 'occasion', type: 'text', maxLength: 80 },
+    ] },
+    { name: 'equipment', type: 'select', hasMany: true, options: [
+      { label: 'Sound system', value: 'sound' }, { label: 'Microphone', value: 'mic' }, { label: 'Projector', value: 'projector' }, { label: 'Big-screen TV', value: 'tv' },
+    ] },
     { name: 'message', type: 'textarea', required: true, maxLength: 4000 },
     { name: 'status', type: 'select', defaultValue: 'new', options: [{ label: 'New', value: 'new' }, { label: 'Replied', value: 'replied' }, { label: 'Booked', value: 'booked' }, { label: 'Closed', value: 'closed' }], admin: { position: 'sidebar' } },
     { name: 'website', type: 'text', admin: { hidden: true } },

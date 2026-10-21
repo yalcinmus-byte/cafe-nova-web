@@ -17,6 +17,9 @@ import { Themes } from './collections/Themes'
 import { Posts } from './collections/Posts'
 import { Jobs } from './collections/Jobs'
 import { Enquiries } from './collections/Enquiries'
+import { Orders } from './collections/Orders'
+import { Partners } from './collections/Partners'
+import { Reviews } from './collections/Reviews'
 import { ServiceControl } from './globals/ServiceControl'
 import { SiteSettings } from './globals/SiteSettings'
 
@@ -35,10 +38,12 @@ export default buildConfig({
     components: {
       graphics: { Logo: '@/admin/Logo#Logo', Icon: '@/admin/Logo#Icon' },
       beforeDashboard: ['@/admin/Today#Today'],
+      afterNavLinks: ['@/admin/NavExtra#NavExtra'],
+      views: { kitchen: { Component: '@/admin/Kitchen#Kitchen', path: '/kitchen' } },
     },
     theme: 'light',
   },
-  collections: [Enquiries, MenuItems, MenuCategories, Events, Posts, Jobs, Media, Themes, Users],
+  collections: [Orders, Enquiries, MenuItems, MenuCategories, Events, Posts, Jobs, Reviews, Partners, Media, Themes, Users],
   globals: [ServiceControl, SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

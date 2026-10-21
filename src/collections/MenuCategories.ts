@@ -14,7 +14,7 @@ export const MenuCategories: CollectionConfig = {
       type: 'select',
       required: true,
       defaultValue: 'breakfast',
-      options: ['breakfast', 'turkish', 'lunch', 'sweet', 'drinks', 'kids'].map((v) => ({ label: v[0].toUpperCase() + v.slice(1), value: v })),
+      options: ['breakfast', 'turkish', 'lunch', 'sweet', 'drinks', 'kids', 'shop'].map((v) => ({ label: v[0].toUpperCase() + v.slice(1), value: v })),
     },
     { name: 'note', type: 'textarea', admin: { description: 'Shown under the section title, e.g. "Served with sourdough toast"' } },
     { name: 'order', type: 'number', defaultValue: 0 },
