@@ -53,7 +53,7 @@ export function EnquiryForm({ initialKind = 'general', lockKind = false }: { ini
             <label>Guests<input name="guests" type="number" min={1} max={200} inputMode="numeric" /></label>
           </div>
           <div className="enquiry__row">
-            <label>Date<input name="date" type="date" /></label>
+            <label>Date<input id="enq-date" name="date" type="date" /></label>
             <label>Start time<input name="startTime" type="time" min="17:00" /></label>
           </div>
           <fieldset className="enquiry__kinds">

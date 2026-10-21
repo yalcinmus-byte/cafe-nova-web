@@ -109,9 +109,11 @@ export function OrderApp({ incoming }: { incoming: Line[] }) {
       {lines.length > 0 && (
         <form className="order-app__checkout enquiry" onSubmit={submit}>
           <fieldset className="seg">
-            <legend>How would you like it?</legend>
-            {info?.collection !== false && <label className={fulfilment === 'collection' ? 'is-on' : ''}><input type="radio" name="f" checked={fulfilment === 'collection'} onChange={() => setFulfilment('collection')} /> Collection<small>424 Richmond Road</small></label>}
-            {info?.delivery && <label className={fulfilment === 'delivery' ? 'is-on' : ''}><input type="radio" name="f" checked={fulfilment === 'delivery'} onChange={() => setFulfilment('delivery')} /> Delivery<small>{info.deliveryAreas.join(', ')} · {gbp(info.deliveryFee)}</small></label>}
+            <legend>Collect or delivery?</legend>
+            {info?.collection !== false && <label className={fulfilment === 'collection' ? 'is-on' : ''}><input type="radio" name="f" checked={fulfilment === 'collection'} onChange={() => setFulfilment('collection')} /> Pick up in the café<small>424 Richmond Road · skip the queue</small></label>}
+            {info?.delivery
+              ? <label className={fulfilment === 'delivery' ? 'is-on' : ''}><input type="radio" name="f" checked={fulfilment === 'delivery'} onChange={() => setFulfilment('delivery')} /> Delivery<small>{info.deliveryAreas.join(', ')} · {gbp(info.deliveryFee)}</small></label>
+              : <label className="is-disabled" aria-disabled="true"><input type="radio" name="f" disabled /> Delivery<small>Use the delivery apps below</small></label>}
           </fieldset>
 
           <label>{fulfilment === 'delivery' ? 'Delivery time' : 'Collection time'}
@@ -140,7 +142,11 @@ export function OrderApp({ incoming }: { incoming: Line[] }) {
 
           <fieldset className="seg">
             <legend>Payment</legend>
-            {canCard && <label className={pay === 'online' ? 'is-on' : ''}><input type="radio" name="p" checked={pay === 'online'} onChange={() => setPay('online')} /> Pay now by card<small>Apple Pay & Google Pay</small></label>}
+            {canCard ? (
+              <label className={pay === 'online' ? 'is-on' : ''}><input type="radio" name="p" checked={pay === 'online'} onChange={() => setPay('online')} /> Pay now by card<small>Card, Apple Pay & Google Pay</small></label>
+            ) : (
+              <label className="is-disabled" aria-disabled="true"><input type="radio" name="p" disabled /> Pay now online<small>Card, Apple Pay & Google Pay — coming soon</small></label>
+            )}
             {canCounter && <label className={pay === 'counter' ? 'is-on' : ''}><input type="radio" name="p" checked={pay === 'counter'} onChange={() => setPay('counter')} /> Pay when you collect<small>Card or cash at the counter</small></label>}
           </fieldset>
           {fulfilment === 'delivery' && !canCard && <p className="form-error">Card payment for delivery is being set up — please choose collection for now.</p>}

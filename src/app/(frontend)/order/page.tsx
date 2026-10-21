@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Header, Footer } from '@/components/Chrome'
 import { OrderApp } from '@/components/OrderApp'
+import { DeliveryApps } from '@/components/DeliveryApps'
 import { db, getService, getSettings, orderingState } from '@/lib/data'
 
 export const metadata: Metadata = { title: 'Order online', description: 'Order breakfast, lunch and coffee from Cafe Nova Bistro for collection or local delivery in East Twickenham, Richmond and St Margarets.' }
@@ -24,19 +25,16 @@ export default async function OrderPage({ searchParams }: { searchParams: Promis
         <header className="page-head">
           <p className="eyebrow">Order online</p>
           <h1>Breakfast, to go</h1>
-          <p>Collection from 424 Richmond Road{state.delivery ? ', or delivery nearby' : ''}. Freshly cooked when you order — no marketplace fees.</p>
+          <p>Order here and pick it up from the café at 424 Richmond Road{state.delivery ? ', or have it delivered nearby' : ''}. Freshly cooked for your time slot — skip the queue.</p>
           {cancelled && <p className="notice">Payment cancelled — your basket is still here.</p>}
         </header>
         {state.live || state.paused ? <OrderApp incoming={incoming} /> : (
           <p className="notice">Online ordering opens soon. Until then, come in and see us{state.marketplaces.length ? ', or use a delivery app below' : ''}.</p>
         )}
 
-        {state.marketplaces.length > 0 && (
-          <section className="apps" aria-labelledby="apps-title">
-            <h2 id="apps-title">Also on delivery apps</h2>
-            <ul className="apps__list">{state.marketplaces.map((m) => <li key={m.id ?? m.name}><a className="btn btn--outline" href={m.url!} rel="noopener">{m.name}</a></li>)}</ul>
-          </section>
-        )}
+        <section className="apps" aria-label="Delivery apps">
+          <DeliveryApps apps={state.marketplaces} title={state.delivery ? 'Also on the delivery apps' : 'Want it delivered? Use the delivery apps'} />
+        </section>
         <div className="row-ctas"><Link className="btn btn--outline" href="/menu">Full menu</Link><Link className="btn btn--outline" href="/visit">Find us</Link></div>
       </main>
       <Footer s={settings} />

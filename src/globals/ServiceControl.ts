@@ -26,10 +26,11 @@ export const ServiceControl: GlobalConfig = {
     {
       type: 'row',
       fields: [
-        { name: 'firstSlot', type: 'text', defaultValue: '08:30', label: 'First order time', admin: { width: '25%', description: '24h, London time' } },
-        { name: 'lastSlot', type: 'text', defaultValue: '16:15', label: 'Last order time', admin: { width: '25%' } },
-        { name: 'prepMinutes', type: 'number', defaultValue: 20, label: 'Prep time (min)', admin: { width: '25%' } },
-        { name: 'payAtCounter', type: 'checkbox', defaultValue: true, label: 'Allow pay at the counter (collection)', admin: { width: '25%' } },
+        { name: 'firstSlot', type: 'text', defaultValue: '07:30', label: 'First order (Mon–Fri)', admin: { width: '20%', description: '24h, London time' } },
+        { name: 'weekendFirstSlot', type: 'text', defaultValue: '08:30', label: 'First order (Sat–Sun)', admin: { width: '20%' } },
+        { name: 'lastSlot', type: 'text', defaultValue: '16:15', label: 'Last order time', admin: { width: '20%' } },
+        { name: 'prepMinutes', type: 'number', defaultValue: 20, label: 'Prep time (min)', admin: { width: '20%' } },
+        { name: 'payAtCounter', type: 'checkbox', defaultValue: true, label: 'Allow pay at the counter (collection)', admin: { width: '20%' } },
       ],
     },
     {
@@ -51,7 +52,7 @@ export const ServiceControl: GlobalConfig = {
           fields: [
             { name: 'name', type: 'select', required: true, options: ['Deliveroo', 'Uber Eats', 'Just Eat'].map((v) => ({ label: v, value: v })), admin: { width: '30%' } },
             { name: 'url', type: 'text', admin: { width: '50%' } },
-            { name: 'showOnSite', type: 'checkbox', label: 'Show', defaultValue: false, admin: { width: '20%' } },
+            { name: 'showOnSite', type: 'checkbox', label: 'Show', defaultValue: false, admin: { width: '20%', description: 'No link yet = shown as “coming soon”' } },
           ],
         },
       ],

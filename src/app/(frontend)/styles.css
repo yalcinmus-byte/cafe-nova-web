@@ -572,3 +572,45 @@ html[data-decor='easter'] .site-header--solid, html[data-decor='summer'] .site-h
 .hire-ideas li { border: 1.5px solid var(--turq-deep); border-radius: 999px; padding: 10px 18px; font-weight: 600; }
 .hire-book { padding: 24px 0 96px; }
 .enquiry__kinds label input[type='checkbox'] { accent-color: var(--turq-deep); }
+
+/* Delivery apps & order-online strip */
+.seg label.is-disabled { opacity: .55; cursor: not-allowed; background: #f6f5f0; }
+.apps-block h3 { font-size: 26px; color: var(--river); margin-bottom: 14px; }
+.apps-tiles { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.app > a, .app > div { display: grid; gap: 6px; padding: 20px 22px; border-radius: 18px; text-decoration: none; color: #fff; min-height: 104px; align-content: space-between; transition: transform .2s; }
+.app > a:hover { transform: translateY(-3px); }
+.app__word { font-weight: 800; font-size: 26px; letter-spacing: -.02em; }
+.app__cta { font-size: 14px; font-weight: 600; opacity: .95; }
+.app--deliveroo > * { background: #00ccbc; color: #fff; }
+.app--uber > * { background: #142328; } .app--uber .app__word { color: #06c167; }
+.app--justeat > * { background: #ff8000; }
+.app.is-soon .app__cta { display: inline-block; justify-self: start; background: rgba(255,255,255,.22); border-radius: 999px; padding: 3px 10px; }
+.order-strip { padding: clamp(64px, 8vw, 104px) 0; background: var(--chalk); border-top: 1px solid var(--line); }
+.order-strip__grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 24px; align-items: stretch; }
+.order-card { background: var(--ink); color: var(--chalk); border-radius: 24px; padding: 32px; display: grid; gap: 14px; align-content: start; position: relative; overflow: hidden; }
+.order-card h3 { font-size: clamp(32px, 3.4vw, 44px); color: var(--turq); }
+.order-card p { color: #cfdbe2; margin: 0; }
+.order-card ul { list-style: none; padding: 0; margin: 4px 0 8px; display: grid; gap: 6px; color: #e8eef1; }
+.order-card li::before { content: '✓  '; color: var(--turq); font-weight: 700; }
+.order-strip__side { display: grid; gap: 18px; }
+.order-strip__side .apps-block { background: #fff; border: 1px solid var(--line); border-radius: 24px; padding: 26px; }
+.hire-card { background: var(--river); color: var(--chalk); border-radius: 24px; padding: 26px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.hire-card h3 { font-size: 26px; } .hire-card p { margin: 4px 0 0; color: #dbe7ee; }
+@media (max-width: 900px) { .order-strip__grid { grid-template-columns: 1fr; } }
+
+/* Booking calendar */
+.cal { background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 22px; margin-bottom: 28px; }
+.cal__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.cal__head h3 { font-size: 24px; color: var(--river); }
+.cal__nav { display: flex; gap: 6px; }
+.cal__nav button { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--line); background: #fff; cursor: pointer; font-size: 18px; }
+.cal__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.cal__dow { text-align: center; font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; padding: 4px 0; }
+.cal__day { aspect-ratio: 1; border-radius: 12px; border: 1.5px solid transparent; background: rgba(95,189,183,.14); font: inherit; font-weight: 600; cursor: pointer; display: grid; place-items: center; color: var(--ink); }
+.cal__day:hover:not(:disabled) { border-color: var(--turq-deep); }
+.cal__day:disabled { background: transparent; color: #b7bfc2; cursor: default; }
+.cal__day.is-booked { background: #f3e2df; color: #8a3a2c; text-decoration: line-through; }
+.cal__day.is-picked { background: var(--turq-deep); color: #fff; }
+.cal__legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; font-size: 13px; color: var(--muted); }
+.cal__legend span::before { content: ''; display: inline-block; width: 12px; height: 12px; border-radius: 4px; margin-right: 6px; vertical-align: -1px; background: rgba(95,189,183,.3); }
+.cal__legend span.b::before { background: #f3e2df; } .cal__legend span.p::before { background: var(--turq-deep); }

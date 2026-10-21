@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Header, Footer } from '@/components/Chrome'
 import { EnquiryForm } from '@/components/EnquiryForm'
+import { BookingCalendar } from '@/components/BookingCalendar'
 import { getSettings } from '@/lib/data'
 
 export const metadata: Metadata = { title: 'Private hire & events', description: 'Hire Cafe Nova Bistro in the evening for birthdays, team parties, talks and match nights — with sound system, microphone, projector and big-screen TV. East Twickenham, by Richmond Bridge.' }
@@ -39,8 +40,9 @@ export default async function PrivateHirePage() {
         </section>
         <section className="wrap contact__grid hire-book" id="book" aria-labelledby="book-title">
           <div>
-            <h2 id="book-title">Tell us about your evening</h2>
-            <p>We’ll reply by email, usually within a day, with availability and a quote.</p>
+            <h2 id="book-title">Book your evening</h2>
+            <p>Pick an evening, then tell us what you’re planning. We’ll confirm availability and send a quote by email, usually within a day.</p>
+            <BookingCalendar />
             <EnquiryForm initialKind="event" lockKind />
           </div>
           <aside className="contact__aside">

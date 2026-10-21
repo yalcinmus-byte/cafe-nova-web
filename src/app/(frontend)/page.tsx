@@ -5,7 +5,7 @@ import { RestaurantJsonLd } from '@/components/JsonLd'
 import { PlatesCarousel, type Plate } from '@/components/PlatesCarousel'
 import type { Media } from '@/payload-types'
 import { getActiveTheme, getEvents, getPartners, getReviews, getService, getSettings, getShop, getSignatures, orderingState } from '@/lib/data'
-import { Products, Reviews, Seasonal, Values, Welcome } from '@/components/HomeSections'
+import { OrderStrip, Products, Reviews, Seasonal, Values, Welcome } from '@/components/HomeSections'
 
 export default async function Home() {
   const [settings, svc, dishes, events, theme, reviews, partners, shop] = await Promise.all([getSettings(), getService(), getSignatures(), getEvents(true), getActiveTheme(), getReviews(), getPartners(), getShop()])
@@ -27,6 +27,7 @@ export default async function Home() {
         <HeroFilm orderLive={order.live} />
 
         <PlatesCarousel orderLive={order.live} plates={plates} />
+        <OrderStrip live={order.live} apps={order.marketplaces} />
         <Seasonal theme={theme} />
 
         {events.length > 0 && (

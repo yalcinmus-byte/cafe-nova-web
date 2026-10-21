@@ -66,8 +66,9 @@ for (const p of partners) await payload.create({ collection: 'partners', data: {
 
 // Café details belong to the café: only fill what is still empty (and add new links).
 const seedSettings: Record<string, unknown> = {
-  name: 'Cafe Nova Bistro', address: '424 Richmond Road\nEast Twickenham',
-  hours: [{ days: 'Every day', time: '8am – 5pm' }],
+  name: 'Cafe Nova Bistro', address: '424 Richmond Road\nEast Twickenham, Twickenham TW1 2EB',
+  hours: [{ days: 'Monday – Friday', time: '7am – 5pm' }, { days: 'Saturday & Sunday', time: '8am – 5pm' }],
+  phone: '07453 302323',
   contentVersion: CONTENT_VERSION,
   reviews: { googleRating: 4.9, googleCount: 685, asOf: '2026-10-17', tripadvisorCount: 30, tripadvisorRank: '#3 of 67 Coffee & Tea in Richmond-upon-Thames' },
   facilities: [
@@ -111,8 +112,8 @@ const seedSettings: Record<string, unknown> = {
 {
   // Service control belongs to the café: only fill settings that are still empty.
   const svc = (await payload.findGlobal({ slug: 'service-control' })) as unknown as Record<string, unknown>
-  const defaults: Record<string, unknown> = { directOrdering: false, collection: true, delivery: true, coffeeShop: true, payAtCounter: true, deliveryFee: 3.5, deliveryMinimum: 15, deliveryPostcodes: 'TW1, TW2, TW9, TW10', firstSlot: '08:30', lastSlot: '16:15', prepMinutes: 20, slotCapacity: 6,
-    marketplaces: [{ name: 'Deliveroo', showOnSite: false }, { name: 'Uber Eats', showOnSite: false }, { name: 'Just Eat', showOnSite: false }] }
+  const defaults: Record<string, unknown> = { directOrdering: false, collection: true, delivery: true, coffeeShop: true, payAtCounter: true, deliveryFee: 3.5, deliveryMinimum: 15, deliveryPostcodes: 'TW1, TW2, TW9, TW10', firstSlot: '07:30', weekendFirstSlot: '08:30', lastSlot: '16:15', prepMinutes: 20, slotCapacity: 6,
+    marketplaces: [{ name: 'Deliveroo', showOnSite: true }, { name: 'Uber Eats', showOnSite: true }, { name: 'Just Eat', showOnSite: true }] }
   const patch: Record<string, unknown> = {}
   for (const [k, v] of Object.entries(defaults)) if (svc[k] == null || (Array.isArray(svc[k]) && (svc[k] as unknown[]).length === 0)) patch[k] = v
   if (Object.keys(patch).length) await payload.updateGlobal({ slug: 'service-control', data: patch as never })

@@ -3,6 +3,7 @@ import type { Media, Partner, Review, MenuItem, Theme } from '@/payload-types'
 import { FsaBadge } from './FsaBadge'
 import { NovaArcs } from './NovaLogo'
 import { AddToBasket } from './AddToBasket'
+import { DeliveryApps } from './DeliveryApps'
 
 type Links = Record<string, string | null | undefined>
 
@@ -228,4 +229,36 @@ export function SeasonArt({ decor, small = false }: { decor: string; small?: boo
     </svg>
   )
   return null
+}
+
+export function OrderStrip({ live, apps }: { live: boolean; apps: { id?: string | null; name: string; url?: string | null }[] }) {
+  return (
+    <section className="order-strip" aria-labelledby="order-strip-title">
+      <div className="wrap">
+        <div className="section-head">
+          <p className="eyebrow">Order online</p>
+          <h2 id="order-strip-title">Hungry? Order ahead.</h2>
+          <p>Pick it up from the café without the wait, or get it delivered through your favourite app.</p>
+        </div>
+        <div className="order-strip__grid">
+          <div className="order-card">
+            <h3>Pick up in the café</h3>
+            <p>Choose your breakfast, lunch and coffee, pick a time and it’ll be ready when you arrive.</p>
+            <ul><li>Freshly cooked for your time slot</li><li>Pay at the counter — card or cash</li><li>Order from 7am on weekdays, 8am at weekends</li></ul>
+            <div className="row-ctas">
+              <a className="btn btn--turq" href={live ? '/menu' : '/order'}>{live ? 'Start your order' : 'Ordering opens soon'}</a>
+              <a className="btn btn--ghost-light" href="/order">View basket</a>
+            </div>
+          </div>
+          <div className="order-strip__side">
+            <DeliveryApps apps={apps} title="Delivery through the apps" />
+            <div className="hire-card">
+              <div><h3>Planning a party?</h3><p>Book the café for an evening — sound, mic, projector and big screen.</p></div>
+              <a className="btn btn--light" href="/private-hire">Check dates</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
 }

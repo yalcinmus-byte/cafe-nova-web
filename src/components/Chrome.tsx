@@ -15,7 +15,7 @@ export function Header({ overlay = false }: { overlay?: boolean; banner?: string
 
 type Settings = { address?: string | null; hours?: { days: string; time: string }[] | null; phone?: string | null; links?: Record<string, string | null | undefined> | null }
 
-const MAP_SRC = 'https://www.google.com/maps?q=Cafe+Nova+Bistro,+424+Richmond+Road,+Twickenham&output=embed'
+const MAP_SRC = 'https://www.google.com/maps?q=Cafe+Nova+Bistro,+424+Richmond+Road,+Twickenham+TW1+2EB&output=embed'
 
 export function Footer({ s }: { s: Settings }) {
   const l = s.links ?? {}

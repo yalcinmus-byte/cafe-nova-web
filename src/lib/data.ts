@@ -66,7 +66,7 @@ export const orderingState = (svc: Awaited<ReturnType<typeof getService>>) => {
     paused: !!svc.emergencyPause,
     collection: live && !!svc.collection,
     delivery: live && !!svc.delivery,
-    marketplaces: (svc.marketplaces ?? []).filter((m) => m.showOnSite && m.url),
+    marketplaces: (svc.marketplaces ?? []).filter((m) => m.showOnSite),
     message: svc.pauseMessage,
   }
 }

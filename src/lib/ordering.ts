@@ -3,7 +3,7 @@ import crypto from 'node:crypto'
 import type { Payload } from 'payload'
 
 type Svc = {
-  firstSlot?: string | null; lastSlot?: string | null; prepMinutes?: number | null; slotCapacity?: number | null
+  firstSlot?: string | null; weekendFirstSlot?: string | null; lastSlot?: string | null; prepMinutes?: number | null; slotCapacity?: number | null
   deliveryPostcodes?: string | null; deliveryFee?: number | null; deliveryMinimum?: number | null
 }
 
@@ -34,7 +34,9 @@ export type Slot = { iso: string; label: string; full: boolean }
 /** Today's 15-minute collection/delivery slots from now + prep time, with capacity applied. */
 export async function todaysSlots(payload: Payload, svc: Svc, now = new Date()): Promise<Slot[]> {
   const day = londonDateParts(now)
-  const first = londonInstant(day, svc.firstSlot || '08:30')
+  const weekday = new Intl.DateTimeFormat('en-GB', { timeZone: TZ, weekday: 'short' }).format(now)
+  const weekend = weekday === 'Sat' || weekday === 'Sun'
+  const first = londonInstant(day, (weekend ? svc.weekendFirstSlot : svc.firstSlot) || (weekend ? '08:30' : '07:30'))
   const last = londonInstant(day, svc.lastSlot || '16:15')
   const earliest = new Date(now.getTime() + (svc.prepMinutes ?? 20) * 60000)
   const slots: Date[] = []

@@ -940,6 +940,7 @@ export interface ServiceControl {
    * 24h, London time
    */
   firstSlot?: string | null;
+  weekendFirstSlot?: string | null;
   lastSlot?: string | null;
   prepMinutes?: number | null;
   payAtCounter?: boolean | null;
@@ -956,6 +957,9 @@ export interface ServiceControl {
     | {
         name: 'Deliveroo' | 'Uber Eats' | 'Just Eat';
         url?: string | null;
+        /**
+         * No link yet = shown as “coming soon”
+         */
         showOnSite?: boolean | null;
         id?: string | null;
       }[]
@@ -1035,6 +1039,7 @@ export interface ServiceControlSelect<T extends boolean = true> {
   coffeeShop?: T;
   slotCapacity?: T;
   firstSlot?: T;
+  weekendFirstSlot?: T;
   lastSlot?: T;
   prepMinutes?: T;
   payAtCounter?: T;
