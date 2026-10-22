@@ -5,6 +5,7 @@ import '@fontsource-variable/instrument-sans/index.css'
 import React from 'react'
 import { getActiveTheme, getSettings } from '@/lib/data'
 import { SeasonArt } from '@/components/HomeSections'
+import { CartDrawer } from '@/components/CartDrawer'
 import './styles.css'
 
 
@@ -34,6 +35,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </div>
         )}
         {children}
+        <CartDrawer />
       </body>
     </html>
   )

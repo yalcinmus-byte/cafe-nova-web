@@ -32,6 +32,7 @@ export const basket = {
     if (i >= 0) lines[i] = { ...lines[i], qty: lines[i].qty + qty }
     else lines.push({ ...item, qty })
     write(lines)
+    try { window.dispatchEvent(new CustomEvent('nova:added', { detail: { name: item.name } })) } catch { /* SSR */ }
   },
   setQty(slug: string, qty: number) { write(read().map((l) => (l.slug === slug ? { ...l, qty } : l))) },
   replace(lines: Line[]) { write(lines) },
@@ -44,3 +45,9 @@ export function useBasket(): Line[] {
 export function useBasketCount(): number {
   return useBasket().reduce((s, l) => s + l.qty, 0)
 }
+
+export type Fulfilment = 'collection' | 'delivery'
+const FKEY = 'nova-fulfilment'
+export function getFulfilment(): Fulfilment { try { return localStorage.getItem(FKEY) === 'delivery' ? 'delivery' : 'collection' } catch { return 'collection' } }
+export function setFulfilment(f: Fulfilment) { try { localStorage.setItem(FKEY, f) } catch { /* private mode */ } }
+export const openCart = () => window.dispatchEvent(new Event('nova:open-cart'))

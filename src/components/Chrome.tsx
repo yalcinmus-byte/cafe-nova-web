@@ -17,15 +17,15 @@ type Settings = { address?: string | null; hours?: { days: string; time: string 
 
 const MAP_SRC = 'https://www.google.com/maps?q=Cafe+Nova+Bistro,+424+Richmond+Road,+Twickenham+TW1+2EB&output=embed'
 
-export function Footer({ s }: { s: Settings }) {
+export function Footer({ s, map = true }: { s: Settings; map?: boolean }) {
   const l = s.links ?? {}
   const ext = { rel: 'noopener', target: '_blank' }
   return (
     <footer className="site-footer">
-      <div className="site-footer__map">
+      {map && <div className="site-footer__map">
         <iframe title="Map showing Cafe Nova Bistro on Richmond Road, East Twickenham" src={MAP_SRC} loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
         {l.googleMaps && <a className="btn btn--light site-footer__directions" href={l.googleMaps} {...ext}>Get directions</a>}
-      </div>
+      </div>}
       <div className="site-footer__grid">
         <div className="site-footer__brand">
           <Wordmark light />

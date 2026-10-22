@@ -107,3 +107,15 @@ export const getShop = cache(async () => {
   if (!cat.docs[0]) return []
   return (await p.find({ collection: 'menu-items', where: { category: { equals: cat.docs[0].id }, price: { exists: true } }, sort: 'order', limit: 12, depth: 0 })).docs
 })
+
+export const getShopItems = cache(async () => {
+  const p = await db()
+  const r = await p.find({ collection: 'menu-items', where: { inShop: { equals: true }, available: { equals: true }, price: { exists: true } }, limit: 24, depth: 1, sort: 'order' })
+  const rank = (d: (typeof r.docs)[number]) => { const c = typeof d.category === 'object' ? (d.category as MenuCategory) : null; return (c?.order ?? 99) * 100 + (d.order ?? 0) }
+  return r.docs.sort((a, b) => rank(a) - rank(b)).map((d) => {
+    const c = typeof d.category === 'object' ? (d.category as MenuCategory) : null
+    const m = typeof d.photo === 'object' && d.photo ? (d.photo as { url?: string | null }) : null
+    return { slug: d.slug, name: d.name, localName: d.localName, description: d.description, price: d.price!, photo: m?.url || d.photoPath || null, group: c?.group ?? 'breakfast', category: c?.name ?? '', diet: d.dietary ?? [] }
+  })
+})
+

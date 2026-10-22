@@ -228,6 +228,10 @@ export interface MenuItem {
   available?: boolean | null;
   signature?: boolean | null;
   orderable?: boolean | null;
+  /**
+   * Pick around 8–12 dishes for “Order your favourites”
+   */
+  inShop?: boolean | null;
   dietary?: ('v' | 'vg' | 'gf')[] | null;
   /**
    * Kitchen-confirmed only. Empty = not yet confirmed (shown as "ask our team").
@@ -695,6 +699,7 @@ export interface MenuItemsSelect<T extends boolean = true> {
   available?: T;
   signature?: T;
   orderable?: T;
+  inShop?: T;
   dietary?: T;
   allergens?: T;
   extras?: T;

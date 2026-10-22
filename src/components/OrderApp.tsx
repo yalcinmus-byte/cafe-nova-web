@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
-import { basket, useBasket, type Line } from './basket'
+import { basket, getFulfilment, setFulfilment as saveFulfilment, useBasket, type Line } from './basket'
 
 type Slots = {
   live: boolean; paused: boolean; message?: string | null; collection: boolean; delivery: boolean
@@ -31,7 +31,9 @@ export function OrderApp({ incoming }: { incoming: Line[] }) {
     const load = () => fetch('/api/v1/slots', { cache: 'no-store' }).then((r) => r.json()).then((j: Slots) => {
       if (!alive) return
       setInfo(j)
-      if (!j.collection && j.delivery) setFulfilment('delivery')
+      const pref = getFulfilment()
+      if (pref === 'delivery' && j.delivery) setFulfilment('delivery')
+      else if (!j.collection && j.delivery) setFulfilment('delivery')
       setPay(j.cardPayments ? 'online' : 'counter')
     }).catch(() => {})
     load()
@@ -110,9 +112,9 @@ export function OrderApp({ incoming }: { incoming: Line[] }) {
         <form className="order-app__checkout enquiry" onSubmit={submit}>
           <fieldset className="seg">
             <legend>Collect or delivery?</legend>
-            {info?.collection !== false && <label className={fulfilment === 'collection' ? 'is-on' : ''}><input type="radio" name="f" checked={fulfilment === 'collection'} onChange={() => setFulfilment('collection')} /> Pick up in the café<small>424 Richmond Road · skip the queue</small></label>}
+            {info?.collection !== false && <label className={fulfilment === 'collection' ? 'is-on' : ''}><input type="radio" name="f" checked={fulfilment === 'collection'} onChange={() => { setFulfilment('collection'); saveFulfilment('collection') }} /> Pick up in the café<small>424 Richmond Road · skip the queue</small></label>}
             {info?.delivery
-              ? <label className={fulfilment === 'delivery' ? 'is-on' : ''}><input type="radio" name="f" checked={fulfilment === 'delivery'} onChange={() => setFulfilment('delivery')} /> Delivery<small>{info.deliveryAreas.join(', ')} · {gbp(info.deliveryFee)}</small></label>
+              ? <label className={fulfilment === 'delivery' ? 'is-on' : ''}><input type="radio" name="f" checked={fulfilment === 'delivery'} onChange={() => { setFulfilment('delivery'); saveFulfilment('delivery') }} /> Delivery<small>{info.deliveryAreas.join(', ')} · {gbp(info.deliveryFee)}</small></label>
               : <label className="is-disabled" aria-disabled="true"><input type="radio" name="f" disabled /> Delivery<small>Use the delivery apps below</small></label>}
           </fieldset>
 

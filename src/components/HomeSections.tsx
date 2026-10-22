@@ -4,6 +4,9 @@ import { FsaBadge } from './FsaBadge'
 import { NovaArcs } from './NovaLogo'
 import { AddToBasket } from './AddToBasket'
 import { DeliveryApps } from './DeliveryApps'
+import { BrandIcon } from './BrandIcon'
+import { BookingCalendar } from './BookingCalendar'
+import { EnquiryForm } from './EnquiryForm'
 
 type Links = Record<string, string | null | undefined>
 
@@ -43,19 +46,6 @@ export function Products({ partners, shop, orderLive }: { partners: Partner[]; s
           <h2 id="products-title">Quality you can taste</h2>
           <p>Speciality coffee, organic milk and produce bought fresh — the good stuff, every day.</p>
         </div>
-        <ul className="partners">
-          {partners.map((p) => {
-            const logo = typeof p.logo === 'object' ? (p.logo as Media | null) : null
-            const body = (
-              <>
-                <span className="partners__mark">{logo?.url ? <img src={logo.url} alt={p.name} /> : <span className="partners__word">{p.name}</span>}</span>
-                <span className="partners__role">{p.role}</span>
-                <span className="partners__desc">{p.description}</span>
-              </>
-            )
-            return <li key={p.id}>{p.url ? <a href={p.url} rel="noopener" target="_blank">{body}</a> : <div>{body}</div>}</li>
-          })}
-        </ul>
         {shop.length > 0 && (
           <div className="take-home">
             <img src="/img/dishes/latte-heart.webp" alt="A latte with a heart in the foam in Nova's turquoise cup" loading="lazy" />
@@ -157,18 +147,6 @@ export function Welcome({ facilities, links }: { facilities: { id?: string | nul
               <span>with the My Richmond card — excludes public holidays, not with other offers.</span>
             </a>
           )}
-          {links.wanderlog && (
-            <a className="perk" href={links.wanderlog} rel="noopener" target="_blank">
-              <b>Planning a day in Richmond?</b>
-              <span>Add Cafe Nova to your trip on Wanderlog →</span>
-            </a>
-          )}
-          {links.visitRichmond && (
-            <a className="perk" href={links.visitRichmond} rel="noopener" target="_blank">
-              <b>Visit Richmond</b>
-              <span>Find us in the official Richmond visitor guide →</span>
-            </a>
-          )}
         </div>
       </div>
     </section>
@@ -257,6 +235,144 @@ export function OrderStrip({ live, apps }: { live: boolean; apps: { id?: string 
               <a className="btn btn--light" href="/private-hire">Check dates</a>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+
+export function BookEvent() {
+  return (
+    <section className="book" id="book" aria-labelledby="book-home-title">
+      <div className="wrap book__inner">
+        <div className="book__intro">
+          <p className="eyebrow eyebrow--light">Book an event</p>
+          <h2 id="book-home-title">Your party, our café.</h2>
+          <p>Birthdays, team parties, meze nights, quizzes and match nights — after 5pm the café is yours.</p>
+          <ul className="book__kit">
+            {['Sound system', 'Microphone', 'Projector', 'Big-screen TV'].map((k) => <li key={k}>{k}</li>)}
+          </ul>
+          <a className="link-light" href="/private-hire">Everything about private hire →</a>
+        </div>
+        <div className="book__panel">
+          <BookingCalendar />
+          <EnquiryForm initialKind="event" lockKind />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export function SupplierBar({ partners }: { partners: Partner[] }) {
+  if (!partners.length) return null
+  const row = partners.map((p) => {
+    const logo = typeof p.logo === 'object' ? (p.logo as Media | null) : null
+    return (
+      <li key={p.id}>
+        {logo?.url ? <img src={logo.url} alt={p.name} /> : <span className={`wordmark wordmark--${p.name.toLowerCase().replace(/[^a-z]+/g, '-')}`}>{p.name}</span>}
+        <small>{p.role}</small>
+      </li>
+    )
+  })
+  return (
+    <section className="supplier-bar" aria-label="Our suppliers">
+      <p className="supplier-bar__label">Proudly serving</p>
+      <div className="supplier-bar__track"><ul>{row}</ul><ul aria-hidden="true">{row}</ul></div>
+    </section>
+  )
+}
+
+type L = Links
+const ext = { rel: 'noopener', target: '_blank' } as const
+
+export function FindUsBar({ links }: { links: L }) {
+  const items: [string, string, string, string?][] = [
+    [links.googleMaps ?? '', 'google', 'Google', 'Reviews & directions'],
+    [links.tripadvisor ?? '', 'tripadvisor', 'Tripadvisor', 'Reviews & photos'],
+    [links.wanderlog ?? '', 'route', 'Wanderlog', 'Add us to your trip plan'],
+    [links.pawpal ?? '', 'paw', 'PawPal', 'Dog-friendly café'],
+    [links.visitRichmond ?? '', 'pin', 'Visit Richmond', 'Official visitor guide'],
+    [links.myRichmond ?? '', 'tag', 'My Richmond', '10% off Mon–Fri'],
+    [links.staycation ?? '', 'bed', 'Staycation', 'Richmond guide'],
+    [links.fsa ?? '', 'shield', 'Food hygiene', 'Rated 5 — Very good'],
+    [links.instagram ?? '', 'instagram', 'Instagram', '@cafenovabistro'],
+    [links.facebook ?? '', 'facebook', 'Facebook', 'Watch our video'],
+  ]
+  return (
+    <section className="findus" aria-labelledby="findus-title">
+      <div className="wrap">
+        <h2 id="findus-title">Find us around Richmond</h2>
+        <ul>
+          {items.filter(([u]) => u).map(([u, icon, name, sub]) => (
+            <li key={name}><a href={u} {...ext}><span className={`findus__icon findus__icon--${icon}`}><BrandIcon name={icon} size={24} /></span><span><b>{name}</b><small>{sub}</small></span></a></li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+const MAP = 'https://www.google.com/maps?q=Cafe+Nova+Bistro,+424+Richmond+Road,+Twickenham+TW1+2EB&output=embed'
+
+export function GoogleSection({ s }: { s: { address?: string | null; phone?: string | null; hours?: { days: string; time: string; id?: string | null }[] | null; reviews?: { googleRating?: number | null; googleCount?: number | null } | null; links?: L | null } }) {
+  const r = s.reviews ?? {}
+  const l = s.links ?? {}
+  return (
+    <section className="gsec" aria-labelledby="gsec-title">
+      <div className="gsec__map"><iframe title="Map: Cafe Nova Bistro, 424 Richmond Road, East Twickenham" src={MAP} loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></div>
+      <div className="gsec__card">
+        <p className="gsec__brand"><BrandIcon name="google" size={22} /> Google</p>
+        <h2 id="gsec-title">Find us by Richmond Bridge</h2>
+        {r.googleRating && (
+          <p className="gsec__rating"><b>{r.googleRating.toFixed(1)}</b><span className="gsec__stars" aria-hidden="true">★★★★★</span><span>{r.googleCount} Google reviews</span></p>
+        )}
+        <address>{s.address?.split('\n').map((x) => <span key={x}>{x}<br /></span>)}</address>
+        <ul className="hours">{s.hours?.map((h) => <li key={h.id ?? h.days}><span>{h.days}</span><span>{h.time}</span></li>)}</ul>
+        {s.phone && <p><a href={`tel:${s.phone.replace(/\s/g, '')}`}>{s.phone}</a></p>}
+        <div className="row-ctas">
+          {l.googleMaps && <a className="btn btn--river" href={l.googleMaps} {...ext}>Directions</a>}
+          {l.googleMaps && <a className="btn btn--outline" href={l.googleMaps} {...ext}>Leave a Google review</a>}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export function TripadvisorSection({ reviews, s }: { reviews: Review[]; s: { reviews?: { tripadvisorCount?: number | null; tripadvisorRank?: string | null } | null; links?: L | null } }) {
+  const r = s.reviews ?? {}
+  const l = s.links ?? {}
+  const ta = reviews.filter((q) => q.source === 'tripadvisor')
+  return (
+    <section className="tasec" aria-labelledby="tasec-title">
+      <div className="wrap">
+        <div className="tasec__head">
+          <div className="tasec__brand"><BrandIcon name="tripadvisor" size={44} color="#000" /><span>Tripadvisor</span></div>
+          <div>
+            <h2 id="tasec-title">{r.tripadvisorRank?.match(/^#\d+ of \d+/)?.[0] ?? 'Loved on Tripadvisor'}</h2>
+            <p>{r.tripadvisorRank?.replace(/^#\d+ of \d+\s*/, '') ?? ''}{r.tripadvisorCount ? ` · ${r.tripadvisorCount} reviews` : ''}</p>
+          </div>
+          <div className="tasec__ctas">
+            {l.tripadvisor && <a className="btn btn--ta" href={l.tripadvisor} {...ext}>Read all reviews</a>}
+            {l.tripadvisor && <a className="btn btn--outline" href={l.tripadvisor} {...ext}>Write a review</a>}
+          </div>
+        </div>
+        <ul className="tasec__quotes">
+          {ta.map((q) => (
+            <li key={q.id}>
+              <figure>
+                <span className="tasec__bubbles" aria-label="Rated 5 of 5">{Array.from({ length: 5 }).map((_, i) => <i key={i} />)}</span>
+                {q.title && <h3>{q.title}</h3>}
+                <blockquote>“{q.quote}”</blockquote>
+                <figcaption>{q.author}{q.date ? ` · ${new Date(q.date).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}` : ''}</figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+        <div className="tasec__plan">
+          <span>Visiting Richmond?</span>
+          {l.wanderlog && <a href={l.wanderlog} {...ext}><BrandIcon name="route" size={20} color="currentColor" /> Add Cafe Nova to your Wanderlog trip</a>}
+          {l.tripadvisor && <a href={l.tripadvisor} {...ext}><BrandIcon name="tripadvisor" size={20} color="currentColor" /> Save us on Tripadvisor</a>}
         </div>
       </div>
     </section>

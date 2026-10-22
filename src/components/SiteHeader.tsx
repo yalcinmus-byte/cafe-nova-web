@@ -3,12 +3,12 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { NovaLogo } from './NovaLogo'
-import { useBasketCount } from './basket'
+import { openCart, useBasketCount } from './basket'
 
 const NAV = [
   { href: '/menu', label: 'Menu' },
   { href: '/events', label: 'Events' },
-  { href: '/private-hire', label: 'Private hire' },
+  { href: '/private-hire', label: 'Book an event' },
   { href: '/about', label: 'About' },
   { href: '/blog', label: 'Journal' },
   { href: '/careers', label: 'Careers' },
@@ -59,7 +59,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
         ))}
       </nav>
       <div className="site-header__actions">
-        <Link href="/order" className="site-header__order" aria-current={active('/order') ? 'page' : undefined}>
+        <Link href="/order" className="site-header__order" aria-current={active('/order') ? 'page' : undefined} onClick={(e) => { if (count > 0 && path !== '/order') { e.preventDefault(); openCart() } }}>
           Order{count > 0 && <span className="site-header__count" aria-label={`${count} in your basket`}>{count}</span>}
         </Link>
         <button type="button" className="site-header__burger" aria-expanded={open} aria-controls="site-nav" onClick={() => setOpen((o) => !o)}>

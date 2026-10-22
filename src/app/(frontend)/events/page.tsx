@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Header, Footer } from '@/components/Chrome'
 import { getEvents, getSettings } from '@/lib/data'
+import { BookEvent } from '@/components/HomeSections'
 
 export const metadata: Metadata = { title: 'Festive & events', description: 'Seasonal menus, evening hire and nearby events through the year at Cafe Nova Bistro, East Twickenham.' }
 
@@ -30,6 +31,7 @@ export default async function EventsPage() {
           ))}
         </ol>
       </main>
+      <BookEvent />
       <Footer s={settings} />
     </>
   )

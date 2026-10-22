@@ -39,7 +39,7 @@ export default buildConfig({
       graphics: { Logo: '@/admin/Logo#Logo', Icon: '@/admin/Logo#Icon' },
       beforeDashboard: ['@/admin/Today#Today'],
       afterNavLinks: ['@/admin/NavExtra#NavExtra'],
-      views: { kitchen: { Component: '@/admin/Kitchen#Kitchen', path: '/kitchen' } },
+      views: { kitchen: { Component: '@/admin/Kitchen#Kitchen', path: '/kitchen' }, bookings: { Component: '@/admin/Bookings#Bookings', path: '/bookings' } },
     },
     theme: 'light',
   },

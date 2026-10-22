@@ -5,6 +5,7 @@ import { MENU } from './menu-data'
 const slugify = (s: string) => s.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 
 export const CONTENT_VERSION = 2
+const SHOP = ['istanbul-special-breakfast', 'full-english-breakfast', 'turkish-eggs', 'shakshuka-with-eggs', 'smashed-avocado-on-toast', 'eggs-royale', 'two-american-pancakes', 'hot-mezze-platter', 'roasted-mixed-vegetables-plate', 'meatball-wrap', 'chef-s-salad', 'cigar-borek', 'latte', 'flat-white', 'turkish-tea', 'alchemy-coffee-kenya-nandi-ab']
 
 const payload = await getPayload({ config })
 for (const c of ['menu-items', 'menu-categories', 'events', 'themes', 'posts', 'reviews', 'partners'] as const) await payload.delete({ collection: c, where: { id: { exists: true } } })
@@ -17,7 +18,7 @@ for (const cat of MENU) {
     await payload.create({
       collection: 'menu-items',
       // Everything on the menu can be ordered online once ordering is switched on (no alcohol on this menu).
-      data: { name, localName: local ?? undefined, slug: slugify(name), description: desc, price: price ?? undefined, category: c.id, order: i++, dietary: (diet ?? []) as never, extras, signature: !!sig, photoPath: photo, available: true, orderable: true },
+      data: { name, localName: local ?? undefined, slug: slugify(name), description: desc, price: price ?? undefined, category: c.id, order: i++, dietary: (diet ?? []) as never, extras, signature: !!sig, photoPath: photo, available: true, orderable: true, inShop: SHOP.includes(slugify(name)) },
     })
   }
 }
@@ -112,7 +113,7 @@ const seedSettings: Record<string, unknown> = {
 {
   // Service control belongs to the café: only fill settings that are still empty.
   const svc = (await payload.findGlobal({ slug: 'service-control' })) as unknown as Record<string, unknown>
-  const defaults: Record<string, unknown> = { directOrdering: false, collection: true, delivery: true, coffeeShop: true, payAtCounter: true, deliveryFee: 3.5, deliveryMinimum: 15, deliveryPostcodes: 'TW1, TW2, TW9, TW10', firstSlot: '07:30', weekendFirstSlot: '08:30', lastSlot: '16:15', prepMinutes: 20, slotCapacity: 6,
+  const defaults: Record<string, unknown> = { directOrdering: true, collection: true, delivery: true, coffeeShop: true, payAtCounter: true, deliveryFee: 3.5, deliveryMinimum: 15, deliveryPostcodes: 'TW1, TW2, TW9, TW10', firstSlot: '07:30', weekendFirstSlot: '08:30', lastSlot: '16:15', prepMinutes: 20, slotCapacity: 6,
     marketplaces: [{ name: 'Deliveroo', showOnSite: true }, { name: 'Uber Eats', showOnSite: true }, { name: 'Just Eat', showOnSite: true }] }
   const patch: Record<string, unknown> = {}
   for (const [k, v] of Object.entries(defaults)) if (svc[k] == null || (Array.isArray(svc[k]) && (svc[k] as unknown[]).length === 0)) patch[k] = v

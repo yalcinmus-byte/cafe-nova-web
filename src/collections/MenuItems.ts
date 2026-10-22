@@ -37,6 +37,7 @@ export const MenuItems: CollectionConfig = {
         { name: 'available', type: 'checkbox', defaultValue: true, label: 'Available today', admin: { width: '33%' } },
         { name: 'signature', type: 'checkbox', label: 'Signature dish (homepage)', admin: { width: '33%' } },
         { name: 'orderable', type: 'checkbox', label: 'Can be ordered online', admin: { width: '33%' } },
+        { name: 'inShop', type: 'checkbox', label: 'Show in the homepage shop', admin: { width: '33%', description: 'Pick around 8–12 dishes for “Order your favourites”' } },
       ],
     },
     {
