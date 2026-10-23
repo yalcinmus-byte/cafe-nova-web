@@ -5,7 +5,7 @@ import { MENU } from './menu-data'
 const slugify = (s: string) => s.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 
 export const CONTENT_VERSION = 2
-const SHOP = ['istanbul-special-breakfast', 'full-english-breakfast', 'turkish-eggs', 'shakshuka-with-eggs', 'smashed-avocado-on-toast', 'eggs-royale', 'two-american-pancakes', 'hot-mezze-platter', 'roasted-mixed-vegetables-plate', 'meatball-wrap', 'chef-s-salad', 'cigar-borek', 'latte', 'flat-white', 'turkish-tea', 'alchemy-coffee-kenya-nandi-ab']
+const SHOP = ['istanbul-special-breakfast', 'full-english-breakfast', 'turkish-eggs', 'shakshuka-with-eggs', 'smashed-avocado-on-toast', 'eggs-royale', 'two-american-pancakes', 'hot-mezze-platter', 'roasted-mixed-vegetables-plate', 'meatball-wrap', 'chef-s-salad', 'cigar-borek', 'latte', 'flat-white', 'turkish-tea', 'alchemy-coffee-kenya-nandi-ab', 'alchemy-coffee-opus-espresso']
 
 const payload = await getPayload({ config })
 for (const c of ['menu-items', 'menu-categories', 'events', 'themes', 'posts', 'reviews', 'partners'] as const) await payload.delete({ collection: c, where: { id: { exists: true } } })
@@ -40,7 +40,7 @@ const ev = [
 for (const e of ev) await payload.create({ collection: 'events', data: e as never })
 
 const themes = [
-  { name: 'Halloween', decor: 'halloween', startsAt: '2026-10-17T00:00:00+01:00', endsAt: '2026-11-01T00:00:00Z', accent: '#3A2A5C', banner: 'Half-term? Breakfast is served all day.', bannerLink: '/events', headline: 'Spooky-season mornings', blurb: 'Half-term pancakes, babyccinos for the little ones and a strong flat white for everyone else.' },
+  { name: 'Halloween', decor: 'halloween', startsAt: '2026-10-17T00:00:00+01:00', endsAt: '2026-11-01T00:00:00Z', accent: '#3A2A5C', banner: 'Half-term? Breakfast is served all day.', bannerLink: '/events', headline: 'Spooky-season mornings', imagePath: '/img/seasonal/halloween.webp', blurb: 'Half-term pancakes, babyccinos for the little ones and a strong flat white for everyone else.' },
   { name: 'Christmas', decor: 'christmas', startsAt: '2026-12-01T00:00:00Z', endsAt: '2027-01-02T00:00:00Z', accent: '#1F5A43', banner: 'Festive breakfasts and evening parties — book your date.', bannerLink: '/private-hire', headline: 'Christmas at Nova', blurb: 'Festive breakfasts all December, and the café is yours after 5pm for team and family parties.' },
   { name: 'Easter', decor: 'easter', startsAt: '2027-03-07T00:00:00Z', endsAt: '2027-03-30T00:00:00+01:00', accent: '#6E4F96', banner: 'Easter brunch at Nova.', bannerLink: '/events', headline: 'Spring brunch season', blurb: 'Mother’s Day and Easter weekend brunch by Richmond Bridge.' },
   { name: 'Summer', decor: 'summer', startsAt: '2027-05-15T00:00:00+01:00', endsAt: '2027-09-01T00:00:00+01:00', accent: '#237A76', banner: 'Iced coffee weather.', bannerLink: '/menu#iced', headline: 'Iced coffee weather', blurb: 'Iced lattes, smoothies and the terrace in the sun.' },

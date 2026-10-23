@@ -70,7 +70,7 @@ export default async function Home() {
         <Welcome facilities={settings.facilities ?? []} links={settings.links ?? {}} />
         <FindUsBar links={settings.links ?? {}} />
       </main>
-      <Footer s={settings} map={false} />
+      <Footer s={settings} />
     </>
   )
 }

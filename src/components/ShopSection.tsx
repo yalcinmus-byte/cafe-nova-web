@@ -68,7 +68,7 @@ export function ShopSection({ items, opts }: { items: ShopItem[]; opts: Opts }) 
               {shown.map((i) => (
                 <li key={i.slug} className="product">
                   <div className={`product__img ${i.photo ? '' : 'product__img--ph'}`} data-group={i.group}>
-                    {i.photo ? <img src={i.photo} alt={i.name} loading="lazy" /> : <span aria-hidden="true">{i.name.replace(/^Alchemy Coffee — /, '').charAt(0)}</span>}
+                    {i.photo ? <img src={i.photo} alt={i.name} loading="lazy" /> : <span className="product__ph" aria-hidden="true">{i.name.replace(/^Alchemy Coffee — /, '').charAt(0)}</span>}
                     {i.diet?.includes('vg') ? <span className="product__diet">Vegan</span> : i.diet?.includes('v') ? <span className="product__diet">Veggie</span> : null}
                   </div>
                   <div className="product__body">

@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 type Kind = 'general' | 'event' | 'careers'
 
-export function EnquiryForm({ initialKind = 'general', lockKind = false }: { initialKind?: Kind; lockKind?: boolean }) {
+export function EnquiryForm({ initialKind = 'general', lockKind = false, compact = false }: { initialKind?: Kind; lockKind?: boolean; compact?: boolean }) {
   const [kind, setKind] = useState<Kind>(initialKind)
   const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 
@@ -30,7 +30,7 @@ export function EnquiryForm({ initialKind = 'general', lockKind = false }: { ini
   )
 
   return (
-    <form className="enquiry" onSubmit={submit}>
+    <form className={`enquiry ${compact ? 'enquiry--compact' : ''}`} onSubmit={submit}>
       {!lockKind && (
         <fieldset className="enquiry__kinds">
           <legend>What’s it about?</legend>
@@ -45,13 +45,14 @@ export function EnquiryForm({ initialKind = 'general', lockKind = false }: { ini
         <label>Your name<input name="name" required autoComplete="name" maxLength={120} /></label>
         <label>Email<input name="email" type="email" required autoComplete="email" /></label>
       </div>
-      <label>Phone <span className="opt">(optional)</span><input name="phone" type="tel" autoComplete="tel" maxLength={40} /></label>
+      {kind !== 'event' && <label>Phone <span className="opt">(optional)</span><input name="phone" type="tel" autoComplete="tel" maxLength={40} /></label>}
       {kind === 'event' && (
         <>
           <div className="enquiry__row">
-            <label>Occasion<input name="occasion" maxLength={80} placeholder="Birthday, team party, quiz night…" /></label>
+            <label>Phone <span className="opt">(optional)</span><input name="phone" type="tel" autoComplete="tel" maxLength={40} /></label>
             <label>Guests<input name="guests" type="number" min={1} max={200} inputMode="numeric" /></label>
           </div>
+          <label>Occasion<input name="occasion" maxLength={80} placeholder="Birthday, team party, quiz night…" /></label>
           <div className="enquiry__row">
             <label>Date<input id="enq-date" name="date" type="date" /></label>
             <label>Start time<input name="startTime" type="time" min="17:00" /></label>
@@ -65,7 +66,7 @@ export function EnquiryForm({ initialKind = 'general', lockKind = false }: { ini
         </>
       )}
       <label>{kind === 'careers' ? 'Tell us about you and the hours you’re after' : kind === 'event' ? 'What are you planning?' : 'Message'}
-        <textarea name="message" required rows={5} maxLength={4000} />
+        <textarea name="message" required rows={compact ? 3 : 5} maxLength={4000} />
       </label>
       <label className="hp" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
       <button className="btn btn--river" disabled={state === 'sending'}>{state === 'sending' ? 'Sending…' : 'Send'}</button>

@@ -42,8 +42,10 @@ export default async function PrivateHirePage() {
           <div>
             <h2 id="book-title">Book your evening</h2>
             <p>Pick an evening, then tell us what you’re planning. We’ll confirm availability and send a quote by email, usually within a day.</p>
-            <BookingCalendar />
-            <EnquiryForm initialKind="event" lockKind />
+            <div className="book__panel book__panel--light">
+              <BookingCalendar />
+              <EnquiryForm initialKind="event" lockKind compact />
+            </div>
           </div>
           <aside className="contact__aside">
             <h2>Where</h2>

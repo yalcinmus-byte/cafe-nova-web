@@ -7,6 +7,7 @@ import { DeliveryApps } from './DeliveryApps'
 import { BrandIcon } from './BrandIcon'
 import { BookingCalendar } from './BookingCalendar'
 import { EnquiryForm } from './EnquiryForm'
+import { OpenNow } from './OpenNow'
 
 type Links = Record<string, string | null | undefined>
 
@@ -167,7 +168,13 @@ export function Seasonal({ theme }: { theme: Theme | null }) {
             <Link className="btn btn--ghost-light" href="/private-hire">Book an evening</Link>
           </div>
         </div>
-        <SeasonArt decor={theme.decor ?? 'none'} />
+        {(() => {
+          const m = typeof theme.image === 'object' ? (theme.image as Media | null) : null
+          const src = m?.url || theme.imagePath
+          return src
+            ? <figure className="seasonal__photo"><img src={src} alt={m?.alt || `Cafe Nova Bistro dressed for ${theme.name}`} loading="lazy" /></figure>
+            : <SeasonArt decor={theme.decor ?? 'none'} />
+        })()}
       </div>
     </section>
   )
@@ -257,7 +264,7 @@ export function BookEvent() {
         </div>
         <div className="book__panel">
           <BookingCalendar />
-          <EnquiryForm initialKind="event" lockKind />
+          <EnquiryForm initialKind="event" lockKind compact />
         </div>
       </div>
     </section>
@@ -313,26 +320,34 @@ export function FindUsBar({ links }: { links: L }) {
   )
 }
 
-const MAP = 'https://www.google.com/maps?q=Cafe+Nova+Bistro,+424+Richmond+Road,+Twickenham+TW1+2EB&output=embed'
-
-export function GoogleSection({ s }: { s: { address?: string | null; phone?: string | null; hours?: { days: string; time: string; id?: string | null }[] | null; reviews?: { googleRating?: number | null; googleCount?: number | null } | null; links?: L | null } }) {
+export function GoogleSection({ s }: { s: { address?: string | null; phone?: string | null; hours?: { days: string; time: string; id?: string | null }[] | null; reviews?: { googleRating?: number | null; googleCount?: number | null; asOf?: string | null } | null; links?: L | null } }) {
   const r = s.reviews ?? {}
   const l = s.links ?? {}
   return (
     <section className="gsec" aria-labelledby="gsec-title">
-      <div className="gsec__map"><iframe title="Map: Cafe Nova Bistro, 424 Richmond Road, East Twickenham" src={MAP} loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></div>
-      <div className="gsec__card">
-        <p className="gsec__brand"><BrandIcon name="google" size={22} /> Google</p>
-        <h2 id="gsec-title">Find us by Richmond Bridge</h2>
-        {r.googleRating && (
-          <p className="gsec__rating"><b>{r.googleRating.toFixed(1)}</b><span className="gsec__stars" aria-hidden="true">★★★★★</span><span>{r.googleCount} Google reviews</span></p>
-        )}
-        <address>{s.address?.split('\n').map((x) => <span key={x}>{x}<br /></span>)}</address>
-        <ul className="hours">{s.hours?.map((h) => <li key={h.id ?? h.days}><span>{h.days}</span><span>{h.time}</span></li>)}</ul>
-        {s.phone && <p><a href={`tel:${s.phone.replace(/\s/g, '')}`}>{s.phone}</a></p>}
-        <div className="row-ctas">
-          {l.googleMaps && <a className="btn btn--river" href={l.googleMaps} {...ext}>Directions</a>}
-          {l.googleMaps && <a className="btn btn--outline" href={l.googleMaps} {...ext}>Leave a Google review</a>}
+      <div className="wrap gsec__inner">
+        <figure className="gsec__photo">
+          <img src="/img/place/frontage.webp" alt="Cafe Nova Bistro's terrace with flower boxes on Richmond Road" loading="lazy" />
+          <OpenNow hours={s.hours ?? []} />
+        </figure>
+        <div className="gsec__card">
+          <p className="gsec__brand"><BrandIcon name="google" size={22} /> Google reviews</p>
+          <h2 id="gsec-title">Rated {r.googleRating?.toFixed(1) ?? '5'} by our neighbours</h2>
+          {r.googleRating && (
+            <div className="gsec__rating">
+              <b>{r.googleRating.toFixed(1)}</b>
+              <div><span className="gsec__stars" aria-hidden="true">★★★★★</span><span>{r.googleCount} reviews on Google</span></div>
+            </div>
+          )}
+          <dl className="gsec__facts">
+            <div><dt>Address</dt><dd>{s.address?.split('\n').join(', ')}</dd></div>
+            {s.phone && <div><dt>Phone</dt><dd><a href={`tel:${s.phone.replace(/\s/g, '')}`}>{s.phone}</a></dd></div>}
+            {s.hours?.map((h) => <div key={h.id ?? h.days}><dt>{h.days}</dt><dd>{h.time}</dd></div>)}
+          </dl>
+          <div className="row-ctas">
+            {l.googleMaps && <a className="btn btn--river" href={l.googleMaps} {...ext}>Get directions</a>}
+            {l.googleMaps && <a className="btn btn--outline" href={l.googleMaps} {...ext}><BrandIcon name="google" size={18} /> Write a review</a>}
+          </div>
         </div>
       </div>
     </section>

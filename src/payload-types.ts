@@ -478,6 +478,14 @@ export interface Theme {
    */
   headline?: string | null;
   /**
+   * Seasonal photo for the homepage card
+   */
+  image?: (number | null) | Media;
+  /**
+   * Or a photo already on the site, e.g. /img/seasonal/halloween.webp
+   */
+  imagePath?: string | null;
+  /**
    * Homepage seasonal card text
    */
   blurb?: string | null;
@@ -855,6 +863,8 @@ export interface ThemesSelect<T extends boolean = true> {
   banner?: T;
   bannerLink?: T;
   headline?: T;
+  image?: T;
+  imagePath?: T;
   blurb?: T;
   priority?: T;
   updatedAt?: T;

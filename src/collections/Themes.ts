@@ -44,6 +44,8 @@ export const Themes: CollectionConfig = {
     { name: 'banner', type: 'text', admin: { description: 'Short line shown at the top of the site' } },
     { name: 'bannerLink', type: 'text', admin: { description: 'Optional link for the banner, e.g. /events' } },
     { name: 'headline', type: 'text', admin: { description: 'Homepage seasonal card title' } },
+    { name: 'image', type: 'upload', relationTo: 'media', admin: { description: 'Seasonal photo for the homepage card' } },
+    { name: 'imagePath', type: 'text', admin: { description: 'Or a photo already on the site, e.g. /img/seasonal/halloween.webp' } },
     { name: 'blurb', type: 'textarea', admin: { description: 'Homepage seasonal card text' } },
     { name: 'priority', type: 'number', defaultValue: 0 },
   ],

@@ -5,15 +5,15 @@ import { useEffect, useRef, useState } from 'react'
 const DURATION = 34.5
 const CHAPTERS = [
   { id: 'kitchen', label: 'Kitchen', at: 0 },
-  { id: 'beans', label: 'Beans', at: 10 },
+  { id: 'beans', label: 'Beans', at: 8.4 },
   { id: 'espresso', label: 'Espresso', at: 15 },
   { id: 'latte', label: 'Latte', at: 20 },
   { id: 'river', label: 'River', at: 25 },
 ]
 type Line = { from: number; to: number; title: string; body?: string; cta?: boolean; center?: boolean }
 const LINES: Line[] = [
-  { from: 3.2, to: 9.6, title: 'Sourdough, smashed avocado and two poached eggs.', body: 'Cooked to order in our kitchen, every morning from eight.' },
-  { from: 10.4, to: 14.8, title: 'Coffee from Alchemy.', body: 'Speciality beans, roasted by hand in London.', center: true },
+  { from: 2.6, to: 8.0, title: 'Sourdough, smashed avocado and two poached eggs.', body: 'Cooked to order in our kitchen, every morning from eight.' },
+  { from: 8.4, to: 14.8, title: 'Coffee from Alchemy.', body: 'Speciality beans, roasted by hand in London.', center: true },
   { from: 15.4, to: 19.8, title: 'Pulled for you, not before.' },
   { from: 20.6, to: 24.6, title: 'A little milk. A little patience.', body: 'Organic milk from Waitrose, steamed for every cup.' },
   { from: 26, to: 30.6, title: 'Breakfast first. Then the river.' },
