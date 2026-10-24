@@ -1322,6 +1322,20 @@ export interface SiteSetting {
       }[]
     | null;
   /**
+   * Round WhatsApp button fixed at the bottom-right of every page.
+   */
+  whatsapp?: {
+    show?: boolean | null;
+    /**
+     * International format, digits only (e.g. 447453302323)
+     */
+    number?: string | null;
+    /**
+     * Pre-filled start of the message
+     */
+    message?: string | null;
+  };
+  /**
    * Optional line at the top of every page (e.g. holiday hours)
    */
   announcement?: string | null;
@@ -1607,6 +1621,13 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         days?: T;
         time?: T;
         id?: T;
+      };
+  whatsapp?:
+    | T
+    | {
+        show?: T;
+        number?: T;
+        message?: T;
       };
   announcement?: T;
   reviews?:

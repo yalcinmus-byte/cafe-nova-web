@@ -6,6 +6,7 @@ import React from 'react'
 import { getActiveTheme, getSettings } from '@/lib/data'
 import { SeasonArt } from '@/components/HomeSections'
 import { CartDrawer } from '@/components/CartDrawer'
+import { BrandIcon } from '@/components/BrandIcon'
 import './styles.css'
 
 
@@ -36,6 +37,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         )}
         {children}
         <CartDrawer />
+        {settings.whatsapp?.show !== false && settings.whatsapp?.number && (
+          <a
+            className="wa-fab"
+            href={`https://wa.me/${settings.whatsapp.number.replace(/\D/g, '')}${settings.whatsapp.message ? `?text=${encodeURIComponent(settings.whatsapp.message)}` : ''}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Message Cafe Nova on WhatsApp"
+          >
+            <BrandIcon name="whatsapp" size={30} color="#fff" />
+          </a>
+        )}
       </body>
     </html>
   )

@@ -1,8 +1,8 @@
-import { siApplepay, siDeliveroo, siFacebook, siGoogle, siGooglepay, siInstagram, siJusteat, siMastercard, siTiktok, siTripadvisor, siUbereats, siVisa } from 'simple-icons'
+import { siApplepay, siDeliveroo, siFacebook, siGoogle, siGooglepay, siInstagram, siJusteat, siMastercard, siTiktok, siTripadvisor, siUbereats, siVisa, siWhatsapp } from 'simple-icons'
 
 const ICONS = {
   deliveroo: siDeliveroo, ubereats: siUbereats, justeat: siJusteat, tripadvisor: siTripadvisor, google: siGoogle,
-  instagram: siInstagram, facebook: siFacebook, tiktok: siTiktok, applepay: siApplepay, googlepay: siGooglepay, visa: siVisa, mastercard: siMastercard,
+  instagram: siInstagram, facebook: siFacebook, tiktok: siTiktok, applepay: siApplepay, googlepay: siGooglepay, visa: siVisa, mastercard: siMastercard, whatsapp: siWhatsapp,
 } as const
 
 /** Custom marks for listings that have no public icon set. Simple, generic pictograms. */

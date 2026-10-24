@@ -5,6 +5,7 @@ import * as migration_20261022_204934_v4_shop from './20261022_204934_v4_shop';
 import * as migration_20261023_114734_v5_seasonal_photo from './20261023_114734_v5_seasonal_photo';
 import * as migration_20261024_093150_v6_content_cms_hq from './20261024_093150_v6_content_cms_hq';
 import * as migration_20261024_100751_v7_careers_teaser from './20261024_100751_v7_careers_teaser';
+import * as migration_20261024_104045_v8_whatsapp from './20261024_104045_v8_whatsapp';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20261024_100751_v7_careers_teaser.up,
     down: migration_20261024_100751_v7_careers_teaser.down,
-    name: '20261024_100751_v7_careers_teaser'
+    name: '20261024_100751_v7_careers_teaser',
+  },
+  {
+    up: migration_20261024_104045_v8_whatsapp.up,
+    down: migration_20261024_104045_v8_whatsapp.down,
+    name: '20261024_104045_v8_whatsapp'
   },
 ];

@@ -16,6 +16,17 @@ export const SiteSettings: GlobalConfig = {
       labels: { singular: 'Opening hours line', plural: 'Opening hours' },
       fields: [{ type: 'row', fields: [{ name: 'days', type: 'text', required: true }, { name: 'time', type: 'text', required: true }] }],
     },
+    {
+      name: 'whatsapp',
+      type: 'group',
+      label: 'WhatsApp button',
+      admin: { description: 'Round WhatsApp button fixed at the bottom-right of every page.' },
+      fields: [{ type: 'row', fields: [
+        { name: 'show', type: 'checkbox', defaultValue: true, admin: { width: '20%' } },
+        { name: 'number', type: 'text', defaultValue: '447453302323', admin: { width: '30%', description: 'International format, digits only (e.g. 447453302323)' } },
+        { name: 'message', type: 'text', defaultValue: 'Hi Cafe Nova, ', admin: { width: '50%', description: 'Pre-filled start of the message' } },
+      ] }],
+    },
     { name: 'announcement', type: 'text', admin: { description: 'Optional line at the top of every page (e.g. holiday hours)' } },
     {
       name: 'reviews',
