@@ -27,6 +27,7 @@ import { NavExtra as NavExtra_bb93c5c7536cd6c30b2ded4eab41a7db } from '@/admin/N
 import { Today as Today_a2caee4c141b58d55f8f900ffc8d6f55 } from '@/admin/Today'
 import { Kitchen as Kitchen_a0fc762d6cebbed32090e944cb933f41 } from '@/admin/Kitchen'
 import { Bookings as Bookings_40acdd30a866fefb120c9dce4ccdb2ec } from '@/admin/Bookings'
+import { HQ as HQ_26689a0c8cc3d97117647e70d5cb5dbb } from '@/admin/HQ'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 
@@ -61,6 +62,7 @@ export const importMap = {
   "@/admin/Today#Today": Today_a2caee4c141b58d55f8f900ffc8d6f55,
   "@/admin/Kitchen#Kitchen": Kitchen_a0fc762d6cebbed32090e944cb933f41,
   "@/admin/Bookings#Bookings": Bookings_40acdd30a866fefb120c9dce4ccdb2ec,
+  "@/admin/HQ#HQ": HQ_26689a0c8cc3d97117647e70d5cb5dbb,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e
 }

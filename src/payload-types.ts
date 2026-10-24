@@ -79,6 +79,10 @@ export interface Config {
     media: Media;
     themes: Theme;
     users: User;
+    suppliers: Supplier;
+    purchases: Purchase;
+    expenses: Expense;
+    documents: Document;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -98,6 +102,10 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     themes: ThemesSelect<false> | ThemesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    suppliers: SuppliersSelect<false> | SuppliersSelect<true>;
+    purchases: PurchasesSelect<false> | PurchasesSelect<true>;
+    expenses: ExpensesSelect<false> | ExpensesSelect<true>;
+    documents: DocumentsSelect<false> | DocumentsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -110,10 +118,14 @@ export interface Config {
   globals: {
     'service-control': ServiceControl;
     'site-settings': SiteSetting;
+    homepage: Homepage;
+    pages: Page;
   };
   globalsSelect: {
     'service-control': ServiceControlSelect<false> | ServiceControlSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    homepage: HomepageSelect<false> | HomepageSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
   };
   locale: null;
   widgets: {
@@ -202,6 +214,10 @@ export interface Enquiry {
    */
   startTime?: string | null;
   occasion?: string | null;
+  /**
+   * Careers: role applied for
+   */
+  position?: string | null;
   equipment?: ('sound' | 'mic' | 'projector' | 'tv')[] | null;
   message: string;
   status?: ('new' | 'replied' | 'booked' | 'closed') | null;
@@ -232,7 +248,13 @@ export interface MenuItem {
    * Pick around 8–12 dishes for “Order your favourites”
    */
   inShop?: boolean | null;
-  dietary?: ('v' | 'vg' | 'gf')[] | null;
+  dietary?: ('v' | 'vg' | 'gf' | 'df')[] | null;
+  /**
+   * Little labels shown on the menu and the shop, e.g. New, Popular, Spicy.
+   */
+  badges?:
+    | ('new' | 'popular' | 'bestseller' | 'chefs' | 'seasonal' | 'spicy' | 'healthy' | 'kids' | 'limited' | 'turkish')[]
+    | null;
   /**
    * Kitchen-confirmed only. Empty = not yet confirmed (shown as "ask our team").
    */
@@ -395,8 +417,36 @@ export interface Job {
   title: string;
   slug: string;
   open?: boolean | null;
+  order?: number | null;
+  team?: ('front' | 'kitchen' | 'coffee') | null;
   hours?: ('full-time' | 'part-time' | 'weekends' | 'seasonal') | null;
+  /**
+   * e.g. Sat & Sun, 7:30am–5pm
+   */
+  schedule?: string | null;
+  /**
+   * e.g. £12.50/hr + tips (leave empty to say “discussed at interview”)
+   */
+  pay?: string | null;
   summary?: string | null;
+  responsibilities?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  requirements?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  benefits?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -482,6 +532,10 @@ export interface Theme {
    */
   image?: (number | null) | Media;
   /**
+   * Dishes and drinks listed in the homepage seasonal section
+   */
+  seasonalItems?: (number | MenuItem)[] | null;
+  /**
    * Or a photo already on the site, e.g. /img/seasonal/halloween.webp
    */
   imagePath?: string | null;
@@ -520,6 +574,145 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "suppliers".
+ */
+export interface Supplier {
+  id: number;
+  name: string;
+  category?:
+    | (
+        | 'coffee'
+        | 'dairy'
+        | 'bakery'
+        | 'fresh-produce'
+        | 'meat-fish'
+        | 'dry-goods'
+        | 'drinks'
+        | 'packaging'
+        | 'cleaning'
+        | 'equipment'
+        | 'services'
+      )
+    | null;
+  contact?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  website?: string | null;
+  accountNumber?: string | null;
+  /**
+   * e.g. 30 days, card on delivery
+   */
+  paymentTerms?: string | null;
+  deliveryDays?: string | null;
+  minimumOrder?: number | null;
+  products?:
+    | {
+        item: string;
+        unit?: string | null;
+        price?: number | null;
+        updated?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "purchases".
+ */
+export interface Purchase {
+  id: number;
+  date: string;
+  supplier?: (number | null) | Supplier;
+  /**
+   * Invoice number
+   */
+  reference?: string | null;
+  lines?:
+    | {
+        item: string;
+        qty?: number | null;
+        unit?: string | null;
+        unitPrice?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  net?: number | null;
+  vat?: number | null;
+  total: number;
+  status?: ('unpaid' | 'paid' | 'disputed') | null;
+  /**
+   * Photo or PDF of the invoice
+   */
+  file?: (number | null) | Document;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Upload EPOS exports, bank statements, invoices and reports. The Nova HQ agents will read these once connected.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents".
+ */
+export interface Document {
+  id: number;
+  title: string;
+  kind?:
+    | (
+        | 'epos-sales-export'
+        | 'bank-statement'
+        | 'supplier-invoice'
+        | 'payroll-rota'
+        | 'delivery-app-report'
+        | 'stock-count'
+        | 'other'
+      )
+    | null;
+  /**
+   * e.g. October 2026
+   */
+  period?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expenses".
+ */
+export interface Expense {
+  id: number;
+  date: string;
+  category:
+    | 'rent-rates'
+    | 'utilities'
+    | 'staff'
+    | 'marketing'
+    | 'delivery-fees'
+    | 'card-fees'
+    | 'repairs'
+    | 'software'
+    | 'insurance'
+    | 'other';
+  amount: number;
+  description: string;
+  recurring?: ('one-off' | 'weekly' | 'monthly' | 'quarterly' | 'yearly') | null;
+  receipt?: (number | null) | Document;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -592,6 +785,22 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'suppliers';
+        value: number | Supplier;
+      } | null)
+    | ({
+        relationTo: 'purchases';
+        value: number | Purchase;
+      } | null)
+    | ({
+        relationTo: 'expenses';
+        value: number | Expense;
+      } | null)
+    | ({
+        relationTo: 'documents';
+        value: number | Document;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -685,6 +894,7 @@ export interface EnquiriesSelect<T extends boolean = true> {
   guests?: T;
   startTime?: T;
   occasion?: T;
+  position?: T;
   equipment?: T;
   message?: T;
   status?: T;
@@ -709,6 +919,7 @@ export interface MenuItemsSelect<T extends boolean = true> {
   orderable?: T;
   inShop?: T;
   dietary?: T;
+  badges?: T;
   allergens?: T;
   extras?: T;
   photo?: T;
@@ -771,8 +982,30 @@ export interface JobsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   open?: T;
+  order?: T;
+  team?: T;
   hours?: T;
+  schedule?: T;
+  pay?: T;
   summary?: T;
+  responsibilities?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  requirements?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  benefits?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -864,6 +1097,7 @@ export interface ThemesSelect<T extends boolean = true> {
   bannerLink?: T;
   headline?: T;
   image?: T;
+  seasonalItems?: T;
   imagePath?: T;
   blurb?: T;
   priority?: T;
@@ -894,6 +1128,93 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "suppliers_select".
+ */
+export interface SuppliersSelect<T extends boolean = true> {
+  name?: T;
+  category?: T;
+  contact?: T;
+  phone?: T;
+  email?: T;
+  website?: T;
+  accountNumber?: T;
+  paymentTerms?: T;
+  deliveryDays?: T;
+  minimumOrder?: T;
+  products?:
+    | T
+    | {
+        item?: T;
+        unit?: T;
+        price?: T;
+        updated?: T;
+        id?: T;
+      };
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "purchases_select".
+ */
+export interface PurchasesSelect<T extends boolean = true> {
+  date?: T;
+  supplier?: T;
+  reference?: T;
+  lines?:
+    | T
+    | {
+        item?: T;
+        qty?: T;
+        unit?: T;
+        unitPrice?: T;
+        id?: T;
+      };
+  net?: T;
+  vat?: T;
+  total?: T;
+  status?: T;
+  file?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expenses_select".
+ */
+export interface ExpensesSelect<T extends boolean = true> {
+  date?: T;
+  category?: T;
+  amount?: T;
+  description?: T;
+  recurring?: T;
+  receipt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents_select".
+ */
+export interface DocumentsSelect<T extends boolean = true> {
+  title?: T;
+  kind?: T;
+  period?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1020,8 +1341,18 @@ export interface SiteSetting {
   facilities?:
     | {
         title: string;
+        icon?:
+          ('dog' | 'run' | 'bike' | 'rowing' | 'river' | 'family' | 'party' | 'hygiene' | 'coffee' | 'heart') | null;
         link?: string | null;
         text?: string | null;
+        links?:
+          | {
+              label: string;
+              url: string;
+              note?: string | null;
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
@@ -1037,6 +1368,183 @@ export interface SiteSetting {
     myRichmond?: string | null;
     facebook?: string | null;
     tiktok?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * All homepage text, section by section. Untick “Show this section” to hide one.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage".
+ */
+export interface Homepage {
+  id: number;
+  hero?: {
+    show?: boolean | null;
+    title?: string | null;
+    text?: string | null;
+    /**
+     * Text over the scroll film. Times are seconds in the film (0–34).
+     */
+    captions?:
+      | {
+          from: number;
+          to: number;
+          center?: boolean | null;
+          cta?: boolean | null;
+          title: string;
+          body?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  plates?: {
+    show?: boolean | null;
+    eyebrow?: string | null;
+    title?: string | null;
+    text?: string | null;
+  };
+  shop?: {
+    show?: boolean | null;
+    eyebrow?: string | null;
+    title?: string | null;
+    text?: string | null;
+  };
+  newOnMenu?: {
+    show?: boolean | null;
+    eyebrow?: string | null;
+    title?: string | null;
+    text?: string | null;
+    /**
+     * The one plate to feature
+     */
+    dish?: (number | null) | MenuItem;
+    linkLabel?: string | null;
+  };
+  book?: {
+    show?: boolean | null;
+    eyebrow?: string | null;
+    title?: string | null;
+    text?: string | null;
+    kit?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  events?: {
+    show?: boolean | null;
+    title?: string | null;
+    nearbyTitle?: string | null;
+  };
+  products?: {
+    show?: boolean | null;
+    eyebrow?: string | null;
+    title?: string | null;
+    text?: string | null;
+    takeHomeTitle?: string | null;
+    takeHomeImagePath?: string | null;
+    takeHomeText?: string | null;
+    takeHomeImage?: (number | null) | Media;
+  };
+  values?: {
+    show?: boolean | null;
+    eyebrow?: string | null;
+    title?: string | null;
+    text?: string | null;
+    items?:
+      | {
+          title: string;
+          text?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  google?: {
+    show?: boolean | null;
+    eyebrow?: string | null;
+    title?: string | null;
+    text?: string | null;
+  };
+  tripadvisor?: {
+    show?: boolean | null;
+    eyebrow?: string | null;
+    title?: string | null;
+    text?: string | null;
+  };
+  welcome?: {
+    show?: boolean | null;
+    eyebrow?: string | null;
+    title?: string | null;
+    text?: string | null;
+  };
+  findUs?: {
+    show?: boolean | null;
+    title?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Text on the About, Book an event and Careers pages.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  about?: {
+    eyebrow?: string | null;
+    title?: string | null;
+    lede?: string | null;
+    story?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    signature?: string | null;
+    signedBy?: string | null;
+    missionTitle?: string | null;
+    missionText?: string | null;
+    values?:
+      | {
+          title: string;
+          text?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  hire?: {
+    title?: string | null;
+    text?: string | null;
+    kit?:
+      | {
+          title: string;
+          text?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    ideas?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    foodNote?: string | null;
+    when?: string | null;
+  };
+  careers?: {
+    title?: string | null;
+    text?: string | null;
+    why?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1104,8 +1612,17 @@ export interface SiteSettingsSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
+        icon?: T;
         link?: T;
         text?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+              note?: T;
+              id?: T;
+            };
         id?: T;
       };
   links?:
@@ -1122,6 +1639,203 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         myRichmond?: T;
         facebook?: T;
         tiktok?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage_select".
+ */
+export interface HomepageSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        show?: T;
+        title?: T;
+        text?: T;
+        captions?:
+          | T
+          | {
+              from?: T;
+              to?: T;
+              center?: T;
+              cta?: T;
+              title?: T;
+              body?: T;
+              id?: T;
+            };
+      };
+  plates?:
+    | T
+    | {
+        show?: T;
+        eyebrow?: T;
+        title?: T;
+        text?: T;
+      };
+  shop?:
+    | T
+    | {
+        show?: T;
+        eyebrow?: T;
+        title?: T;
+        text?: T;
+      };
+  newOnMenu?:
+    | T
+    | {
+        show?: T;
+        eyebrow?: T;
+        title?: T;
+        text?: T;
+        dish?: T;
+        linkLabel?: T;
+      };
+  book?:
+    | T
+    | {
+        show?: T;
+        eyebrow?: T;
+        title?: T;
+        text?: T;
+        kit?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+      };
+  events?:
+    | T
+    | {
+        show?: T;
+        title?: T;
+        nearbyTitle?: T;
+      };
+  products?:
+    | T
+    | {
+        show?: T;
+        eyebrow?: T;
+        title?: T;
+        text?: T;
+        takeHomeTitle?: T;
+        takeHomeImagePath?: T;
+        takeHomeText?: T;
+        takeHomeImage?: T;
+      };
+  values?:
+    | T
+    | {
+        show?: T;
+        eyebrow?: T;
+        title?: T;
+        text?: T;
+        items?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              id?: T;
+            };
+      };
+  google?:
+    | T
+    | {
+        show?: T;
+        eyebrow?: T;
+        title?: T;
+        text?: T;
+      };
+  tripadvisor?:
+    | T
+    | {
+        show?: T;
+        eyebrow?: T;
+        title?: T;
+        text?: T;
+      };
+  welcome?:
+    | T
+    | {
+        show?: T;
+        eyebrow?: T;
+        title?: T;
+        text?: T;
+      };
+  findUs?:
+    | T
+    | {
+        show?: T;
+        title?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  about?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        lede?: T;
+        story?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        signature?: T;
+        signedBy?: T;
+        missionTitle?: T;
+        missionText?: T;
+        values?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              id?: T;
+            };
+      };
+  hire?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        kit?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              id?: T;
+            };
+        ideas?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        foodNote?: T;
+        when?: T;
+      };
+  careers?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+        why?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;

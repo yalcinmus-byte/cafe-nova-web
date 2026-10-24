@@ -93,7 +93,7 @@ export const getJobs = cache(async () => {
 
 export const getReviews = cache(async () => {
   const p = await db()
-  return (await p.find({ collection: 'reviews', where: { featured: { equals: true } }, sort: '-date', limit: 8, depth: 0 })).docs
+  return (await p.find({ collection: 'reviews', where: { featured: { equals: true } }, sort: '-date', limit: 24, depth: 0 })).docs
 })
 
 export const getPartners = cache(async () => {
@@ -115,7 +115,20 @@ export const getShopItems = cache(async () => {
   return r.docs.sort((a, b) => rank(a) - rank(b)).map((d) => {
     const c = typeof d.category === 'object' ? (d.category as MenuCategory) : null
     const m = typeof d.photo === 'object' && d.photo ? (d.photo as { url?: string | null }) : null
-    return { slug: d.slug, name: d.name, localName: d.localName, description: d.description, price: d.price!, photo: m?.url || d.photoPath || null, group: c?.group ?? 'breakfast', category: c?.name ?? '', diet: d.dietary ?? [] }
+    return { slug: d.slug, name: d.name, localName: d.localName, description: d.description, price: d.price!, photo: m?.url || d.photoPath || null, group: c?.group ?? 'breakfast', category: c?.name ?? '', diet: d.dietary ?? [], badges: d.badges ?? [] }
   })
 })
 
+
+export const getHomepage = cache(async () => (await db()).findGlobal({ slug: 'homepage', depth: 2 }))
+export const getPages = cache(async () => (await db()).findGlobal({ slug: 'pages' }))
+
+/** Homepage events: Nova highlights plus nearby Richmond dates. */
+export const getHomeEvents = cache(async () => {
+  const p = await db()
+  const now = new Date().toISOString()
+  const r = await p.find({ collection: 'events', sort: 'startsAt', limit: 12, depth: 0, where: { and: [{ or: [{ endsAt: { greater_than: now } }, { startsAt: { greater_than: now } }] }, { highlight: { equals: true } }] } })
+  const nova = r.docs.filter((e) => e.kind !== 'nearby').slice(0, 4)
+  const near = r.docs.filter((e) => e.kind === 'nearby').slice(0, 4)
+  return [...nova, ...near]
+})

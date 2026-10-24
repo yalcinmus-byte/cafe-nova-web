@@ -45,6 +45,7 @@ export const Themes: CollectionConfig = {
     { name: 'bannerLink', type: 'text', admin: { description: 'Optional link for the banner, e.g. /events' } },
     { name: 'headline', type: 'text', admin: { description: 'Homepage seasonal card title' } },
     { name: 'image', type: 'upload', relationTo: 'media', admin: { description: 'Seasonal photo for the homepage card' } },
+    { name: 'seasonalItems', type: 'relationship', relationTo: 'menu-items', hasMany: true, label: 'Seasonal menu', admin: { description: 'Dishes and drinks listed in the homepage seasonal section' } },
     { name: 'imagePath', type: 'text', admin: { description: 'Or a photo already on the site, e.g. /img/seasonal/halloween.webp' } },
     { name: 'blurb', type: 'textarea', admin: { description: 'Homepage seasonal card text' } },
     { name: 'priority', type: 'number', defaultValue: 0 },

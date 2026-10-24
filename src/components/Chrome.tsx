@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { NovaLogo } from './NovaLogo'
 import { SiteHeader } from './SiteHeader'
 import { BrandIcon } from './BrandIcon'
+import { FsaBadge } from './FsaBadge'
 
 
 export function Wordmark({ light = false }: { light?: boolean }) {
@@ -80,6 +81,14 @@ export function Footer({ s }: { s: Settings; map?: boolean }) {
             </ul>
           </div>
         </nav>
+      </div>
+      <div className="site-footer__trust">
+        <div className="site-footer__pay" aria-label="We accept">
+          <span>We accept</span>
+          {(['visa', 'mastercard', 'applepay', 'googlepay'] as const).map((n) => <span key={n} className="pay-chip"><BrandIcon name={n} size={30} /></span>)}
+          <span className="pay-chip pay-chip--text">Cash</span>
+        </div>
+        <div className="site-footer__fsa"><FsaBadge style="1" /></div>
       </div>
       <div className="site-footer__legal">
         <span>© {new Date().getFullYear()} Cafe Nova Bistro · 424 Richmond Road, East Twickenham</span>

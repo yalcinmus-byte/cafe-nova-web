@@ -15,7 +15,7 @@ export const Enquiries: CollectionConfig = {
     beforeChange: [({ data, req, operation }) => {
       if (operation === 'create' && !req.user) {
         if (data.website) throw new APIError('Invalid submission', 400) // honeypot
-        const keep = ['kind', 'name', 'email', 'phone', 'date', 'guests', 'message', 'startTime', 'occasion', 'equipment'] as const
+        const keep = ['kind', 'name', 'email', 'phone', 'date', 'guests', 'message', 'startTime', 'occasion', 'equipment', 'position'] as const
         const clean: Record<string, unknown> = { status: 'new' }
         for (const k of keep) if (data[k] !== undefined) clean[k] = data[k]
         return clean
@@ -32,6 +32,7 @@ export const Enquiries: CollectionConfig = {
     { type: 'row', fields: [
       { name: 'startTime', type: 'text', maxLength: 20, admin: { description: 'Events: preferred start time' } },
       { name: 'occasion', type: 'text', maxLength: 80 },
+      { name: 'position', type: 'text', maxLength: 80, admin: { description: 'Careers: role applied for' } },
     ] },
     { name: 'equipment', type: 'select', hasMany: true, options: [
       { label: 'Sound system', value: 'sound' }, { label: 'Microphone', value: 'mic' }, { label: 'Projector', value: 'projector' }, { label: 'Big-screen TV', value: 'tv' },

@@ -1,36 +1,43 @@
 import Link from 'next/link'
-import type { Media, Partner, Review, MenuItem, Theme } from '@/payload-types'
+import type { Event, Homepage, Media, MenuItem, Partner, Review, Theme } from '@/payload-types'
 import { FsaBadge } from './FsaBadge'
 import { NovaArcs } from './NovaLogo'
 import { AddToBasket } from './AddToBasket'
-import { DeliveryApps } from './DeliveryApps'
 import { BrandIcon } from './BrandIcon'
 import { BookingCalendar } from './BookingCalendar'
 import { EnquiryForm } from './EnquiryForm'
-import { OpenNow } from './OpenNow'
+import { Badges, Icon } from './Icons'
 
 type Links = Record<string, string | null | undefined>
+type L = Links
+type Head = { show?: boolean | null; eyebrow?: string | null; title?: string | null; text?: string | null }
+const ext = { rel: 'noopener', target: '_blank' } as const
+const gbp = (n?: number | null) => (n == null ? '' : `£${n.toFixed(2)}`)
 
-export function Values() {
-  const words = [
-    ['Delicious', 'British classics and Turkish favourites, cooked to order.'],
-    ['Fresh', 'Real ingredients, home-made in our own kitchen every day.'],
-    ['Happy', 'Good mornings, good coffee and a good feeling to take with you.'],
-    ['Peaceful', 'A calm corner by the river to slow down, catch up or work a little.'],
-  ]
+function SectionHead({ h, id, light = false, children }: { h: Head; id: string; light?: boolean; children?: React.ReactNode }) {
+  return (
+    <div className={`section-head ${light ? 'section-head--light' : ''}`}>
+      {h.eyebrow && <p className={`eyebrow ${light ? 'eyebrow--light' : ''}`}>{h.eyebrow}</p>}
+      {h.title && <h2 id={id}>{h.title}</h2>}
+      {h.text && <p>{h.text}</p>}
+      {children}
+    </div>
+  )
+}
+
+export function Values({ c }: { c: Homepage['values'] }) {
+  if (c?.show === false) return null
   return (
     <section className="values" aria-labelledby="values-title">
       <div className="wrap values__inner">
         <div className="values__intro">
-          <p className="eyebrow eyebrow--light">Our neighbourhood café</p>
-          <h2 id="values-title">A local hub, made with love.</h2>
-          <p>Fresh, home-made, friendly and welcoming. Come as a guest, leave as a friend.</p>
+          {c?.eyebrow && <p className="eyebrow eyebrow--light">{c.eyebrow}</p>}
+          <h2 id="values-title">{c?.title}</h2>
+          {c?.text && <p>{c.text}</p>}
           <Link href="/about" className="link-light">Our story →</Link>
         </div>
         <ul className="values__list">
-          {words.map(([t, d], i) => (
-            <li key={t} style={{ '--i': i } as React.CSSProperties}><h3>{t}</h3><p>{d}</p></li>
-          ))}
+          {(c?.items ?? []).map((v) => <li key={v.id ?? v.title}><h3>{v.title}</h3><p>{v.text}</p></li>)}
         </ul>
       </div>
       <NovaArcs className="values__arcs" />
@@ -38,26 +45,24 @@ export function Values() {
   )
 }
 
-export function Products({ partners, shop, orderLive }: { partners: Partner[]; shop: MenuItem[]; orderLive: boolean }) {
+export function Products({ c, shop, orderLive }: { c: Homepage['products']; shop: MenuItem[]; orderLive: boolean }) {
+  if (c?.show === false) return null
+  const img = (typeof c?.takeHomeImage === 'object' && (c.takeHomeImage as Media | null)?.url) || c?.takeHomeImagePath || '/img/coffee-pack.svg'
   return (
     <section className="products" aria-labelledby="products-title">
       <div className="wrap">
-        <div className="section-head">
-          <p className="eyebrow">Products & suppliers</p>
-          <h2 id="products-title">Quality you can taste</h2>
-          <p>Speciality coffee, organic milk and produce bought fresh — the good stuff, every day.</p>
-        </div>
+        <SectionHead h={c ?? {}} id="products-title" />
         {shop.length > 0 && (
           <div className="take-home">
-            <img src="/img/dishes/latte-heart.webp" alt="A latte with a heart in the foam in Nova's turquoise cup" loading="lazy" />
+            <div className="take-home__img"><img src={img} alt="A bag of speciality coffee beans to take home" loading="lazy" /></div>
             <div>
-              <h3>Take Alchemy home</h3>
-              <p>The same speciality beans we pour, in bags to take home. Ask us to grind them for you.</p>
+              <h3>{c?.takeHomeTitle}</h3>
+              <p>{c?.takeHomeText}</p>
               <ul>
                 {shop.map((s) => (
                   <li key={s.id}>
                     <span>{s.name.replace('Alchemy Coffee — ', '')}</span>
-                    <span className="take-home__price">£{s.price!.toFixed(2)}</span>
+                    <span className="take-home__price">{gbp(s.price)}</span>
                     {orderLive && <AddToBasket slug={s.slug} name={s.name} price={s.price!} compact />}
                   </li>
                 ))}
@@ -70,85 +75,31 @@ export function Products({ partners, shop, orderLive }: { partners: Partner[]; s
   )
 }
 
-const STARS = (n = 5) => '★'.repeat(Math.round(n))
-
-export function Reviews({ reviews, s }: { reviews: Review[]; s: { reviews?: { googleRating?: number | null; googleCount?: number | null; tripadvisorCount?: number | null; tripadvisorRank?: string | null } | null; links?: Links | null } }) {
-  const r = s.reviews ?? {}
-  const l = s.links ?? {}
-  return (
-    <section className="reviews" aria-labelledby="reviews-title">
-      <div className="wrap">
-        <div className="section-head">
-          <p className="eyebrow">What guests say</p>
-          <h2 id="reviews-title">Loved in Richmond</h2>
-        </div>
-        <div className="badges">
-          {l.googleMaps && (
-            <a className="badge badge--google" href={l.googleMaps} rel="noopener" target="_blank">
-              <span className="badge__src">Google reviews</span>
-              <span className="badge__score">{r.googleRating?.toFixed(1)}<span className="badge__stars" aria-hidden="true">{STARS(r.googleRating ?? 5)}</span></span>
-              <span className="badge__meta">{r.googleCount ? `${r.googleCount} reviews` : 'Read reviews'}</span>
-            </a>
-          )}
-          {l.tripadvisor && (
-            <a className="badge badge--ta" href={l.tripadvisor} rel="noopener" target="_blank">
-              <span className="badge__src">Tripadvisor</span>
-              <span className="badge__score">{r.tripadvisorRank?.match(/^#\d+/)?.[0] ?? '★'}</span>
-              <span className="badge__meta">{r.tripadvisorRank?.replace(/^#\d+\s*/, '') ?? 'Reviews and photos'}{r.tripadvisorCount ? ` · ${r.tripadvisorCount} reviews` : ''}</span>
-            </a>
-          )}
-          <div className="badge badge--fsa">
-            <FsaBadge />
-            {l.fsa && <a className="fsa-fallback" href={l.fsa} rel="noopener" target="_blank">Food hygiene rating on food.gov.uk →</a>}
-          </div>
-        </div>
-        <ul className="quotes">
-          {reviews.map((q) => (
-            <li key={q.id}>
-              <figure>
-                <span className="quotes__stars" aria-label="Five stars">★★★★★</span>
-                {q.title && <h3>{q.title}</h3>}
-                <blockquote>“{q.quote}”</blockquote>
-                <figcaption>{q.author} · {q.source === 'tripadvisor' ? 'Tripadvisor' : q.source === 'google' ? 'Google' : 'Review'}{q.date ? `, ${new Date(q.date).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}` : ''}</figcaption>
-              </figure>
-            </li>
-          ))}
-        </ul>
-        <div className="row-ctas">
-          {l.googleMaps && <a className="btn btn--river" href={l.googleMaps} rel="noopener" target="_blank">Leave us a Google review</a>}
-          {l.tripadvisor && <a className="btn btn--outline" href={l.tripadvisor} rel="noopener" target="_blank">Review us on Tripadvisor</a>}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-export function Welcome({ facilities, links }: { facilities: { id?: string | null; title: string; text?: string | null; link?: string | null }[]; links: Links }) {
+export function Welcome({ c, facilities, fsa }: { c: Homepage['welcome']; facilities: { id?: string | null; title: string; icon?: string | null; text?: string | null; link?: string | null; links?: { id?: string | null; label: string; url: string; note?: string | null }[] | null }[]; fsa?: string | null }) {
+  if (c?.show === false) return null
   return (
     <section className="welcome" aria-labelledby="welcome-title">
       <div className="wrap">
-        <div className="section-head">
-          <p className="eyebrow">Everyone’s welcome</p>
-          <h2 id="welcome-title">Dogs, bikes, buggies and big groups</h2>
-          <p>A neighbourhood meeting spot between Richmond Bridge and the park.</p>
-        </div>
+        <SectionHead h={c ?? {}} id="welcome-title" />
         <ul className="welcome__grid">
           {facilities.map((f) => (
-            <li key={f.id ?? f.title}>
+            <li key={f.id ?? f.title} className={`fac fac--${f.icon ?? 'heart'}`}>
+              <span className="fac__icon"><Icon name={f.icon ?? 'heart'} size={30} /></span>
               <h3>{f.title}</h3>
               {f.text && <p>{f.text}</p>}
-              {f.link && <a href={f.link} {...(f.link.startsWith('http') ? { rel: 'noopener', target: '_blank' } : {})}>{f.link.startsWith('/') ? 'Find out more' : 'Visit site'} →</a>}
+              {f.icon === 'hygiene' && <div className="fac__fsa"><FsaBadge style="1" /></div>}
+              {f.links && f.links.length > 0 && (
+                <ul className="fac__links">
+                  {f.links.map((k) => (
+                    <li key={k.id ?? k.label}><a href={k.url} {...(k.url.startsWith('http') ? ext : {})}><b>{k.label}</b>{k.note && <small>{k.note}</small>}<span aria-hidden="true">→</span></a></li>
+                  ))}
+                </ul>
+              )}
+              {f.link && !(f.links && f.links.length) && <a className="fac__more" href={f.link} {...(f.link.startsWith('http') ? ext : {})}>{f.link.startsWith('/') ? 'Find out more' : 'Visit website'} →</a>}
             </li>
           ))}
         </ul>
-        <div className="perks">
-          {links.myRichmond && (
-            <a className="perk perk--offer" href={links.myRichmond} rel="noopener" target="_blank">
-              <b>10% off Monday to Friday</b>
-              <span>with the My Richmond card — excludes public holidays, not with other offers.</span>
-            </a>
-          )}
-        </div>
+        {fsa && null}
       </div>
     </section>
   )
@@ -156,6 +107,9 @@ export function Welcome({ facilities, links }: { facilities: { id?: string | nul
 
 export function Seasonal({ theme }: { theme: Theme | null }) {
   if (!theme || !theme.headline) return null
+  const m = typeof theme.image === 'object' ? (theme.image as Media | null) : null
+  const src = m?.url || theme.imagePath
+  const items = (theme.seasonalItems ?? []).filter((x): x is MenuItem => typeof x === 'object' && !!x && x.available !== false)
   return (
     <section className={`seasonal seasonal--${theme.decor ?? 'none'}`} aria-labelledby="seasonal-title">
       <div className="wrap seasonal__inner">
@@ -163,18 +117,22 @@ export function Seasonal({ theme }: { theme: Theme | null }) {
           <p className="eyebrow eyebrow--light">{theme.name}</p>
           <h2 id="seasonal-title">{theme.headline}</h2>
           {theme.blurb && <p>{theme.blurb}</p>}
+          {items.length > 0 && (
+            <ul className="seasonal__menu" aria-label={`${theme.name} menu`}>
+              {items.map((i) => (
+                <li key={i.id}>
+                  <span className="seasonal__name">{i.name}{i.description && <small>{i.description}</small>}</span>
+                  <span className="seasonal__price">{gbp(i.price)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
           <div className="row-ctas">
             <Link className="btn btn--light" href={theme.bannerLink || '/events'}>See what’s on</Link>
-            <Link className="btn btn--ghost-light" href="/private-hire">Book an evening</Link>
+            <Link className="btn btn--ghost-light" href="/menu#seasonal-specials">Full seasonal menu</Link>
           </div>
         </div>
-        {(() => {
-          const m = typeof theme.image === 'object' ? (theme.image as Media | null) : null
-          const src = m?.url || theme.imagePath
-          return src
-            ? <figure className="seasonal__photo"><img src={src} alt={m?.alt || `Cafe Nova Bistro dressed for ${theme.name}`} loading="lazy" /></figure>
-            : <SeasonArt decor={theme.decor ?? 'none'} />
-        })()}
+        {src ? <figure className="seasonal__photo"><img src={src} alt={m?.alt || `Cafe Nova Bistro dressed for ${theme.name}`} loading="lazy" /></figure> : <SeasonArt decor={theme.decor ?? 'none'} />}
       </div>
     </section>
   )
@@ -182,6 +140,16 @@ export function Seasonal({ theme }: { theme: Theme | null }) {
 
 export function SeasonArt({ decor, small = false }: { decor: string; small?: boolean }) {
   const cls = `season-art season-art--${decor} ${small ? 'season-art--small' : ''}`
+  if (decor === 'halloween' && small) return (
+    <svg className={`${cls} season-art--spider`} viewBox="0 0 40 32" aria-hidden="true">
+      <circle cx="22" cy="16" r="13" fill="#f4e9c8" />
+      <path d="M22 0v15" stroke="#f4e9c8" strokeWidth=".8" />
+      <g fill="#1b1230" stroke="#1b1230" strokeWidth="1" strokeLinecap="round">
+        <ellipse cx="22" cy="18" rx="2.6" ry="3.2" /><circle cx="22" cy="14.2" r="1.7" />
+        <path d="M20 17l-4-3M20 18.5l-4.5 0M20 20l-4 3M21 21l-2.5 4M24 17l4-3M24 18.5l4.5 0M24 20l4 3M23 21l2.5 4" fill="none" />
+      </g>
+    </svg>
+  )
   if (decor === 'halloween') return (
     <svg className={cls} viewBox="0 0 200 160" aria-hidden="true">
       <circle cx="120" cy="70" r="46" className="sa-moon" />
@@ -216,31 +184,26 @@ export function SeasonArt({ decor, small = false }: { decor: string; small?: boo
   return null
 }
 
-export function OrderStrip({ live, apps }: { live: boolean; apps: { id?: string | null; name: string; url?: string | null }[] }) {
+
+export function NewOnMenu({ c }: { c: Homepage['newOnMenu'] }) {
+  const dish = c?.dish && typeof c.dish === 'object' ? (c.dish as MenuItem) : null
+  if (c?.show === false || !dish) return null
+  const m = typeof dish.photo === 'object' ? (dish.photo as Media | null) : null
+  const src = m?.url || dish.photoPath
   return (
-    <section className="order-strip" aria-labelledby="order-strip-title">
-      <div className="wrap">
-        <div className="section-head">
-          <p className="eyebrow">Order online</p>
-          <h2 id="order-strip-title">Hungry? Order ahead.</h2>
-          <p>Pick it up from the café without the wait, or get it delivered through your favourite app.</p>
-        </div>
-        <div className="order-strip__grid">
-          <div className="order-card">
-            <h3>Pick up in the café</h3>
-            <p>Choose your breakfast, lunch and coffee, pick a time and it’ll be ready when you arrive.</p>
-            <ul><li>Freshly cooked for your time slot</li><li>Pay at the counter — card or cash</li><li>Order from 7am on weekdays, 8am at weekends</li></ul>
-            <div className="row-ctas">
-              <a className="btn btn--turq" href={live ? '/menu' : '/order'}>{live ? 'Start your order' : 'Ordering opens soon'}</a>
-              <a className="btn btn--ghost-light" href="/order">View basket</a>
-            </div>
-          </div>
-          <div className="order-strip__side">
-            <DeliveryApps apps={apps} title="Delivery through the apps" />
-            <div className="hire-card">
-              <div><h3>Planning a party?</h3><p>Book the café for an evening — sound, mic, projector and big screen.</p></div>
-              <a className="btn btn--light" href="/private-hire">Check dates</a>
-            </div>
+    <section className="new-dish" aria-labelledby="new-dish-title">
+      <div className="wrap new-dish__inner">
+        <figure className="new-dish__img">{src ? <img src={src} alt={dish.name} loading="lazy" /> : <span className="new-dish__ph" aria-hidden="true">{dish.name.charAt(0)}</span>}<span className="new-dish__tag">New</span></figure>
+        <div>
+          {c?.eyebrow && <p className="eyebrow">{c.eyebrow}</p>}
+          <h2 id="new-dish-title">{c?.title}</h2>
+          <h3>{dish.name}{dish.localName && <em> {dish.localName}</em>}</h3>
+          <p>{dish.description}</p>
+          {c?.text && <p className="new-dish__note">{c.text}</p>}
+          <p className="new-dish__price">{gbp(dish.price)}</p>
+          <div className="row-ctas">
+            <Link className="btn btn--river" href={`/menu#${dish.slug}`}>{c?.linkLabel || 'See the menu'}</Link>
+            {dish.price != null && dish.orderable && <AddToBasket slug={dish.slug} name={dish.name} price={dish.price} />}
           </div>
         </div>
       </div>
@@ -248,18 +211,16 @@ export function OrderStrip({ live, apps }: { live: boolean; apps: { id?: string 
   )
 }
 
-
-export function BookEvent() {
+export function BookEvent({ c }: { c?: Homepage['book'] }) {
+  if (c?.show === false) return null
   return (
     <section className="book" id="book" aria-labelledby="book-home-title">
       <div className="wrap book__inner">
         <div className="book__intro">
-          <p className="eyebrow eyebrow--light">Book an event</p>
-          <h2 id="book-home-title">Your party, our café.</h2>
-          <p>Birthdays, team parties, meze nights, quizzes and match nights — after 5pm the café is yours.</p>
-          <ul className="book__kit">
-            {['Sound system', 'Microphone', 'Projector', 'Big-screen TV'].map((k) => <li key={k}>{k}</li>)}
-          </ul>
+          {c?.eyebrow && <p className="eyebrow eyebrow--light">{c.eyebrow}</p>}
+          <h2 id="book-home-title">{c?.title ?? 'Your party, our café.'}</h2>
+          {c?.text && <p>{c.text}</p>}
+          <ul className="book__kit">{(c?.kit ?? []).map((k) => <li key={k.id ?? k.text}>{k.text}</li>)}</ul>
           <a className="link-light" href="/private-hire">Everything about private hire →</a>
         </div>
         <div className="book__panel">
@@ -271,33 +232,47 @@ export function BookEvent() {
   )
 }
 
-export function SupplierBar({ partners }: { partners: Partner[] }) {
-  if (!partners.length) return null
-  const row = partners.map((p) => {
-    const logo = typeof p.logo === 'object' ? (p.logo as Media | null) : null
-    return (
-      <li key={p.id}>
-        {logo?.url ? <img src={logo.url} alt={p.name} /> : <span className={`wordmark wordmark--${p.name.toLowerCase().replace(/[^a-z]+/g, '-')}`}>{p.name}</span>}
-        <small>{p.role}</small>
-      </li>
-    )
-  })
+export function EventsStrip({ c, events }: { c: Homepage['events']; events: Event[] }) {
+  if (c?.show === false || !events.length) return null
+  const nova = events.filter((e) => e.kind !== 'nearby')
+  const near = events.filter((e) => e.kind === 'nearby')
+  const Card = ({ e }: { e: Event }) => (
+    <li>
+      <time dateTime={e.startsAt}>
+        <span className="d">{e.dateNote ? '—' : new Date(e.startsAt).toLocaleDateString('en-GB', { day: 'numeric', timeZone: 'Europe/London' })}</span>
+        <span className="m">{e.dateNote && /season|week/i.test(e.dateNote) ? '' : new Date(e.startsAt).toLocaleDateString('en-GB', { month: 'short', timeZone: 'Europe/London' })}</span>
+      </time>
+      <div>
+        <h3>{e.link ? <a href={e.link} {...(e.link.startsWith('http') ? ext : {})}>{e.title}</a> : e.title}</h3>
+        {e.dateNote && <p className="events-strip__note">{e.dateNote}</p>}
+        <p>{e.summary}</p>
+      </div>
+    </li>
+  )
   return (
-    <section className="supplier-bar" aria-label="Our suppliers">
-      <p className="supplier-bar__label">Proudly serving</p>
-      <div className="supplier-bar__track"><ul>{row}</ul><ul aria-hidden="true">{row}</ul></div>
+    <section className="events-strip" aria-labelledby="events-title">
+      <div className="wrap">
+        <div className="section-head section-head--light events-strip__head">
+          <h2 id="events-title">{c?.title ?? 'Festive & events'}</h2>
+          <Link href="/events" className="link-light">All dates this year →</Link>
+        </div>
+        <ol className="events-strip__list">{nova.map((e) => <Card key={e.id} e={e} />)}</ol>
+        {near.length > 0 && (
+          <>
+            <h3 className="events-strip__sub">{c?.nearbyTitle ?? 'Around Richmond'}</h3>
+            <ol className="events-strip__list events-strip__list--near">{near.map((e) => <Card key={e.id} e={e} />)}</ol>
+          </>
+        )}
+      </div>
     </section>
   )
 }
 
-type L = Links
-const ext = { rel: 'noopener', target: '_blank' } as const
-
-export function FindUsBar({ links }: { links: L }) {
+export function FindUsBar({ title, links }: { title?: string | null; links: L }) {
   const items: [string, string, string, string?][] = [
     [links.googleMaps ?? '', 'google', 'Google', 'Reviews & directions'],
     [links.tripadvisor ?? '', 'tripadvisor', 'Tripadvisor', 'Reviews & photos'],
-    [links.wanderlog ?? '', 'route', 'Wanderlog', 'Add us to your trip plan'],
+    [links.wanderlog ?? '', 'wanderlog', 'Wanderlog', 'Add us to your trip plan'],
     [links.pawpal ?? '', 'paw', 'PawPal', 'Dog-friendly café'],
     [links.visitRichmond ?? '', 'pin', 'Visit Richmond', 'Official visitor guide'],
     [links.myRichmond ?? '', 'tag', 'My Richmond', '10% off Mon–Fri'],
@@ -309,7 +284,7 @@ export function FindUsBar({ links }: { links: L }) {
   return (
     <section className="findus" aria-labelledby="findus-title">
       <div className="wrap">
-        <h2 id="findus-title">Find us around Richmond</h2>
+        <h2 id="findus-title">{title ?? 'Find us around Richmond'}</h2>
         <ul>
           {items.filter(([u]) => u).map(([u, icon, name, sub]) => (
             <li key={name}><a href={u} {...ext}><span className={`findus__icon findus__icon--${icon}`}><BrandIcon name={icon} size={24} /></span><span><b>{name}</b><small>{sub}</small></span></a></li>
@@ -320,41 +295,55 @@ export function FindUsBar({ links }: { links: L }) {
   )
 }
 
-export function GoogleSection({ s }: { s: { address?: string | null; phone?: string | null; hours?: { days: string; time: string; id?: string | null }[] | null; reviews?: { googleRating?: number | null; googleCount?: number | null; asOf?: string | null } | null; links?: L | null } }) {
+function ReviewCards({ reviews, kind }: { reviews: Review[]; kind: 'google' | 'tripadvisor' }) {
+  return (
+    <ul className={`rev-cards rev-cards--${kind}`}>
+      {reviews.map((q) => (
+        <li key={q.id}>
+          <figure>
+            {kind === 'google' ? <span className="rev-cards__stars" aria-label="Rated 5 of 5">★★★★★</span> : <span className="tasec__bubbles" aria-label="Rated 5 of 5">{Array.from({ length: 5 }).map((_, i) => <i key={i} />)}</span>}
+            {q.title && <h3>{q.title}</h3>}
+            <blockquote>“{q.quote}”</blockquote>
+            <figcaption>{q.author}{q.date ? ` · ${new Date(q.date).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}` : ''}</figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+export function GoogleSection({ c, s, reviews }: { c: Homepage['google']; reviews: Review[]; s: { address?: string | null; phone?: string | null; hours?: { days: string; time: string; id?: string | null }[] | null; reviews?: { googleRating?: number | null; googleCount?: number | null } | null; links?: L | null } }) {
+  if (c?.show === false) return null
   const r = s.reviews ?? {}
   const l = s.links ?? {}
+  const g = reviews.filter((q) => q.source === 'google')
   return (
     <section className="gsec" aria-labelledby="gsec-title">
-      <div className="wrap gsec__inner">
-        <figure className="gsec__photo">
-          <img src="/img/place/frontage.webp" alt="Cafe Nova Bistro's terrace with flower boxes on Richmond Road" loading="lazy" />
-          <OpenNow hours={s.hours ?? []} />
-        </figure>
-        <div className="gsec__card">
-          <p className="gsec__brand"><BrandIcon name="google" size={22} /> Google reviews</p>
-          <h2 id="gsec-title">Rated {r.googleRating?.toFixed(1) ?? '5'} by our neighbours</h2>
-          {r.googleRating && (
-            <div className="gsec__rating">
-              <b>{r.googleRating.toFixed(1)}</b>
-              <div><span className="gsec__stars" aria-hidden="true">★★★★★</span><span>{r.googleCount} reviews on Google</span></div>
-            </div>
-          )}
-          <dl className="gsec__facts">
-            <div><dt>Address</dt><dd>{s.address?.split('\n').join(', ')}</dd></div>
-            {s.phone && <div><dt>Phone</dt><dd><a href={`tel:${s.phone.replace(/\s/g, '')}`}>{s.phone}</a></dd></div>}
-            {s.hours?.map((h) => <div key={h.id ?? h.days}><dt>{h.days}</dt><dd>{h.time}</dd></div>)}
-          </dl>
-          <div className="row-ctas">
-            {l.googleMaps && <a className="btn btn--river" href={l.googleMaps} {...ext}>Get directions</a>}
-            {l.googleMaps && <a className="btn btn--outline" href={l.googleMaps} {...ext}><BrandIcon name="google" size={18} /> Write a review</a>}
+      <div className="wrap">
+        <div className="gsec__head">
+          <div className="gsec__brandbox"><BrandIcon name="google" size={34} /><span>Google</span></div>
+          <div>
+            <h2 id="gsec-title">{c?.title || 'Loved by our neighbours'}</h2>
+            {r.googleRating && <p className="gsec__rating"><b>{r.googleRating.toFixed(1)}</b><span className="gsec__stars" aria-hidden="true">★★★★★</span><span>{r.googleCount} reviews on Google</span></p>}
           </div>
+          <div className="tasec__ctas">
+            {l.googleMaps && <a className="btn btn--google" href={l.googleMaps} {...ext}><BrandIcon name="google" size={18} color="#fff" /> See Nova on Google</a>}
+            {l.googleMaps && <a className="btn btn--outline" href={l.googleMaps} {...ext}>Write a review</a>}
+          </div>
+        </div>
+        {g.length > 0 && <ReviewCards reviews={g} kind="google" />}
+        <div className="gsec__facts">
+          <span><Icon name="clock" size={18} /> {s.hours?.map((h) => `${h.days} ${h.time}`).join(' · ')}</span>
+          {s.phone && <a href={`tel:${s.phone.replace(/\s/g, '')}`}>{s.phone}</a>}
+          {l.googleMaps && <a href={l.googleMaps} {...ext}>Get directions →</a>}
         </div>
       </div>
     </section>
   )
 }
 
-export function TripadvisorSection({ reviews, s }: { reviews: Review[]; s: { reviews?: { tripadvisorCount?: number | null; tripadvisorRank?: string | null } | null; links?: L | null } }) {
+export function TripadvisorSection({ c, reviews, s }: { c: Homepage['tripadvisor']; reviews: Review[]; s: { reviews?: { tripadvisorCount?: number | null; tripadvisorRank?: string | null } | null; links?: L | null } }) {
+  if (c?.show === false) return null
   const r = s.reviews ?? {}
   const l = s.links ?? {}
   const ta = reviews.filter((q) => q.source === 'tripadvisor')
@@ -362,32 +351,21 @@ export function TripadvisorSection({ reviews, s }: { reviews: Review[]; s: { rev
     <section className="tasec" aria-labelledby="tasec-title">
       <div className="wrap">
         <div className="tasec__head">
-          <div className="tasec__brand"><BrandIcon name="tripadvisor" size={44} color="#000" /><span>Tripadvisor</span></div>
+          <div className="tasec__brand"><BrandIcon name="tripadvisor" size={40} color="#000" /><span>Tripadvisor</span></div>
           <div>
-            <h2 id="tasec-title">{r.tripadvisorRank?.match(/^#\d+ of \d+/)?.[0] ?? 'Loved on Tripadvisor'}</h2>
+            <h2 id="tasec-title">{c?.title || r.tripadvisorRank?.match(/^#\d+ of \d+/)?.[0] || 'Loved on Tripadvisor'}</h2>
             <p>{r.tripadvisorRank?.replace(/^#\d+ of \d+\s*/, '') ?? ''}{r.tripadvisorCount ? ` · ${r.tripadvisorCount} reviews` : ''}</p>
           </div>
           <div className="tasec__ctas">
-            {l.tripadvisor && <a className="btn btn--ta" href={l.tripadvisor} {...ext}>Read all reviews</a>}
+            {l.tripadvisor && <a className="btn btn--ta" href={l.tripadvisor} {...ext}><BrandIcon name="tripadvisor" size={18} color="#fff" /> See Nova on Tripadvisor</a>}
             {l.tripadvisor && <a className="btn btn--outline" href={l.tripadvisor} {...ext}>Write a review</a>}
           </div>
         </div>
-        <ul className="tasec__quotes">
-          {ta.map((q) => (
-            <li key={q.id}>
-              <figure>
-                <span className="tasec__bubbles" aria-label="Rated 5 of 5">{Array.from({ length: 5 }).map((_, i) => <i key={i} />)}</span>
-                {q.title && <h3>{q.title}</h3>}
-                <blockquote>“{q.quote}”</blockquote>
-                <figcaption>{q.author}{q.date ? ` · ${new Date(q.date).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}` : ''}</figcaption>
-              </figure>
-            </li>
-          ))}
-        </ul>
+        <ReviewCards reviews={ta} kind="tripadvisor" />
         <div className="tasec__plan">
           <span>Visiting Richmond?</span>
-          {l.wanderlog && <a href={l.wanderlog} {...ext}><BrandIcon name="route" size={20} color="currentColor" /> Add Cafe Nova to your Wanderlog trip</a>}
-          {l.tripadvisor && <a href={l.tripadvisor} {...ext}><BrandIcon name="tripadvisor" size={20} color="currentColor" /> Save us on Tripadvisor</a>}
+          {l.wanderlog && <a className="plan-chip plan-chip--wanderlog" href={l.wanderlog} {...ext}><span className="plan-chip__icon"><BrandIcon name="wanderlog" size={20} color="#fff" /></span> Add Cafe Nova to your Wanderlog trip</a>}
+          {l.tripadvisor && <a className="plan-chip plan-chip--ta" href={l.tripadvisor} {...ext}><span className="plan-chip__icon"><BrandIcon name="tripadvisor" size={20} color="#000" /></span> Save us on Tripadvisor</a>}
         </div>
       </div>
     </section>

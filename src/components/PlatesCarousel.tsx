@@ -8,7 +8,7 @@ export type Plate = { id: string | number; slug: string; name: string; localName
 const gbp = (n?: number | null) => (n == null ? '' : `£${n.toFixed(2)}`)
 
 /** Vertical scroll drives a horizontal track (sticky). Falls back to a swipeable row on small screens and reduced motion. */
-export function PlatesCarousel({ plates, orderLive }: { plates: Plate[]; orderLive: boolean }) {
+export function PlatesCarousel({ plates, orderLive, head }: { plates: Plate[]; orderLive: boolean; head?: { eyebrow?: string | null; title?: string | null; text?: string | null } }) {
   const outer = useRef<HTMLDivElement>(null)
   const track = useRef<HTMLOListElement>(null)
 
@@ -61,9 +61,9 @@ export function PlatesCarousel({ plates, orderLive }: { plates: Plate[]; orderLi
       <div className="plates__outer" ref={outer}>
         <div className="plates__sticky">
           <div className="plates__head wrap">
-            <p className="eyebrow">From the kitchen</p>
-            <h2 id="plates-title">Popular plates</h2>
-            <p>Breakfast all day, lunch from noon. Two kitchens, British and Turkish, one table.</p>
+            {head?.eyebrow && <p className="eyebrow">{head.eyebrow}</p>}
+            <h2 id="plates-title">{head?.title ?? 'Popular plates'}</h2>
+            {head?.text && <p>{head.text}</p>}
           </div>
           <ol className="plates__track" ref={track}>
             {plates.map((d, i) => (

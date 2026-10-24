@@ -34,7 +34,15 @@ export const SiteSettings: GlobalConfig = {
       name: 'facilities',
       type: 'array',
       labels: { singular: 'Facility', plural: 'Good to know' },
-      fields: [{ type: 'row', fields: [{ name: 'title', type: 'text', required: true }, { name: 'link', type: 'text' }] }, { name: 'text', type: 'textarea' }],
+      fields: [
+        { type: 'row', fields: [
+          { name: 'title', type: 'text', required: true },
+          { name: 'icon', type: 'select', options: ['dog', 'run', 'bike', 'rowing', 'river', 'family', 'party', 'hygiene', 'coffee', 'heart'].map((v) => ({ label: v, value: v })) },
+          { name: 'link', type: 'text' },
+        ] },
+        { name: 'text', type: 'textarea' },
+        { name: 'links', type: 'array', labels: { singular: 'Link', plural: 'Links' }, fields: [{ type: 'row', fields: [{ name: 'label', type: 'text', required: true }, { name: 'url', type: 'text', required: true }, { name: 'note', type: 'text' }] }] },
+      ],
     },
     {
       name: 'links',

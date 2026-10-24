@@ -31,7 +31,7 @@ export function RestaurantJsonLd({ s, menu, orderLive = false }: { s: S; menu?: 
             name: i.localName ? `${i.name} (${i.localName})` : i.name,
             description: i.description || undefined,
             offers: { '@type': 'Offer', price: i.price?.toFixed(2), priceCurrency: 'GBP' },
-            suitableForDiet: i.dietary?.map((d) => ({ v: 'https://schema.org/VegetarianDiet', vg: 'https://schema.org/VeganDiet', gf: 'https://schema.org/GlutenFreeDiet' })[d]),
+            suitableForDiet: i.dietary?.map((d) => ({ v: 'https://schema.org/VegetarianDiet', vg: 'https://schema.org/VeganDiet', gf: 'https://schema.org/GlutenFreeDiet' } as Record<string, string>)[d]).filter(Boolean),
           })),
         })),
       },

@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 type Kind = 'general' | 'event' | 'careers'
 
-export function EnquiryForm({ initialKind = 'general', lockKind = false, compact = false }: { initialKind?: Kind; lockKind?: boolean; compact?: boolean }) {
+export function EnquiryForm({ initialKind = 'general', lockKind = false, compact = false, position }: { initialKind?: Kind; lockKind?: boolean; compact?: boolean; position?: string }) {
   const [kind, setKind] = useState<Kind>(initialKind)
   const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 
@@ -12,6 +12,7 @@ export function EnquiryForm({ initialKind = 'general', lockKind = false, compact
     const f = new FormData(e.currentTarget)
     const data: Record<string, unknown> = Object.fromEntries(f.entries())
     data.equipment = f.getAll('equipment')
+    if (position) data.position = position
     if (!data.startTime) delete data.startTime
     if (!data.occasion) delete data.occasion
     data.kind = kind

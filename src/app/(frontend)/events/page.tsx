@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import { Header, Footer } from '@/components/Chrome'
-import { getEvents, getSettings } from '@/lib/data'
+import { getEvents, getHomepage, getSettings } from '@/lib/data'
 import { BookEvent } from '@/components/HomeSections'
 
 export const metadata: Metadata = { title: 'Festive & events', description: 'Seasonal menus, evening hire and nearby events through the year at Cafe Nova Bistro, East Twickenham.' }
 
 export default async function EventsPage() {
-  const [events, settings] = await Promise.all([getEvents(), getSettings()])
+  const [events, settings, home] = await Promise.all([getEvents(), getSettings(), getHomepage()])
   const fmt = (d: string) => new Date(d).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', timeZone: 'Europe/London' })
   return (
     <>
@@ -31,7 +31,7 @@ export default async function EventsPage() {
           ))}
         </ol>
       </main>
-      <BookEvent />
+      <BookEvent c={home.book} />
       <Footer s={settings} />
     </>
   )

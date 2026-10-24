@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d5a7e"/><stop offset="1" stop-color="#12293a"/></linearGradient>
+    <linearGradient id="kraft" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b8875a"/><stop offset=".45" stop-color="#d4a777"/><stop offset=".8" stop-color="#c3946a"/><stop offset="1" stop-color="#a87a4f"/></linearGradient>
+    <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".18"/><stop offset=".25" stop-color="#000" stop-opacity="0"/></linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".9" r=".6"><stop offset="0" stop-color="#5fbdb7" stop-opacity=".35"/><stop offset="1" stop-color="#5fbdb7" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="600" height="600" fill="url(#bg)"/>
+  <rect width="600" height="600" fill="url(#glow)"/>
+  <g fill="none" stroke="#bcd8e6" stroke-opacity=".18" stroke-width="2">
+    <path d="M60 600a240 240 0 0 1 480 0"/><path d="M110 600a190 190 0 0 1 380 0"/><path d="M160 600a140 140 0 0 1 280 0"/>
+  </g>
+  <ellipse cx="300" cy="528" rx="150" ry="16" fill="#000" opacity=".35"/>
+  <path d="M178 150h244l14 370H164z" fill="url(#kraft)"/>
+  <path d="M178 150h244l14 370H164z" fill="url(#shade)"/>
+  <path d="M172 112h256v44H172z" fill="#c99d6e"/>
+  <path d="M172 112h256v10H172z" fill="#000" opacity=".12"/>
+  <g stroke="#8a6440" stroke-opacity=".5" stroke-width="2"><path d="M188 132h224"/><path d="M188 142h224"/></g>
+  <path d="M206 236h188v196H206z" fill="#f4f1e9"/>
+  <text x="300" y="282" text-anchor="middle" font-family="Georgia, serif" font-size="15" letter-spacing="5" fill="#1d5a7e">SPECIALITY</text>
+  <text x="300" y="332" text-anchor="middle" font-family="Georgia, serif" font-size="44" font-weight="700" fill="#12293a">Coffee</text>
+  <path d="M244 352h112" stroke="#5fbdb7" stroke-width="3"/>
+  <text x="300" y="384" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" letter-spacing="2" fill="#12293a">WHOLE BEANS · 250g</text>
+  <text x="300" y="412" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" letter-spacing="1.5" fill="#5c6c74">ROASTED IN LONDON</text>
+  <g fill="#5a3a22">
+    <ellipse cx="432" cy="508" rx="15" ry="10" transform="rotate(-25 432 508)"/><ellipse cx="458" cy="520" rx="15" ry="10" transform="rotate(20 458 520)"/><ellipse cx="146" cy="514" rx="15" ry="10" transform="rotate(30 146 514)"/>
+  </g>
+  <g stroke="#2e1d10" stroke-width="2" fill="none"><path d="M422 513q10-8 20-10"/><path d="M450 515q10 2 17 10"/><path d="M137 508q10 2 17 12"/></g>
+</svg>

@@ -2,21 +2,22 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Header, Footer } from '@/components/Chrome'
 import { NovaArcs } from '@/components/NovaLogo'
-import { getSettings } from '@/lib/data'
+import { getPages, getSettings } from '@/lib/data'
 
 export const metadata: Metadata = { title: 'About', description: 'Cafe Nova Bistro is run by Süleyman Demir: 60 years of family hospitality, 20 years in Richmond, and British and Turkish breakfasts on one table in East Twickenham.' }
 
 export default async function AboutPage() {
-  const s = await getSettings()
+  const [s, pages] = await Promise.all([getSettings(), getPages()])
+  const a = pages.about ?? {}
   const r = s.reviews
   return (
     <>
       <Header />
       <main id="main" className="about">
         <section className="about__hero wrap">
-          <p className="eyebrow">Our story</p>
-          <h1>Two cultures.<br />One table.</h1>
-          <p className="about__lede">60 years of family heritage, 20 years in Richmond, and one simple belief: every guest deserves to feel at home.</p>
+          {a.eyebrow && <p className="eyebrow">{a.eyebrow}</p>}
+          <h1>{a.title}</h1>
+          {a.lede && <p className="about__lede">{a.lede}</p>}
         </section>
         <section className="about__story wrap">
           <figure className="about__photo">
@@ -24,23 +25,18 @@ export default async function AboutPage() {
             <NovaArcs className="about__arcs" />
           </figure>
           <div className="about__text">
-            <p>My name is Süleyman Demir, and hospitality has always been more than a profession to me. It’s a way of life.</p>
-            <p>I grew up in my family’s café and restaurant tradition, which goes back more than 60 years. Early on I learned that the secret of a good café isn’t only what’s on the plate. It’s how you make people feel.</p>
-            <p>Richmond has been my home for 20 years. In that time I’ve worked in five local cafés, as a chef in three and as a manager in two. Each one taught me the same thing: great food matters, good service makes a difference, but it’s the warmth that brings people back.</p>
-            <p>Cafe Nova Bistro brings it all together: classic British café favourites and authentic Turkish breakfasts, fresh lunches and excellent coffee, on the corner of Richmond Road.</p>
-            <p className="about__sign">Come as a guest, leave as a friend.<br /><span>Süleyman Demir, Founder &amp; Owner</span></p>
+            {(a.story ?? []).map((p) => <p key={p.id ?? p.text.slice(0, 20)}>{p.text}</p>)}
+            <p className="about__sign">{a.signature}<br /><span>{a.signedBy}</span></p>
           </div>
         </section>
         <section className="about__mission wrap" aria-labelledby="mission-title">
           <p className="eyebrow">Our mission</p>
-          <h2 id="mission-title">To be the neighbourhood’s favourite place to start the day.</h2>
-          <p>Delicious food, happy faces, a peaceful corner and fresh ingredients — a local hub where everyone feels at home.</p>
+          <h2 id="mission-title">{a.missionTitle}</h2>
+          {a.missionText && <p>{a.missionText}</p>}
         </section>
         <section className="about__values" aria-label="What we stand for">
           <div className="wrap about__values-grid">
-            {[['Wholesome', 'Fresh, real ingredients made with love — pure, positive food that leaves you feeling good.'], ['Grateful', 'Kindness and positive energy, with the community first. Every returning face matters to us.'], ['Radiant', 'Shining with happiness: bright mornings, warm welcomes, good coffee.'], ['Neighbourly', 'A local hub for East Twickenham and Richmond — home-made, friendly and welcoming.']].map(([t, d]) => (
-              <div key={t}><h2>{t}</h2><p>{d}</p></div>
-            ))}
+            {(a.values ?? []).map((v) => <div key={v.id ?? v.title}><h2>{v.title}</h2><p>{v.text}</p></div>)}
           </div>
         </section>
         {r?.googleRating && (

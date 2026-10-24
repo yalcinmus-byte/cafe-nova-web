@@ -20,8 +20,11 @@ import { Enquiries } from './collections/Enquiries'
 import { Orders } from './collections/Orders'
 import { Partners } from './collections/Partners'
 import { Reviews } from './collections/Reviews'
+import { Suppliers, Purchases, Expenses, Documents } from './collections/hq'
 import { ServiceControl } from './globals/ServiceControl'
 import { SiteSettings } from './globals/SiteSettings'
+import { Homepage } from './globals/Homepage'
+import { Pages } from './globals/Pages'
 
 const dbUrl = process.env.DATABASE_URL || ''
 const isPostgres = dbUrl.startsWith('postgres')
@@ -39,12 +42,12 @@ export default buildConfig({
       graphics: { Logo: '@/admin/Logo#Logo', Icon: '@/admin/Logo#Icon' },
       beforeDashboard: ['@/admin/Today#Today'],
       afterNavLinks: ['@/admin/NavExtra#NavExtra'],
-      views: { kitchen: { Component: '@/admin/Kitchen#Kitchen', path: '/kitchen' }, bookings: { Component: '@/admin/Bookings#Bookings', path: '/bookings' } },
+      views: { kitchen: { Component: '@/admin/Kitchen#Kitchen', path: '/kitchen' }, bookings: { Component: '@/admin/Bookings#Bookings', path: '/bookings' }, hq: { Component: '@/admin/HQ#HQ', path: '/hq' } },
     },
     theme: 'light',
   },
-  collections: [Orders, Enquiries, MenuItems, MenuCategories, Events, Posts, Jobs, Reviews, Partners, Media, Themes, Users],
-  globals: [ServiceControl, SiteSettings],
+  collections: [Orders, Enquiries, MenuItems, MenuCategories, Events, Posts, Jobs, Reviews, Partners, Media, Themes, Users, Suppliers, Purchases, Expenses, Documents],
+  globals: [ServiceControl, SiteSettings, Homepage, Pages],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
@@ -62,6 +65,6 @@ export default buildConfig({
   sharp,
   plugins: [
     // Uploaded photos go to Vercel Blob when its token is set (online); on a laptop they stay in /media.
-    vercelBlobStorage({ enabled: !!process.env.BLOB_READ_WRITE_TOKEN, collections: { media: true }, token: process.env.BLOB_READ_WRITE_TOKEN }),
+    vercelBlobStorage({ enabled: !!process.env.BLOB_READ_WRITE_TOKEN, collections: { media: true, documents: true }, token: process.env.BLOB_READ_WRITE_TOKEN }),
   ],
 })

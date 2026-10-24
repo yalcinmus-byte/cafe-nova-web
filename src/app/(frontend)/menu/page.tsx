@@ -3,10 +3,10 @@ import { Header, Footer } from '@/components/Chrome'
 import { RestaurantJsonLd } from '@/components/JsonLd'
 import { getMenu, getService, getSettings, gbp, orderingState } from '@/lib/data'
 import { AddToBasket, BasketBar } from '@/components/AddToBasket'
+import { Badges } from '@/components/Icons'
 
 export const metadata: Metadata = { title: 'Menu', description: 'Full breakfast, Turkish, lunch, drinks and kids’ menu with prices — Cafe Nova Bistro, East Twickenham.' }
 
-const DIET: Record<string, string> = { v: 'Vegetarian', vg: 'Vegan', gf: 'Gluten-free' }
 
 export default async function MenuPage() {
   const [menu, settings, svc] = await Promise.all([getMenu(), getSettings(), getService()])
@@ -33,14 +33,14 @@ export default async function MenuPage() {
                   {c.items.map((i) => (
                     <li key={i.id} id={i.slug} className={`menu-item ${i.available ? '' : 'is-out'}`}>
                       <div className="menu-item__top">
-                        <h3>{i.name}{i.localName && <span className="dish__local"> {i.localName}</span>}</h3>
+                        <h3>{i.badges?.includes('new') && <span className="new-flag">New</span>}{i.name}{i.localName && <span className="dish__local"> {i.localName}</span>}</h3>
                         <span className="menu-item__price">{gbp(i.price)}</span>
                         {live && i.available && i.orderable && i.price != null && <AddToBasket slug={i.slug} name={i.name} price={i.price} compact />}
                       </div>
                       {i.description && <p>{i.description}</p>}
                       <p className="menu-item__meta">
                         {!i.available && <span className="tag tag--out">Sold out today</span>}
-                        {i.dietary?.map((d) => <span key={d} className="tag">{DIET[d]}</span>)}
+                        <Badges badges={i.badges} diet={i.dietary} max={4} />
                         {i.extras && <span className="menu-item__extras">{i.extras}</span>}
                       </p>
                     </li>

@@ -20,7 +20,10 @@ const LINES: Line[] = [
   { from: 31, to: 34.6, title: 'A short walk from Richmond Bridge.', cta: true },
 ]
 
-export function HeroFilm({ orderLive }: { orderLive: boolean }) {
+type Caption = { from: number; to: number; title: string; body?: string | null; cta?: boolean | null; center?: boolean | null }
+
+export function HeroFilm({ orderLive, title, text, captions }: { orderLive: boolean; title?: string | null; text?: string | null; captions?: Caption[] | null }) {
+  const lines: Line[] = captions && captions.length ? captions.map((c) => ({ from: c.from, to: c.to, title: c.title, body: c.body ?? undefined, cta: !!c.cta, center: !!c.center })) : LINES
   const section = useRef<HTMLElement>(null)
   const video = useRef<HTMLVideoElement>(null)
   const [t, setT] = useState(0)
@@ -84,9 +87,9 @@ export function HeroFilm({ orderLive }: { orderLive: boolean }) {
     return (
       <section className="film film--static" aria-label="Good morning at Cafe Nova">
         <img src="/film/hero-poster.webp" alt="Toasted sourdough, avocado and two poached eggs floating above a blue plate in a sunlit kitchen" />
-        <HeroCopy orderLive={orderLive} />
+        <HeroCopy orderLive={orderLive} title={title} text={text} />
         <ol className="film__static-lines">
-          {LINES.map((l) => <li key={l.title}><b>{l.title}</b> {l.body}</li>)}
+          {lines.map((l) => <li key={l.title}><b>{l.title}</b> {l.body}</li>)}
         </ol>
       </section>
     )
@@ -98,9 +101,9 @@ export function HeroFilm({ orderLive }: { orderLive: boolean }) {
         <video ref={video} className="film__video" poster="/film/hero-poster.webp" muted playsInline preload="auto" aria-hidden="true" />
         <div className="film__shade" />
         <div className="film__hero" style={{ opacity: heroOut, transform: `translateY(${(1 - heroOut) * -24}px)`, pointerEvents: heroOut > 0.3 ? 'auto' : 'none' }}>
-          <HeroCopy orderLive={orderLive} />
+          <HeroCopy orderLive={orderLive} title={title} text={text} />
         </div>
-        {LINES.map((l) => {
+        {lines.map((l) => {
           const o = fade(l)
           return (
             <div key={l.title} className={`film__line ${l.center ? 'film__line--center' : ''}`} style={{ opacity: o, transform: `translateY(${(1 - o) * 28}px)`, filter: o < 1 ? `blur(${(1 - o) * 6}px)` : undefined, pointerEvents: o > 0.5 ? 'auto' : 'none' }} aria-hidden={o < 0.5}>
@@ -129,14 +132,14 @@ export function HeroFilm({ orderLive }: { orderLive: boolean }) {
   )
 }
 
-function HeroCopy({ orderLive }: { orderLive: boolean }) {
+function HeroCopy({ orderLive, title, text }: { orderLive: boolean; title?: string | null; text?: string | null }) {
   return (
     <div className="hero-copy">
-      <h1>Good morning, Richmond.</h1>
-      <p>British and Turkish breakfasts, proper lunches and Alchemy coffee — cooked fresh in East Twickenham, by Richmond Bridge.</p>
+      <h1>{title || 'Good morning, Richmond.'}</h1>
+      <p>{text || 'British and Turkish breakfasts, proper lunches and Alchemy coffee — cooked fresh in East Twickenham, by Richmond Bridge.'}</p>
       <div className="hero-copy__ctas">
         <Link className="btn btn--light" href="/menu">See the menu</Link>
-        <Link className="btn btn--ghost-light" href={orderLive ? '/order' : '/visit'}>{orderLive ? 'Order for collection' : 'Find us'}</Link>
+        <Link className="btn btn--ghost-light" href={orderLive ? '/#order' : '/visit'}>{orderLive ? 'Order online' : 'Find us'}</Link>
       </div>
     </div>
   )

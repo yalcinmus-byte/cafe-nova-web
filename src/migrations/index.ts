@@ -3,6 +3,7 @@ import * as migration_20261021_195220_v3_orders_reviews_partners from './2026102
 import * as migration_20261021_205159_weekend_first_slot from './20261021_205159_weekend_first_slot';
 import * as migration_20261022_204934_v4_shop from './20261022_204934_v4_shop';
 import * as migration_20261023_114734_v5_seasonal_photo from './20261023_114734_v5_seasonal_photo';
+import * as migration_20261024_093150_v6_content_cms_hq from './20261024_093150_v6_content_cms_hq';
 
 export const migrations = [
   {
@@ -28,6 +29,11 @@ export const migrations = [
   {
     up: migration_20261023_114734_v5_seasonal_photo.up,
     down: migration_20261023_114734_v5_seasonal_photo.down,
-    name: '20261023_114734_v5_seasonal_photo'
+    name: '20261023_114734_v5_seasonal_photo',
+  },
+  {
+    up: migration_20261024_093150_v6_content_cms_hq.up,
+    down: migration_20261024_093150_v6_content_cms_hq.down,
+    name: '20261024_093150_v6_content_cms_hq'
   },
 ];

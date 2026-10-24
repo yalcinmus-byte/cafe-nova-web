@@ -59,9 +59,11 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
         ))}
       </nav>
       <div className="site-header__actions">
-        <Link href="/order" className="site-header__order" aria-current={active('/order') ? 'page' : undefined} onClick={(e) => { if (count > 0 && path !== '/order') { e.preventDefault(); openCart() } }}>
-          Order{count > 0 && <span className="site-header__count" aria-label={`${count} in your basket`}>{count}</span>}
-        </Link>
+        <Link href="/#order" className="site-header__order" aria-current={active('/order') ? 'page' : undefined}>Order</Link>
+        <button type="button" className="site-header__cart" onClick={openCart} aria-label={count ? `Basket, ${count} item${count > 1 ? 's' : ''}` : 'Basket, empty'}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 7h12l-1 13H7z" /><path d="M9 7V6a3 3 0 0 1 6 0v1" /></svg>
+          {count > 0 && <span className="site-header__count">{count}</span>}
+        </button>
         <button type="button" className="site-header__burger" aria-expanded={open} aria-controls="site-nav" onClick={() => setOpen((o) => !o)}>
           <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
           <span aria-hidden="true" /><span aria-hidden="true" />

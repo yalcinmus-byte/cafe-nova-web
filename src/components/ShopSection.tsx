@@ -2,17 +2,18 @@
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 import { AddToBasket } from './AddToBasket'
-import { basket, openCart, setFulfilment, useBasket, type Fulfilment } from './basket'
+import { openCart, setFulfilment, useBasket, type Fulfilment } from './basket'
 import { BrandIcon, VENDOR_ICON } from './BrandIcon'
+import { BADGES, Badges } from './Icons'
 
-export type ShopItem = { slug: string; name: string; localName?: string | null; description?: string | null; price: number; photo?: string | null; group: string; category: string; diet?: string[] }
+export type ShopItem = { slug: string; name: string; localName?: string | null; description?: string | null; price: number; photo?: string | null; group: string; category: string; diet?: string[]; badges?: string[] }
 type Vendor = { id?: string | null; name: string; url?: string | null }
 type Opts = { live: boolean; paused: boolean; collection: boolean; delivery: boolean; cardPayments: boolean; payAtCounter: boolean; vendors: Vendor[]; deliveryFee: number; deliveryAreas: string[] }
 
 const GROUPS: Record<string, string> = { breakfast: 'Breakfast', turkish: 'Turkish', lunch: 'Lunch', sweet: 'Sweet', drinks: 'Coffee & drinks', kids: 'Kids', shop: 'Coffee to take home' }
 const gbp = (n: number) => `£${n.toFixed(2)}`
 
-export function ShopSection({ items, opts }: { items: ShopItem[]; opts: Opts }) {
+export function ShopSection({ items, opts, head }: { items: ShopItem[]; opts: Opts; head?: { eyebrow?: string | null; title?: string | null; text?: string | null } }) {
   const [tab, setTab] = useState('all')
   const [mode, setMode] = useState<Fulfilment>('collection')
   const lines = useBasket()
@@ -28,9 +29,9 @@ export function ShopSection({ items, opts }: { items: ShopItem[]; opts: Opts }) 
       <div className="wrap">
         <div className="shop__head">
           <div>
-            <p className="eyebrow">Order online</p>
-            <h2 id="shop-title">Order your favourites</h2>
-            <p>Freshly cooked for your time — pick it up in the café or get it delivered.</p>
+            {head?.eyebrow && <p className="eyebrow">{head.eyebrow}</p>}
+            <h2 id="shop-title">{head?.title ?? 'Order your favourites'}</h2>
+            {head?.text && <p>{head.text}</p>}
           </div>
           <Link className="btn btn--outline" href="/menu">Full menu</Link>
         </div>
@@ -69,13 +70,14 @@ export function ShopSection({ items, opts }: { items: ShopItem[]; opts: Opts }) 
                 <li key={i.slug} className="product">
                   <div className={`product__img ${i.photo ? '' : 'product__img--ph'}`} data-group={i.group}>
                     {i.photo ? <img src={i.photo} alt={i.name} loading="lazy" /> : <span className="product__ph" aria-hidden="true">{i.name.replace(/^Alchemy Coffee — /, '').charAt(0)}</span>}
-                    {i.diet?.includes('vg') ? <span className="product__diet">Vegan</span> : i.diet?.includes('v') ? <span className="product__diet">Veggie</span> : null}
+                    {i.badges?.[0] && BADGES[i.badges[0]] && <span className={`product__flag badge-pill badge-pill--${BADGES[i.badges[0]].tone}`}>{BADGES[i.badges[0]].label}</span>}
                   </div>
                   <div className="product__body">
                     <p className="product__cat">{i.category}</p>
                     <h3>{i.name}</h3>
                     {i.localName && <p className="product__local">{i.localName}</p>}
                     {i.description && <p className="product__desc">{i.description}</p>}
+                    <Badges badges={i.badges?.slice(1)} diet={i.diet} max={2} />
                   </div>
                   <div className="product__foot">
                     <span className="product__price">{gbp(i.price)}</span>
@@ -86,32 +88,6 @@ export function ShopSection({ items, opts }: { items: ShopItem[]; opts: Opts }) 
             </ul>
           </div>
 
-          <aside className="mini-cart" aria-labelledby="mini-cart-title">
-            <h3 id="mini-cart-title">Your basket {count > 0 && <span>{count}</span>}</h3>
-            {lines.length === 0 ? (
-              <p className="mini-cart__empty">{canOrder ? 'Add a dish to start your order.' : opts.paused ? 'Online ordering is paused right now.' : 'Online ordering opens soon.'}</p>
-            ) : (
-              <>
-                <ul>
-                  {lines.map((l) => (
-                    <li key={l.slug}>
-                      <span>{l.qty} × {l.name}</span>
-                      <span>{gbp(l.qty * l.price)}</span>
-                      <button type="button" onClick={() => basket.setQty(l.slug, 0)} aria-label={`Remove ${l.name}`}>×</button>
-                    </li>
-                  ))}
-                </ul>
-                <p className="mini-cart__sum"><span>Subtotal</span><b>{gbp(subtotal)}</b></p>
-                <p className="mini-cart__mode">{mode === 'delivery' ? 'Nova delivery' : 'Pick up in the café'}</p>
-                <Link className="btn btn--turq btn--block" href="/order">Checkout</Link>
-                <button type="button" className="mini-cart__link" onClick={openCart}>View basket</button>
-              </>
-            )}
-            <div className="mini-cart__pay" aria-label="Payment methods">
-              <span>{opts.cardPayments ? 'Pay online or at the counter' : opts.payAtCounter ? 'Pay at the counter · online payment coming soon' : 'Payment options'}</span>
-              <span className="mini-cart__icons"><BrandIcon name="visa" size={26} /><BrandIcon name="mastercard" size={26} /><BrandIcon name="applepay" size={26} /><BrandIcon name="googlepay" size={26} /></span>
-            </div>
-          </aside>
         </div>
       </div>
     </section>

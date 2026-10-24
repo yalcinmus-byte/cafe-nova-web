@@ -88,6 +88,13 @@ export async function Today({ payload }: Props) {
           <Link className="nova-btn nova-btn--ghost" href="/admin/collections/events/create">Add an event</Link>
         </article>
 
+        <article className="nova-card nova-card--hq">
+          <h2>Nova HQ</h2>
+          <p className="nova-big">AI team</p>
+          <p className="nova-muted">CFO, growth, menu, suppliers, social and reviews advisers — preview.</p>
+          <a className="nova-btn" href="/admin/hq">Open Nova HQ</a>
+        </article>
+
         <article className="nova-card">
           <h2>Online orders today</h2>
           <p className="nova-big">{orders.docs.length}</p>

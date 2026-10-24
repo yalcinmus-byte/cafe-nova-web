@@ -1,16 +1,15 @@
-import Link from 'next/link'
 import { HeroFilm } from '@/components/HeroFilm'
 import { Header, Footer } from '@/components/Chrome'
 import { RestaurantJsonLd } from '@/components/JsonLd'
 import { PlatesCarousel, type Plate } from '@/components/PlatesCarousel'
 import type { Media } from '@/payload-types'
-import { getActiveTheme, getEvents, getPartners, getReviews, getService, getSettings, getShop, getShopItems, getSignatures, orderingState } from '@/lib/data'
-import { BookEvent, FindUsBar, GoogleSection, Products, Seasonal, SupplierBar, TripadvisorSection, Values, Welcome } from '@/components/HomeSections'
+import { getActiveTheme, getHomeEvents, getHomepage, getReviews, getService, getSettings, getShop, getShopItems, getSignatures, orderingState } from '@/lib/data'
+import { BookEvent, EventsStrip, FindUsBar, GoogleSection, NewOnMenu, Products, Seasonal, TripadvisorSection, Values, Welcome } from '@/components/HomeSections'
 import { ShopSection } from '@/components/ShopSection'
 import { deliveryAreas } from '@/lib/ordering'
 
 export default async function Home() {
-  const [settings, svc, dishes, events, theme, reviews, partners, shop, shopItems] = await Promise.all([getSettings(), getService(), getSignatures(), getEvents(true), getActiveTheme(), getReviews(), getPartners(), getShop(), getShopItems()])
+  const [settings, svc, dishes, events, theme, reviews, shop, shopItems, home] = await Promise.all([getSettings(), getService(), getSignatures(), getHomeEvents(), getActiveTheme(), getReviews(), getShop(), getShopItems(), getHomepage()])
   const order = orderingState(svc)
   const ORDER = ['istanbul-special-breakfast', 'full-english-breakfast', 'shakshuka-with-eggs', 'smashed-avocado-on-toast', 'turkish-eggs', 'roasted-mixed-vegetables-plate', 'chef-s-salad']
   const rank = (slug: string) => { const i = ORDER.indexOf(slug); return i < 0 ? 99 : i }
@@ -30,45 +29,19 @@ export default async function Home() {
       <Header overlay />
       <RestaurantJsonLd s={settings} orderLive={order.live} />
       <main id="main">
-        <HeroFilm orderLive={order.live} />
-
-        <PlatesCarousel orderLive={order.live} plates={plates} />
-        <ShopSection items={shopItems} opts={shopOpts} />
+        <HeroFilm orderLive={order.live} title={home.hero?.title} text={home.hero?.text} captions={home.hero?.captions} />
+        {home.plates?.show !== false && <PlatesCarousel orderLive={order.live} plates={plates} head={home.plates} />}
+        {home.shop?.show !== false && <ShopSection items={shopItems} opts={shopOpts} head={home.shop} />}
+        <NewOnMenu c={home.newOnMenu} />
         <Seasonal theme={theme} />
-        <BookEvent />
-
-        {events.length > 0 && (
-          <section className="events-strip" aria-labelledby="events-title">
-            <div className="wrap">
-              <div className="section-head section-head--light">
-                <h2 id="events-title">Festive & events</h2>
-                <Link href="/events" className="link-light">All dates this year</Link>
-              </div>
-              <ol className="events-strip__list">
-                {events.map((e) => (
-                  <li key={e.id}>
-                    <time dateTime={e.startsAt}>
-                      <span className="d">{e.dateNote ? '—' : new Date(e.startsAt).toLocaleDateString('en-GB', { day: 'numeric', timeZone: 'Europe/London' })}</span>
-                      <span className="m">{new Date(e.startsAt).toLocaleDateString('en-GB', { month: 'short', timeZone: 'Europe/London' })}</span>
-                    </time>
-                    <div>
-                      <h3>{e.title}</h3>
-                      <p>{e.summary}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </section>
-        )}
-
-        <SupplierBar partners={partners} />
-        <Products partners={partners} shop={shop} orderLive={order.live} />
-        <Values />
-        <GoogleSection s={settings} />
-        <TripadvisorSection reviews={reviews} s={settings} />
-        <Welcome facilities={settings.facilities ?? []} links={settings.links ?? {}} />
-        <FindUsBar links={settings.links ?? {}} />
+        <BookEvent c={home.book} />
+        <EventsStrip c={home.events} events={events} />
+        <Products c={home.products} shop={shop} orderLive={order.live} />
+        <Values c={home.values} />
+        <GoogleSection c={home.google} s={settings} reviews={reviews} />
+        <TripadvisorSection c={home.tripadvisor} reviews={reviews} s={settings} />
+        <Welcome c={home.welcome} facilities={settings.facilities ?? []} fsa={settings.links?.fsa} />
+        {home.findUs?.show !== false && <FindUsBar title={home.findUs?.title} links={settings.links ?? {}} />}
       </main>
       <Footer s={settings} />
     </>

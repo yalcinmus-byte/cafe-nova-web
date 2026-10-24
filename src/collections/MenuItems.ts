@@ -48,7 +48,20 @@ export const MenuItems: CollectionConfig = {
         { label: 'Vegetarian', value: 'v' },
         { label: 'Vegan', value: 'vg' },
         { label: 'Gluten-free', value: 'gf' },
+        { label: 'Dairy-free', value: 'df' },
       ],
+    },
+    {
+      name: 'badges',
+      type: 'select',
+      hasMany: true,
+      options: [
+        { label: 'New', value: 'new' }, { label: 'Popular', value: 'popular' }, { label: 'Top seller', value: 'bestseller' },
+        { label: "Chef's special", value: 'chefs' }, { label: 'Seasonal', value: 'seasonal' }, { label: 'Spicy', value: 'spicy' },
+        { label: 'Healthy choice', value: 'healthy' }, { label: 'Kids’ favourite', value: 'kids' }, { label: 'Limited time', value: 'limited' },
+        { label: 'Signature Turkish', value: 'turkish' },
+      ],
+      admin: { description: 'Little labels shown on the menu and the shop, e.g. New, Popular, Spicy.' },
     },
     {
       name: 'allergens',
