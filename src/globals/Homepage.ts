@@ -70,6 +70,10 @@ export const Homepage: GlobalConfig = {
     section('google', 'Google reviews', head('Google reviews', 'Loved by our neighbours', 'What guests say on Google.')),
     section('tripadvisor', 'Tripadvisor', head('Tripadvisor', '', '')),
     section('welcome', 'Everyone’s welcome', head('Everyone’s welcome', 'Dogs, bikes, buggies and big groups', 'A neighbourhood meeting spot between Richmond Bridge and the park.')),
+    section('careers', 'Careers', [
+      ...head('Join the team', 'Work with us', 'We’re a friendly, family-run café — and we’re hiring.'),
+      { name: 'job', type: 'relationship', relationTo: 'jobs', admin: { description: 'Role to feature (leave empty to show the first open role)' } },
+    ]),
     section('findUs', 'Find us around Richmond', [{ name: 'title', type: 'text', defaultValue: 'Find us around Richmond' }]),
   ],
 }

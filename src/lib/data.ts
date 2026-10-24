@@ -87,7 +87,7 @@ export const getPost = cache(async (slug: string) => {
 
 export const getJobs = cache(async () => {
   const p = await db()
-  const r = await p.find({ collection: 'jobs', where: { open: { equals: true } }, limit: 20 })
+  const r = await p.find({ collection: 'jobs', where: { open: { equals: true } }, limit: 20, sort: 'order' })
   return r.docs
 })
 

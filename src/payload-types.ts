@@ -69,6 +69,10 @@ export interface Config {
   collections: {
     orders: Order;
     enquiries: Enquiry;
+    suppliers: Supplier;
+    purchases: Purchase;
+    expenses: Expense;
+    documents: Document;
     'menu-items': MenuItem;
     'menu-categories': MenuCategory;
     events: Event;
@@ -79,10 +83,6 @@ export interface Config {
     media: Media;
     themes: Theme;
     users: User;
-    suppliers: Supplier;
-    purchases: Purchase;
-    expenses: Expense;
-    documents: Document;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -92,6 +92,10 @@ export interface Config {
   collectionsSelect: {
     orders: OrdersSelect<false> | OrdersSelect<true>;
     enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
+    suppliers: SuppliersSelect<false> | SuppliersSelect<true>;
+    purchases: PurchasesSelect<false> | PurchasesSelect<true>;
+    expenses: ExpensesSelect<false> | ExpensesSelect<true>;
+    documents: DocumentsSelect<false> | DocumentsSelect<true>;
     'menu-items': MenuItemsSelect<false> | MenuItemsSelect<true>;
     'menu-categories': MenuCategoriesSelect<false> | MenuCategoriesSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
@@ -102,10 +106,6 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     themes: ThemesSelect<false> | ThemesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
-    suppliers: SuppliersSelect<false> | SuppliersSelect<true>;
-    purchases: PurchasesSelect<false> | PurchasesSelect<true>;
-    expenses: ExpensesSelect<false> | ExpensesSelect<true>;
-    documents: DocumentsSelect<false> | DocumentsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -222,6 +222,145 @@ export interface Enquiry {
   message: string;
   status?: ('new' | 'replied' | 'booked' | 'closed') | null;
   website?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "suppliers".
+ */
+export interface Supplier {
+  id: number;
+  name: string;
+  category?:
+    | (
+        | 'coffee'
+        | 'dairy'
+        | 'bakery'
+        | 'fresh-produce'
+        | 'meat-fish'
+        | 'dry-goods'
+        | 'drinks'
+        | 'packaging'
+        | 'cleaning'
+        | 'equipment'
+        | 'services'
+      )
+    | null;
+  contact?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  website?: string | null;
+  accountNumber?: string | null;
+  /**
+   * e.g. 30 days, card on delivery
+   */
+  paymentTerms?: string | null;
+  deliveryDays?: string | null;
+  minimumOrder?: number | null;
+  products?:
+    | {
+        item: string;
+        unit?: string | null;
+        price?: number | null;
+        updated?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "purchases".
+ */
+export interface Purchase {
+  id: number;
+  date: string;
+  supplier?: (number | null) | Supplier;
+  /**
+   * Invoice number
+   */
+  reference?: string | null;
+  lines?:
+    | {
+        item: string;
+        qty?: number | null;
+        unit?: string | null;
+        unitPrice?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  net?: number | null;
+  vat?: number | null;
+  total: number;
+  status?: ('unpaid' | 'paid' | 'disputed') | null;
+  /**
+   * Photo or PDF of the invoice
+   */
+  file?: (number | null) | Document;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Upload EPOS exports, bank statements, invoices and reports. The Nova HQ agents will read these once connected.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents".
+ */
+export interface Document {
+  id: number;
+  title: string;
+  kind?:
+    | (
+        | 'epos-sales-export'
+        | 'bank-statement'
+        | 'supplier-invoice'
+        | 'payroll-rota'
+        | 'delivery-app-report'
+        | 'stock-count'
+        | 'other'
+      )
+    | null;
+  /**
+   * e.g. October 2026
+   */
+  period?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expenses".
+ */
+export interface Expense {
+  id: number;
+  date: string;
+  category:
+    | 'rent-rates'
+    | 'utilities'
+    | 'staff'
+    | 'marketing'
+    | 'delivery-fees'
+    | 'card-fees'
+    | 'repairs'
+    | 'software'
+    | 'insurance'
+    | 'other';
+  amount: number;
+  description: string;
+  recurring?: ('one-off' | 'weekly' | 'monthly' | 'quarterly' | 'yearly') | null;
+  receipt?: (number | null) | Document;
   updatedAt: string;
   createdAt: string;
 }
@@ -577,145 +716,6 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "suppliers".
- */
-export interface Supplier {
-  id: number;
-  name: string;
-  category?:
-    | (
-        | 'coffee'
-        | 'dairy'
-        | 'bakery'
-        | 'fresh-produce'
-        | 'meat-fish'
-        | 'dry-goods'
-        | 'drinks'
-        | 'packaging'
-        | 'cleaning'
-        | 'equipment'
-        | 'services'
-      )
-    | null;
-  contact?: string | null;
-  phone?: string | null;
-  email?: string | null;
-  website?: string | null;
-  accountNumber?: string | null;
-  /**
-   * e.g. 30 days, card on delivery
-   */
-  paymentTerms?: string | null;
-  deliveryDays?: string | null;
-  minimumOrder?: number | null;
-  products?:
-    | {
-        item: string;
-        unit?: string | null;
-        price?: number | null;
-        updated?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  notes?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "purchases".
- */
-export interface Purchase {
-  id: number;
-  date: string;
-  supplier?: (number | null) | Supplier;
-  /**
-   * Invoice number
-   */
-  reference?: string | null;
-  lines?:
-    | {
-        item: string;
-        qty?: number | null;
-        unit?: string | null;
-        unitPrice?: number | null;
-        id?: string | null;
-      }[]
-    | null;
-  net?: number | null;
-  vat?: number | null;
-  total: number;
-  status?: ('unpaid' | 'paid' | 'disputed') | null;
-  /**
-   * Photo or PDF of the invoice
-   */
-  file?: (number | null) | Document;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Upload EPOS exports, bank statements, invoices and reports. The Nova HQ agents will read these once connected.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "documents".
- */
-export interface Document {
-  id: number;
-  title: string;
-  kind?:
-    | (
-        | 'epos-sales-export'
-        | 'bank-statement'
-        | 'supplier-invoice'
-        | 'payroll-rota'
-        | 'delivery-app-report'
-        | 'stock-count'
-        | 'other'
-      )
-    | null;
-  /**
-   * e.g. October 2026
-   */
-  period?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "expenses".
- */
-export interface Expense {
-  id: number;
-  date: string;
-  category:
-    | 'rent-rates'
-    | 'utilities'
-    | 'staff'
-    | 'marketing'
-    | 'delivery-fees'
-    | 'card-fees'
-    | 'repairs'
-    | 'software'
-    | 'insurance'
-    | 'other';
-  amount: number;
-  description: string;
-  recurring?: ('one-off' | 'weekly' | 'monthly' | 'quarterly' | 'yearly') | null;
-  receipt?: (number | null) | Document;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -745,6 +745,22 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'enquiries';
         value: number | Enquiry;
+      } | null)
+    | ({
+        relationTo: 'suppliers';
+        value: number | Supplier;
+      } | null)
+    | ({
+        relationTo: 'purchases';
+        value: number | Purchase;
+      } | null)
+    | ({
+        relationTo: 'expenses';
+        value: number | Expense;
+      } | null)
+    | ({
+        relationTo: 'documents';
+        value: number | Document;
       } | null)
     | ({
         relationTo: 'menu-items';
@@ -785,22 +801,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
-      } | null)
-    | ({
-        relationTo: 'suppliers';
-        value: number | Supplier;
-      } | null)
-    | ({
-        relationTo: 'purchases';
-        value: number | Purchase;
-      } | null)
-    | ({
-        relationTo: 'expenses';
-        value: number | Expense;
-      } | null)
-    | ({
-        relationTo: 'documents';
-        value: number | Document;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -901,6 +901,93 @@ export interface EnquiriesSelect<T extends boolean = true> {
   website?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "suppliers_select".
+ */
+export interface SuppliersSelect<T extends boolean = true> {
+  name?: T;
+  category?: T;
+  contact?: T;
+  phone?: T;
+  email?: T;
+  website?: T;
+  accountNumber?: T;
+  paymentTerms?: T;
+  deliveryDays?: T;
+  minimumOrder?: T;
+  products?:
+    | T
+    | {
+        item?: T;
+        unit?: T;
+        price?: T;
+        updated?: T;
+        id?: T;
+      };
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "purchases_select".
+ */
+export interface PurchasesSelect<T extends boolean = true> {
+  date?: T;
+  supplier?: T;
+  reference?: T;
+  lines?:
+    | T
+    | {
+        item?: T;
+        qty?: T;
+        unit?: T;
+        unitPrice?: T;
+        id?: T;
+      };
+  net?: T;
+  vat?: T;
+  total?: T;
+  status?: T;
+  file?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expenses_select".
+ */
+export interface ExpensesSelect<T extends boolean = true> {
+  date?: T;
+  category?: T;
+  amount?: T;
+  description?: T;
+  recurring?: T;
+  receipt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents_select".
+ */
+export interface DocumentsSelect<T extends boolean = true> {
+  title?: T;
+  kind?: T;
+  period?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1128,93 +1215,6 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "suppliers_select".
- */
-export interface SuppliersSelect<T extends boolean = true> {
-  name?: T;
-  category?: T;
-  contact?: T;
-  phone?: T;
-  email?: T;
-  website?: T;
-  accountNumber?: T;
-  paymentTerms?: T;
-  deliveryDays?: T;
-  minimumOrder?: T;
-  products?:
-    | T
-    | {
-        item?: T;
-        unit?: T;
-        price?: T;
-        updated?: T;
-        id?: T;
-      };
-  notes?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "purchases_select".
- */
-export interface PurchasesSelect<T extends boolean = true> {
-  date?: T;
-  supplier?: T;
-  reference?: T;
-  lines?:
-    | T
-    | {
-        item?: T;
-        qty?: T;
-        unit?: T;
-        unitPrice?: T;
-        id?: T;
-      };
-  net?: T;
-  vat?: T;
-  total?: T;
-  status?: T;
-  file?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "expenses_select".
- */
-export interface ExpensesSelect<T extends boolean = true> {
-  date?: T;
-  category?: T;
-  amount?: T;
-  description?: T;
-  recurring?: T;
-  receipt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "documents_select".
- */
-export interface DocumentsSelect<T extends boolean = true> {
-  title?: T;
-  kind?: T;
-  period?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1479,6 +1479,16 @@ export interface Homepage {
     eyebrow?: string | null;
     title?: string | null;
     text?: string | null;
+  };
+  careers?: {
+    show?: boolean | null;
+    eyebrow?: string | null;
+    title?: string | null;
+    text?: string | null;
+    /**
+     * Role to feature (leave empty to show the first open role)
+     */
+    job?: (number | null) | Job;
   };
   findUs?: {
     show?: boolean | null;
@@ -1764,6 +1774,15 @@ export interface HomepageSelect<T extends boolean = true> {
         eyebrow?: T;
         title?: T;
         text?: T;
+      };
+  careers?:
+    | T
+    | {
+        show?: T;
+        eyebrow?: T;
+        title?: T;
+        text?: T;
+        job?: T;
       };
   findUs?:
     | T

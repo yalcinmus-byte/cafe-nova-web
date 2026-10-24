@@ -1,12 +1,12 @@
 import Link from 'next/link'
-import type { Event, Homepage, Media, MenuItem, Partner, Review, Theme } from '@/payload-types'
-import { FsaBadge } from './FsaBadge'
+import type { Event, Homepage, Job, Media, MenuItem, Partner, Review, Theme } from '@/payload-types'
 import { NovaArcs } from './NovaLogo'
 import { AddToBasket } from './AddToBasket'
 import { BrandIcon } from './BrandIcon'
 import { BookingCalendar } from './BookingCalendar'
 import { EnquiryForm } from './EnquiryForm'
 import { Badges, Icon } from './Icons'
+import { HygieneRating } from './HygieneRating'
 
 type Links = Record<string, string | null | undefined>
 type L = Links
@@ -87,8 +87,8 @@ export function Welcome({ c, facilities, fsa }: { c: Homepage['welcome']; facili
               <span className="fac__icon"><Icon name={f.icon ?? 'heart'} size={30} /></span>
               <h3>{f.title}</h3>
               {f.text && <p>{f.text}</p>}
-              {f.icon === 'hygiene' && <div className="fac__fsa"><FsaBadge style="1" /></div>}
-              {f.links && f.links.length > 0 && (
+              {f.icon === 'hygiene' && <HygieneRating rating={5} href={f.links?.[0]?.url ?? fsa} />}
+              {f.links && f.links.length > 0 && f.icon !== 'hygiene' && (
                 <ul className="fac__links">
                   {f.links.map((k) => (
                     <li key={k.id ?? k.label}><a href={k.url} {...(k.url.startsWith('http') ? ext : {})}><b>{k.label}</b>{k.note && <small>{k.note}</small>}<span aria-hidden="true">→</span></a></li>
@@ -99,7 +99,6 @@ export function Welcome({ c, facilities, fsa }: { c: Homepage['welcome']; facili
             </li>
           ))}
         </ul>
-        {fsa && null}
       </div>
     </section>
   )
@@ -367,6 +366,33 @@ export function TripadvisorSection({ c, reviews, s }: { c: Homepage['tripadvisor
           {l.wanderlog && <a className="plan-chip plan-chip--wanderlog" href={l.wanderlog} {...ext}><span className="plan-chip__icon"><BrandIcon name="wanderlog" size={20} color="#fff" /></span> Add Cafe Nova to your Wanderlog trip</a>}
           {l.tripadvisor && <a className="plan-chip plan-chip--ta" href={l.tripadvisor} {...ext}><span className="plan-chip__icon"><BrandIcon name="tripadvisor" size={20} color="#000" /></span> Save us on Tripadvisor</a>}
         </div>
+      </div>
+    </section>
+  )
+}
+
+const TEAM: Record<string, string> = { front: 'Front of house', kitchen: 'Kitchen', coffee: 'Coffee bar' }
+
+export function CareersTeaser({ c, fallback }: { c: Homepage['careers']; fallback?: Job | null }) {
+  const job = (c?.job && typeof c.job === 'object' ? (c.job as Job) : null) ?? fallback
+  if (c?.show === false || !job || job.open === false) return null
+  const hours = job.hours ? job.hours.replace('-', ' ').replace(/^./, (x) => x.toUpperCase()) : ''
+  return (
+    <section className="careers-teaser" aria-labelledby="careers-teaser-title">
+      <div className="wrap careers-teaser__inner">
+        <div>
+          {c?.eyebrow && <p className="eyebrow">{c.eyebrow}</p>}
+          <h2 id="careers-teaser-title">{c?.title}</h2>
+          {c?.text && <p>{c.text}</p>}
+          <div className="row-ctas"><Link className="btn btn--outline" href="/careers">See all roles</Link></div>
+        </div>
+        <Link href={`/careers/${job.slug}`} className="job-card">
+          <span className="job-card__meta">{[TEAM[job.team ?? ''], hours].filter(Boolean).join(' · ')}</span>
+          <h3>{job.title}</h3>
+          {job.schedule && <p className="job-card__when">{job.schedule}</p>}
+          <p>{job.summary}</p>
+          <span className="job-card__cta">View role & apply →</span>
+        </Link>
       </div>
     </section>
   )

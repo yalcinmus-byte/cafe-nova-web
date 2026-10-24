@@ -193,3 +193,44 @@ h1, h2, h3, .render-title, .doc-header__title, .list-header h1, .collection-list
 .hq__roadmap ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 .hq__roadmap li { background: #fff; border: 1px solid #e3e1d8; border-top: 4px solid #5fbdb7; border-radius: 16px; padding: 16px; display: grid; gap: 6px; font-size: 14px; }
 @media (max-width: 1100px) { .hq__hero, .hq__sources, .hq__roadmap ol { grid-template-columns: 1fr; } .hq__kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Nav order: Today → café tools → Guests → Nova HQ data → AI team → everything else */
+.nav__wrap > .nav-group:nth-child(1) { order: 1; }
+.nav__wrap > .nova-navextra--today { order: 2; margin: 0 0 14px; padding-top: 0; border-top: 0; }
+.nav__wrap > .nav-group:nth-child(2) { order: 3; }
+.nav__wrap > .nav-group:nth-child(3) { order: 4; }
+.nav__wrap > .nova-navextra--hq { order: 5; margin: 0 0 18px; padding-top: 0; border-top: 0; }
+.nav__wrap > .nav-group:nth-child(n+4) { order: 6; }
+.nav__wrap > .nav__controls { order: 9; }
+.nova-navextra__label { display: block; color: #7fe0d8; font-size: 12px; letter-spacing: .02em; margin: 4px 0 6px; font-weight: 700; }
+.nova-navextra__agent { display: flex !important; gap: 10px; align-items: center; font-size: 14px; }
+.nova-navextra__agent span { width: 22px; height: 22px; border-radius: 6px; background: rgba(127,224,216,.15); color: #7fe0d8; display: inline-grid; place-items: center; font-size: 12px; flex: none; }
+
+/* Agent page */
+a.hq__agent { text-decoration: none; color: inherit; transition: transform .2s, border-color .2s; }
+a.hq__agent:hover { transform: translateY(-2px); border-color: #5fbdb7; }
+a.hq__agent .hq__btn { cursor: pointer; background: #e3f1f0; color: #237a76; text-align: center; }
+.hq-agent__back { display: inline-block; margin-bottom: 16px; font-weight: 700; text-decoration: none; color: #237a76; }
+.hq-agent__head { display: flex; gap: 18px; align-items: center; background: linear-gradient(135deg, #12293a, #1d5a7e); color: #f4f1e9; border-radius: 22px; padding: 26px; }
+.hq-agent__head h1 { font-family: 'Fraunces', Georgia, serif; font-size: 44px; color: #fff; margin: 8px 0 2px; }
+.hq-agent__head h1 small { font-size: 22px; color: #bcd8e6; }
+.hq-agent__head p { margin: 0; color: #cfdbe2; }
+.hq-agent__icon { width: 72px; height: 72px; font-size: 32px; border-radius: 20px; }
+.hq-agent__grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 16px; margin-top: 16px; }
+.hq-agent__chat { background: #fff; border: 1px solid #e3e1d8; border-radius: 20px; display: flex; flex-direction: column; min-height: 460px; }
+.hq-agent__msgs { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+.hq-msg { max-width: 80%; padding: 12px 14px; border-radius: 16px; font-size: 15px; }
+.hq-msg--bot { background: #f2f0e9; align-self: flex-start; border-bottom-left-radius: 4px; }
+.hq-msg--you { background: #1d5a7e; color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+.hq-msg--muted { color: #6b777d; font-style: italic; }
+.hq-agent__input { display: flex; gap: 8px; padding: 14px; border-top: 1px solid #e3e1d8; }
+.hq-agent__input input { flex: 1; border: 1px solid #d9d6cc; border-radius: 999px; padding: 12px 16px; background: #f8f7f2; }
+.hq-agent__input button { border: 0; border-radius: 999px; padding: 0 20px; background: #edeae1; color: #8a969c; font-weight: 700; }
+.hq-agent__side { display: grid; gap: 12px; align-content: start; }
+.hq-agent__box { background: #fff; border: 1px solid #e3e1d8; border-radius: 18px; padding: 18px; }
+.hq-agent__box h2 { font-size: 17px; margin: 0 0 8px; }
+.hq-agent__box ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 14px; }
+.hq-agent__settings { list-style: none; padding: 0 !important; }
+.hq-agent__settings li { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dashed #e3e1d8; padding: 6px 0; }
+.hq-agent__settings em { font-style: normal; color: #6b777d; font-size: 13px; }
+@media (max-width: 1000px) { .hq-agent__grid { grid-template-columns: 1fr; } }

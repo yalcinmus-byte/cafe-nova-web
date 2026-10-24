@@ -2,7 +2,7 @@ import type { Access, CollectionConfig } from 'payload'
 
 const staff: Access = ({ req }) => !!req.user
 const owner: Access = ({ req }) => req.user?.role === 'owner' || req.user?.role === 'manager'
-const hq = { group: 'Nova HQ' }
+const hq = { group: 'Nova HQ · Data' }
 
 export const Suppliers: CollectionConfig = {
   slug: 'suppliers',

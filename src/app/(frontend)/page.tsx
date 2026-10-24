@@ -3,13 +3,13 @@ import { Header, Footer } from '@/components/Chrome'
 import { RestaurantJsonLd } from '@/components/JsonLd'
 import { PlatesCarousel, type Plate } from '@/components/PlatesCarousel'
 import type { Media } from '@/payload-types'
-import { getActiveTheme, getHomeEvents, getHomepage, getReviews, getService, getSettings, getShop, getShopItems, getSignatures, orderingState } from '@/lib/data'
-import { BookEvent, EventsStrip, FindUsBar, GoogleSection, NewOnMenu, Products, Seasonal, TripadvisorSection, Values, Welcome } from '@/components/HomeSections'
+import { getActiveTheme, getHomeEvents, getHomepage, getJobs, getReviews, getService, getSettings, getShop, getShopItems, getSignatures, orderingState } from '@/lib/data'
+import { BookEvent, CareersTeaser, EventsStrip, FindUsBar, GoogleSection, NewOnMenu, Products, Seasonal, TripadvisorSection, Values, Welcome } from '@/components/HomeSections'
 import { ShopSection } from '@/components/ShopSection'
 import { deliveryAreas } from '@/lib/ordering'
 
 export default async function Home() {
-  const [settings, svc, dishes, events, theme, reviews, shop, shopItems, home] = await Promise.all([getSettings(), getService(), getSignatures(), getHomeEvents(), getActiveTheme(), getReviews(), getShop(), getShopItems(), getHomepage()])
+  const [settings, svc, dishes, events, theme, reviews, shop, shopItems, home, jobs] = await Promise.all([getSettings(), getService(), getSignatures(), getHomeEvents(), getActiveTheme(), getReviews(), getShop(), getShopItems(), getHomepage(), getJobs()])
   const order = orderingState(svc)
   const ORDER = ['istanbul-special-breakfast', 'full-english-breakfast', 'shakshuka-with-eggs', 'smashed-avocado-on-toast', 'turkish-eggs', 'roasted-mixed-vegetables-plate', 'chef-s-salad']
   const rank = (slug: string) => { const i = ORDER.indexOf(slug); return i < 0 ? 99 : i }
@@ -41,6 +41,7 @@ export default async function Home() {
         <GoogleSection c={home.google} s={settings} reviews={reviews} />
         <TripadvisorSection c={home.tripadvisor} reviews={reviews} s={settings} />
         <Welcome c={home.welcome} facilities={settings.facilities ?? []} fsa={settings.links?.fsa} />
+        <CareersTeaser c={home.careers} fallback={jobs[0]} />
         {home.findUs?.show !== false && <FindUsBar title={home.findUs?.title} links={settings.links ?? {}} />}
       </main>
       <Footer s={settings} />
