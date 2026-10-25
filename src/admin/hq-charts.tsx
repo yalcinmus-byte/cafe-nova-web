@@ -158,7 +158,7 @@ export function PoundSplit({ costs }: { costs: { name: string; p: number; profit
 }
 
 type Dish = { name: string; qty: number; margin: number; group: string; price: number }
-const NUDGE: Record<string, [number, number, 'start' | 'end']> = {
+const NUDGE: Record<string, [number, number, 'start' | 'middle' | 'end']> = {
   'Eggs Benedict': [-9, 4, 'end'],
   'Smashed Avocado': [9, 4, 'start'],
   'Turkish Eggs': [9, 16, 'start'],
