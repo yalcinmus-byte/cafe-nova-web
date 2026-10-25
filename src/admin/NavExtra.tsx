@@ -1,6 +1,5 @@
 import React from 'react'
 import Link from 'next/link'
-import { AGENTS } from './agents'
 
 /** Shown straight after the "Today" group (placed with CSS order). */
 export const NavToday = () => (
@@ -11,14 +10,12 @@ export const NavToday = () => (
   </div>
 )
 
-/** Shown straight after the "Nova HQ" group. */
+/** Shown straight after the "Nova HQ · Data" group: Nova HQ is its own app at /hq. */
 export const NavHQ = () => (
   <div className="nova-navextra nova-navextra--hq">
-    <span className="nova-navextra__label">Nova HQ · AI team</span>
-    <Link href="/admin/hq" className="nav__link nova-navextra__hq">✦ HQ dashboard</Link>
-    {AGENTS.map((a) => (
-      <Link key={a.slug} href={`/admin/hq/${a.slug}`} className="nav__link nova-navextra__agent"><span aria-hidden="true">{a.icon}</span>{a.persona} · {a.name}</Link>
-    ))}
+    <span className="nova-navextra__label">Nova HQ</span>
+    <a href="/hq" className="nav__link nova-navextra__hq">✦ Open Nova HQ</a>
+    <span className="nova-navextra__hint">Dashboard, AI team and reports</span>
   </div>
 )
 

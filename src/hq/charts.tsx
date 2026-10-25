@@ -1,5 +1,5 @@
 import React from 'react'
-import type { Day } from './hq-sample'
+import type { Day } from './sample'
 
 /* Chart tokens: one brand hue for single series, the validated 4-slot categorical order for the channel mix,
    a one-hue sequential ramp for the heatmap. Text stays in ink tokens, never the series colour. */

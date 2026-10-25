@@ -1,5 +1,5 @@
 import React from 'react'
-import { getSample } from './hq-sample'
+import { getSample } from '@/hq/sample'
 import Link from 'next/link'
 import type { Payload } from 'payload'
 
@@ -94,7 +94,7 @@ export async function Today({ payload }: Props) {
           <h2>Nova HQ</h2>
           <p className="nova-big">{hq.score}<small style={{ fontSize: '0.45em', opacity: 0.7 }}>/100 health</small></p>
           <p className="nova-muted">{hq.urgent.filter((u) => u.level === 'critical' || u.level === 'serious').length} urgent · {hq.urgent.length} need you · {hq.insights.length} suggestions from your AI team (sample data)</p>
-          <a className="nova-btn" href="/admin/hq">Open Nova HQ</a>
+          <a className="nova-btn" href="/hq">Open Nova HQ</a>
         </article>
 
         <article className="nova-card">

@@ -27,6 +27,12 @@ const nextConfig: NextConfig = {
 
     return webpackConfig
   },
+  async redirects() {
+    return [
+      { source: '/admin/hq', destination: '/hq', permanent: false },
+      { source: '/admin/hq/:agent', destination: '/hq/agents/:agent', permanent: false },
+    ]
+  },
   turbopack: {
     root: path.resolve(dirname),
   },

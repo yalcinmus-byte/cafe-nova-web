@@ -42,7 +42,7 @@ export default buildConfig({
       graphics: { Logo: '@/admin/Logo#Logo', Icon: '@/admin/Logo#Icon' },
       beforeDashboard: ['@/admin/Today#Today'],
       afterNavLinks: ['@/admin/NavExtra#NavToday', '@/admin/NavExtra#NavHQ'],
-      views: { kitchen: { Component: '@/admin/Kitchen#Kitchen', path: '/kitchen' }, bookings: { Component: '@/admin/Bookings#Bookings', path: '/bookings' }, hq: { Component: '@/admin/HQ#HQ', path: '/hq', exact: true }, agent: { Component: '@/admin/Agent#Agent', path: '/hq/:agent' } },
+      views: { kitchen: { Component: '@/admin/Kitchen#Kitchen', path: '/kitchen' }, bookings: { Component: '@/admin/Bookings#Bookings', path: '/bookings' }, },
     },
     theme: 'light',
   },
