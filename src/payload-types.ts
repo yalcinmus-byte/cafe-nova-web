@@ -75,6 +75,7 @@ export interface Config {
     documents: Document;
     'menu-items': MenuItem;
     'menu-categories': MenuCategory;
+    offers: Offer;
     events: Event;
     posts: Post;
     jobs: Job;
@@ -98,6 +99,7 @@ export interface Config {
     documents: DocumentsSelect<false> | DocumentsSelect<true>;
     'menu-items': MenuItemsSelect<false> | MenuItemsSelect<true>;
     'menu-categories': MenuCategoriesSelect<false> | MenuCategoriesSelect<true>;
+    offers: OffersSelect<false> | OffersSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     jobs: JobsSelect<false> | JobsSelect<true>;
@@ -416,6 +418,10 @@ export interface MenuItem {
       )[]
     | null;
   /**
+   * Optional allergy note shown under the dish, e.g. "Can be made gluten-free on request" or "Cooked in a kitchen that uses nuts".
+   */
+  allergyNote?: string | null;
+  /**
    * e.g. "Add a poached egg £2.50"
    */
   extras?: string | null;
@@ -484,6 +490,61 @@ export interface Media {
       filename?: string | null;
     };
   };
+}
+/**
+ * Time-based deals, e.g. half-price cakes after 3pm on weekdays. Shown on the homepage and menu; linked dishes get the discount automatically at checkout while the offer is on.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offers".
+ */
+export interface Offer {
+  id: number;
+  /**
+   * e.g. Half-price cakes after 3pm
+   */
+  title: string;
+  /**
+   * One or two lines for guests.
+   */
+  text?: string | null;
+  active?: boolean | null;
+  showOnHome?: boolean | null;
+  /**
+   * % off, e.g. 50
+   */
+  discount?: number | null;
+  order?: number | null;
+  /**
+   * Leave empty for every day.
+   */
+  days?: ('mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun')[] | null;
+  /**
+   * 24h, UK time
+   */
+  from?: string | null;
+  to?: string | null;
+  /**
+   * Optional
+   */
+  startDate?: string | null;
+  /**
+   * Optional
+   */
+  endDate?: string | null;
+  /**
+   * Whole menu sections this applies to (optional).
+   */
+  categories?: (number | MenuCategory)[] | null;
+  /**
+   * Single dishes this applies to (optional). With none linked, the offer is shown as a note only (e.g. counter cakes).
+   */
+  items?: (number | MenuItem)[] | null;
+  /**
+   * Short tag on the menu, e.g. "½ price after 3pm". Optional.
+   */
+  label?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -771,6 +832,10 @@ export interface PayloadLockedDocument {
         value: number | MenuCategory;
       } | null)
     | ({
+        relationTo: 'offers';
+        value: number | Offer;
+      } | null)
+    | ({
         relationTo: 'events';
         value: number | Event;
       } | null)
@@ -1008,6 +1073,7 @@ export interface MenuItemsSelect<T extends boolean = true> {
   dietary?: T;
   badges?: T;
   allergens?: T;
+  allergyNote?: T;
   extras?: T;
   photo?: T;
   photoPath?: T;
@@ -1024,6 +1090,28 @@ export interface MenuCategoriesSelect<T extends boolean = true> {
   group?: T;
   note?: T;
   order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offers_select".
+ */
+export interface OffersSelect<T extends boolean = true> {
+  title?: T;
+  text?: T;
+  active?: T;
+  showOnHome?: T;
+  discount?: T;
+  order?: T;
+  days?: T;
+  from?: T;
+  to?: T;
+  startDate?: T;
+  endDate?: T;
+  categories?: T;
+  items?: T;
+  label?: T;
   updatedAt?: T;
   createdAt?: T;
 }

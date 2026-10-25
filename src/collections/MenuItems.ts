@@ -70,6 +70,7 @@ export const MenuItems: CollectionConfig = {
       options: ALLERGENS.map((a) => ({ label: a[0].toUpperCase() + a.slice(1), value: a })),
       admin: { description: 'Kitchen-confirmed only. Empty = not yet confirmed (shown as "ask our team").' },
     },
+    { name: 'allergyNote', type: 'text', admin: { description: 'Optional allergy note shown under the dish, e.g. "Can be made gluten-free on request" or "Cooked in a kitchen that uses nuts".' } },
     { name: 'extras', type: 'text', admin: { description: 'e.g. "Add a poached egg £2.50"' } },
     { name: 'photo', type: 'upload', relationTo: 'media' },
     { name: 'photoPath', type: 'text', admin: { description: 'Static image path (used until a photo is uploaded)', position: 'sidebar' } },

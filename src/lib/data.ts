@@ -115,7 +115,7 @@ export const getShopItems = cache(async () => {
   return r.docs.sort((a, b) => rank(a) - rank(b)).map((d) => {
     const c = typeof d.category === 'object' ? (d.category as MenuCategory) : null
     const m = typeof d.photo === 'object' && d.photo ? (d.photo as { url?: string | null }) : null
-    return { slug: d.slug, name: d.name, localName: d.localName, description: d.description, price: d.price!, photo: m?.url || d.photoPath || null, group: c?.group ?? 'breakfast', category: c?.name ?? '', diet: d.dietary ?? [], badges: d.badges ?? [] }
+    return { id: d.id, categoryId: c?.id ?? null, slug: d.slug, name: d.name, localName: d.localName, description: d.description, price: d.price!, photo: m?.url || d.photoPath || null, group: c?.group ?? 'breakfast', category: c?.name ?? '', diet: d.dietary ?? [], badges: d.badges ?? [] }
   })
 })
 
@@ -132,3 +132,5 @@ export const getHomeEvents = cache(async () => {
   const near = r.docs.filter((e) => e.kind === 'nearby').slice(0, 4)
   return [...nova, ...near]
 })
+
+export const getOffers = cache(async () => (await (await db()).find({ collection: 'offers', where: { active: { equals: true } }, sort: 'order', limit: 20, depth: 0 })).docs)

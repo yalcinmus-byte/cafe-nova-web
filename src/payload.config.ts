@@ -20,6 +20,7 @@ import { Enquiries } from './collections/Enquiries'
 import { Orders } from './collections/Orders'
 import { Partners } from './collections/Partners'
 import { Reviews } from './collections/Reviews'
+import { Offers } from './collections/Offers'
 import { Suppliers, Purchases, Expenses, Documents } from './collections/hq'
 import { ServiceControl } from './globals/ServiceControl'
 import { SiteSettings } from './globals/SiteSettings'
@@ -46,7 +47,7 @@ export default buildConfig({
     },
     theme: 'light',
   },
-  collections: [Orders, Enquiries, Suppliers, Purchases, Expenses, Documents, MenuItems, MenuCategories, Events, Posts, Jobs, Reviews, Partners, Media, Themes, Users],
+  collections: [Orders, Enquiries, Suppliers, Purchases, Expenses, Documents, MenuItems, MenuCategories, Offers, Events, Posts, Jobs, Reviews, Partners, Media, Themes, Users],
   globals: [ServiceControl, SiteSettings, Homepage, Pages],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

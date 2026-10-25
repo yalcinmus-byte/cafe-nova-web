@@ -3,13 +3,19 @@ import { Header, Footer } from '@/components/Chrome'
 import { RestaurantJsonLd } from '@/components/JsonLd'
 import { PlatesCarousel, type Plate } from '@/components/PlatesCarousel'
 import type { Media } from '@/payload-types'
-import { getActiveTheme, getHomeEvents, getHomepage, getJobs, getReviews, getService, getSettings, getShop, getShopItems, getSignatures, orderingState } from '@/lib/data'
-import { BookEvent, CareersTeaser, EventsStrip, FindUsBar, GoogleSection, NewOnMenu, Products, Seasonal, TripadvisorSection, Values, Welcome } from '@/components/HomeSections'
+import { getActiveTheme, getHomeEvents, getHomepage, getJobs, getReviews, getService, getSettings, getShop, getShopItems, getSignatures, getPartners, getOffers, orderingState } from '@/lib/data'
+import { discounted, londonNow, offerFor } from '@/lib/offers'
+import { BookEvent, CareersTeaser, OffersSection, SupplierBar, EventsStrip, FindUsBar, GoogleSection, NewOnMenu, Products, Seasonal, TripadvisorSection, Values, Welcome } from '@/components/HomeSections'
 import { ShopSection } from '@/components/ShopSection'
 import { deliveryAreas } from '@/lib/ordering'
 
 export default async function Home() {
-  const [settings, svc, dishes, events, theme, reviews, shop, shopItems, home, jobs] = await Promise.all([getSettings(), getService(), getSignatures(), getHomeEvents(), getActiveTheme(), getReviews(), getShop(), getShopItems(), getHomepage(), getJobs()])
+  const [settings, svc, dishes, events, theme, reviews, shop, shopItemsRaw, home, jobs, partners, offers] = await Promise.all([getSettings(), getService(), getSignatures(), getHomeEvents(), getActiveTheme(), getReviews(), getShop(), getShopItems(), getHomepage(), getJobs(), getPartners(), getOffers()])
+  const now = londonNow()
+  const shopItems = shopItemsRaw.map((i) => {
+    const off = offerFor({ id: i.id, category: i.categoryId }, offers, now)
+    return off ? { ...i, was: i.price, price: discounted(i.price, off), offer: off.label || `${off.discount}% off now` } : i
+  })
   const order = orderingState(svc)
   const ORDER = ['istanbul-special-breakfast', 'full-english-breakfast', 'shakshuka-with-eggs', 'smashed-avocado-on-toast', 'turkish-eggs', 'roasted-mixed-vegetables-plate', 'chef-s-salad']
   const rank = (slug: string) => { const i = ORDER.indexOf(slug); return i < 0 ? 99 : i }
@@ -32,11 +38,13 @@ export default async function Home() {
         <HeroFilm orderLive={order.live} title={home.hero?.title} text={home.hero?.text} captions={home.hero?.captions} />
         {home.plates?.show !== false && <PlatesCarousel orderLive={order.live} plates={plates} head={home.plates} />}
         {home.shop?.show !== false && <ShopSection items={shopItems} opts={shopOpts} head={home.shop} />}
+        <OffersSection offers={offers.filter((o) => o.showOnHome)} />
         <NewOnMenu c={home.newOnMenu} />
         <Seasonal theme={theme} />
         <BookEvent c={home.book} />
         <EventsStrip c={home.events} events={events} />
         <Products c={home.products} shop={shop} orderLive={order.live} />
+        <SupplierBar partners={partners} />
         <Values c={home.values} />
         <GoogleSection c={home.google} s={settings} reviews={reviews} />
         <TripadvisorSection c={home.tripadvisor} reviews={reviews} s={settings} />

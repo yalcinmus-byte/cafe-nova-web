@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import { db, getService, orderingState } from '@/lib/data'
+import { db, getService, orderingState, getOffers } from '@/lib/data'
+import { discounted, offerFor } from '@/lib/offers'
 import { createStripeSession, deliveryAreas, newRef, newToken, outwardCode, todaysSlots } from '@/lib/ordering'
 
 export const dynamic = 'force-dynamic'
@@ -34,7 +35,12 @@ export async function POST(req: Request) {
   for (const l of body.lines ?? []) if (l?.slug) wanted.set(String(l.slug), Math.min(20, (wanted.get(String(l.slug)) ?? 0) + Math.max(1, Math.floor(Number(l.qty) || 1))))
   if (!wanted.size) return bad('Your basket is empty.')
   const found = await payload.find({ collection: 'menu-items', depth: 0, limit: 100, where: { slug: { in: [...wanted.keys()] }, available: { equals: true }, orderable: { equals: true }, price: { exists: true } } })
-  const items = found.docs.map((d) => ({ slug: d.slug, name: d.name, qty: wanted.get(d.slug)!, unitPrice: d.price! }))
+  // Live offers (e.g. half-price after 3pm) are applied here, on the server, at the moment of ordering.
+  const offers = await getOffers()
+  const items = found.docs.map((d) => {
+    const off = offerFor(d, offers)
+    return { slug: d.slug, name: off ? `${d.name} (${off.label || `${off.discount}% off`})` : d.name, qty: wanted.get(d.slug)!, unitPrice: discounted(d.price!, off) }
+  })
   if (items.length !== wanted.size) return bad('Some dishes in your basket aren’t available any more — please check your basket.')
   const subtotal = Math.round(items.reduce((s, i) => s + i.qty * i.unitPrice, 0) * 100) / 100
 

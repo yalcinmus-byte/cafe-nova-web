@@ -7,6 +7,7 @@ import * as migration_20261024_093150_v6_content_cms_hq from './20261024_093150_
 import * as migration_20261024_100751_v7_careers_teaser from './20261024_100751_v7_careers_teaser';
 import * as migration_20261024_104045_v8_whatsapp from './20261024_104045_v8_whatsapp';
 import * as migration_20261025_121500_v9_dish_photos from './20261025_121500_v9_dish_photos';
+import * as migration_20261025_214802_v10_offers_allergy_partners from './20261025_214802_v10_offers_allergy_partners';
 
 export const migrations = [
   {
@@ -47,11 +48,16 @@ export const migrations = [
   {
     up: migration_20261024_104045_v8_whatsapp.up,
     down: migration_20261024_104045_v8_whatsapp.down,
-    name: '20261024_104045_v8_whatsapp'
+    name: '20261024_104045_v8_whatsapp',
   },
   {
     up: migration_20261025_121500_v9_dish_photos.up,
     down: migration_20261025_121500_v9_dish_photos.down,
-    name: '20261025_121500_v9_dish_photos'
+    name: '20261025_121500_v9_dish_photos',
+  },
+  {
+    up: migration_20261025_214802_v10_offers_allergy_partners.up,
+    down: migration_20261025_214802_v10_offers_allergy_partners.down,
+    name: '20261025_214802_v10_offers_allergy_partners'
   },
 ];

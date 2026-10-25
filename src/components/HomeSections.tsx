@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import type { Event, Homepage, Job, Media, MenuItem, Partner, Review, Theme } from '@/payload-types'
+import type { Event, Homepage, Job, Media, MenuItem, Offer, Partner, Review, Theme } from '@/payload-types'
+import { isLive, londonNow, schedule } from '@/lib/offers'
 import { NovaArcs } from './NovaLogo'
 import { AddToBasket } from './AddToBasket'
 import { BrandIcon } from './BrandIcon'
@@ -393,6 +394,54 @@ export function CareersTeaser({ c, fallback }: { c: Homepage['careers']; fallbac
           <p>{job.summary}</p>
           <span className="job-card__cta">View role & apply →</span>
         </Link>
+      </div>
+    </section>
+  )
+}
+
+
+/** Logos (or styled names, until a logo is uploaded with permission) of the people who supply the café. No heading, just the band. */
+export function SupplierBar({ partners }: { partners: Partner[] }) {
+  if (!partners.length) return null
+  const row = partners.map((p) => {
+    const logo = typeof p.logo === 'object' ? (p.logo as Media | null) : null
+    return (
+      <li key={p.id}>
+        {logo?.url ? <img src={logo.url} alt={p.name} /> : <span className={`wordmark wordmark--${p.name.toLowerCase().replace(/[^a-z]+/g, '-').replace(/-+$/, '')}`}>{p.name}</span>}
+        {p.role && <small>{p.role}</small>}
+      </li>
+    )
+  })
+  return (
+    <section className="supplier-bar" aria-label="Our suppliers">
+      <div className="supplier-bar__track"><ul>{row}</ul><ul aria-hidden="true">{row}</ul></div>
+    </section>
+  )
+}
+
+/** Time-based offers from the CMS, e.g. half-price cakes after 3pm on weekdays. */
+export function OffersSection({ offers }: { offers: Offer[] }) {
+  if (!offers.length) return null
+  const now = londonNow()
+  return (
+    <section className="offers" aria-labelledby="offers-title">
+      <div className="wrap">
+        <h2 id="offers-title" className="sr-only">Offers</h2>
+        <ul className="offers__list">
+          {offers.map((o) => {
+            const live = isLive(o, now)
+            return (
+              <li key={o.id} className={`offer ${live ? 'is-live' : ''}`}>
+                {o.discount ? <span className="offer__pct"><b>{o.discount === 50 ? '½' : `${o.discount}%`}</b><small>{o.discount === 50 ? 'price' : 'off'}</small></span> : null}
+                <div>
+                  <p className="offer__when">{live ? <span className="offer__live">On now</span> : null}{schedule(o)}</p>
+                  <h3>{o.title}</h3>
+                  {o.text && <p>{o.text}</p>}
+                </div>
+              </li>
+            )
+          })}
+        </ul>
       </div>
     </section>
   )

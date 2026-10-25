@@ -6,7 +6,7 @@ import { openCart, setFulfilment, useBasket, type Fulfilment } from './basket'
 import { BrandIcon, VENDOR_ICON } from './BrandIcon'
 import { BADGES, Badges } from './Icons'
 
-export type ShopItem = { slug: string; name: string; localName?: string | null; description?: string | null; price: number; photo?: string | null; group: string; category: string; diet?: string[]; badges?: string[] }
+export type ShopItem = { slug: string; name: string; localName?: string | null; description?: string | null; price: number; photo?: string | null; group: string; category: string; diet?: string[]; badges?: string[]; was?: number | null; offer?: string | null }
 type Vendor = { id?: string | null; name: string; url?: string | null }
 type Opts = { live: boolean; paused: boolean; collection: boolean; delivery: boolean; cardPayments: boolean; payAtCounter: boolean; vendors: Vendor[]; deliveryFee: number; deliveryAreas: string[] }
 
@@ -80,7 +80,7 @@ export function ShopSection({ items, opts, head }: { items: ShopItem[]; opts: Op
                     <Badges badges={i.badges?.slice(1)} diet={i.diet} max={2} />
                   </div>
                   <div className="product__foot">
-                    <span className="product__price">{gbp(i.price)}</span>
+                    <span className="product__price">{i.was != null && <s>{gbp(i.was)}</s>}{gbp(i.price)}{i.offer && <em className="product__offer">{i.offer}</em>}</span>
                     {canOrder ? <AddToBasket slug={i.slug} name={i.name} price={i.price} /> : <span className="product__off">Order in the café</span>}
                   </div>
                 </li>

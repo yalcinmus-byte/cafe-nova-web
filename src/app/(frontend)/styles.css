@@ -696,11 +696,7 @@ html[data-decor='easter'] .site-header--solid, html[data-decor='summer'] .site-h
 .supplier-bar li { display: grid; justify-items: center; gap: 2px; white-space: nowrap; }
 .supplier-bar li img { height: 40px; width: auto; }
 .supplier-bar li small { font-size: 11px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
-.wordmark { font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
-.wordmark--alchemy-coffee { font-family: var(--f-display); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; font-size: 22px; color: #111; }
-.wordmark--waitrose { color: #5c7f2f; font-family: Georgia, serif; font-weight: 700; letter-spacing: 0; }
-.wordmark--costco { color: #e31837; font-style: italic; letter-spacing: -.04em; }
-.wordmark--local-farm-markets { font-family: var(--f-display); color: #3f6b3a; font-style: italic; font-weight: 500; }
+.wordmark { font-family: var(--f-display); font-size: 24px; font-weight: 600; letter-spacing: -.01em; color: var(--ink); }
 @keyframes marquee { to { transform: translateX(-100%); } }
 @media (prefers-reduced-motion: reduce) { .supplier-bar__track ul { animation: none; } }
 
@@ -1032,3 +1028,35 @@ html, body { overflow-x: clip; }
   body:has(.basket-bar) .wa-fab { bottom: 84px; }
 }
 @media print { .wa-fab { display: none; } }
+
+/* Supplier band without a heading */
+.supplier-bar { display: block; padding: 22px 0; }
+.supplier-bar__track ul { gap: 64px; }
+
+/* Offers */
+.offers { padding: 28px 0 8px; }
+.offers__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 14px; }
+.offer { display: flex; gap: 18px; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 18px 22px; }
+.offer.is-live { border-color: var(--turq); box-shadow: 0 0 0 3px rgba(95,189,183,.18); }
+.offer__pct { flex: none; width: 76px; height: 76px; border-radius: 50%; background: var(--river); color: #fff; display: grid; place-content: center; text-align: center; line-height: 1; }
+.offer__pct b { font-family: var(--f-display); font-size: 30px; } .offer__pct small { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.offer h3 { margin: 2px 0 4px; font-family: var(--f-display); font-size: 22px; color: var(--ink); }
+.offer p { margin: 0; color: var(--muted); font-size: 15px; }
+.offer__when { font-size: 13px !important; font-weight: 700; color: var(--turq-deep) !important; letter-spacing: .02em; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.offer__live { background: var(--turq); color: var(--ink); border-radius: 999px; padding: 2px 9px; font-size: 12px; }
+.offer-strip { list-style: none; margin: 0 0 24px; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.offer-strip li { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; font-size: 14px; }
+.offer-strip li.is-live { border-color: var(--turq); }
+.offer-strip__tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; background: #e3ece9; color: var(--turq-deep); border-radius: 999px; padding: 2px 8px; }
+.offer-strip li.is-live .offer-strip__tag { background: var(--turq); color: var(--ink); }
+.offer-strip li span:last-child { color: var(--muted); }
+.menu-item__price s, .product__price s { font-size: .7em; color: var(--muted); margin-right: 6px; }
+.product__offer { display: block; font-family: var(--f-body, inherit); font-style: normal; font-size: 12px; font-weight: 700; color: var(--turq-deep); }
+.tag--offer { background: var(--turq); color: var(--ink); }
+.menu-item__allergy { margin: 6px 0 0 !important; font-size: 12.5px; color: var(--muted); }
+.menu-item__allergy b { font-weight: 600; color: var(--ink); }
+
+/* iOS/Safari: a blurred (backdrop-filter) header becomes the containing block for the fixed mobile menu,
+   which squeezed the menu into the header. Drop the blur while the menu is open. */
+.site-header.is-open { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background: var(--chalk) !important; color: var(--ink); }
+@media (max-width: 1180px) { .site-header.is-open .site-nav { height: 100dvh; } }

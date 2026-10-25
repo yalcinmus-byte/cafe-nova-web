@@ -24,6 +24,7 @@ const GROUPS: Group[] = [
   { label: 'Menu', items: [
     { label: 'Dishes', href: c('menu-items') },
     { label: 'Menu sections', href: c('menu-categories') },
+    { label: 'Offers', href: c('offers') },
     { label: 'Seasonal themes', href: c('themes') },
   ] },
   { label: 'Website', items: [
