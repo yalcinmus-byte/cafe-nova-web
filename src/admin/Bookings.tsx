@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import type { AdminViewServerProps } from 'payload'
+import { AdminPage } from './AdminPage'
 import { redirect } from 'next/navigation'
 
 const DOW = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -9,7 +10,8 @@ const KIT: Record<string, string> = { sound: 'Sound', mic: 'Mic', projector: 'Pr
 const key = (d: Date) => `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`
 
 /** Event bookings on a month calendar: requests, replies and confirmed bookings by date. */
-export async function Bookings({ initPageResult, searchParams }: AdminViewServerProps) {
+export async function Bookings(props: AdminViewServerProps) {
+  const { initPageResult, searchParams } = props
   const { req } = initPageResult
   if (!req.user) redirect('/admin/login?redirect=%2Fadmin%2Fbookings')
   const m = typeof searchParams?.m === 'string' && /^\d{4}-\d{2}$/.test(searchParams.m) ? searchParams.m : key(new Date()).slice(0, 7)
@@ -34,6 +36,7 @@ export async function Bookings({ initPageResult, searchParams }: AdminViewServer
   r.docs.forEach((e) => { if (e.status && e.status in counts) counts[e.status as keyof typeof counts]++ })
 
   return (
+    <AdminPage props={props}>
     <div className="bookings">
       <header className="bookings__head">
         <div>
@@ -73,5 +76,6 @@ export async function Bookings({ initPageResult, searchParams }: AdminViewServer
         </section>
       )}
     </div>
+    </AdminPage>
   )
 }

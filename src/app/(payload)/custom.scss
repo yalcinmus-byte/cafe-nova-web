@@ -171,3 +171,12 @@ h1, h2, h3, .render-title, .doc-header__title, .list-header h1, .collection-list
 
 
 .nova-navextra__hint { display: block; font-size: 12px; color: #9fb3bf; margin: 2px 0 0; }
+
+/* Custom CMS menu (NovaNav): hide Payload's auto groups, show ours */
+.nav__wrap > .nav-group, .nav__wrap > .nova-navextra { display: none !important; }
+.nav__wrap > .nova-nav { order: 1; }
+.nova-nav__top { margin: 0 0 14px; }
+.nova-nav__home .nav__link-label { font-weight: 700; }
+.nova-nav__accent { color: #7fe0d8; font-weight: 700; }
+.nova-nav__foot { margin-top: 6px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.08); }
+.nova-nav .nav-group { margin-bottom: 4px; }

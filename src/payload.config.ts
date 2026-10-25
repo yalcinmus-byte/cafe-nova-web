@@ -41,7 +41,7 @@ export default buildConfig({
     components: {
       graphics: { Logo: '@/admin/Logo#Logo', Icon: '@/admin/Logo#Icon' },
       beforeDashboard: ['@/admin/Today#Today'],
-      afterNavLinks: ['@/admin/NavExtra#NavToday', '@/admin/NavExtra#NavHQ'],
+      beforeNavLinks: ['@/admin/NovaNav#NovaNav'],
       views: { kitchen: { Component: '@/admin/Kitchen#Kitchen', path: '/kitchen' }, bookings: { Component: '@/admin/Bookings#Bookings', path: '/bookings' }, },
     },
     theme: 'light',

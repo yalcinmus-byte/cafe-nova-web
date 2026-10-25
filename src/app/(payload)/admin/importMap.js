@@ -23,9 +23,8 @@ import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { Icon as Icon_e7bd77da3186b43b37d9ef658548455c } from '@/admin/Logo'
 import { Logo as Logo_e7bd77da3186b43b37d9ef658548455c } from '@/admin/Logo'
-import { NavToday as NavToday_bb93c5c7536cd6c30b2ded4eab41a7db } from '@/admin/NavExtra'
-import { NavHQ as NavHQ_bb93c5c7536cd6c30b2ded4eab41a7db } from '@/admin/NavExtra'
 import { Today as Today_a2caee4c141b58d55f8f900ffc8d6f55 } from '@/admin/Today'
+import { NovaNav as NovaNav_1b44dd61519c12ae48162a6e35139e07 } from '@/admin/NovaNav'
 import { Kitchen as Kitchen_a0fc762d6cebbed32090e944cb933f41 } from '@/admin/Kitchen'
 import { Bookings as Bookings_40acdd30a866fefb120c9dce4ccdb2ec } from '@/admin/Bookings'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -58,9 +57,8 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/admin/Logo#Icon": Icon_e7bd77da3186b43b37d9ef658548455c,
   "@/admin/Logo#Logo": Logo_e7bd77da3186b43b37d9ef658548455c,
-  "@/admin/NavExtra#NavToday": NavToday_bb93c5c7536cd6c30b2ded4eab41a7db,
-  "@/admin/NavExtra#NavHQ": NavHQ_bb93c5c7536cd6c30b2ded4eab41a7db,
   "@/admin/Today#Today": Today_a2caee4c141b58d55f8f900ffc8d6f55,
+  "@/admin/NovaNav#NovaNav": NovaNav_1b44dd61519c12ae48162a6e35139e07,
   "@/admin/Kitchen#Kitchen": Kitchen_a0fc762d6cebbed32090e944cb933f41,
   "@/admin/Bookings#Bookings": Bookings_40acdd30a866fefb120c9dce4ccdb2ec,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
