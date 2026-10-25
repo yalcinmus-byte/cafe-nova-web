@@ -6,13 +6,13 @@ type C = { name: string; slug: string; group: string; note?: string; items: D[] 
 export const MENU: C[] = [
   { name: 'Set breakfasts', slug: 'set-breakfasts', group: 'breakfast', note: 'Served with sourdough toast. Swap one item — meat for meat or veg for veg.', items: [
     ['The English Feast', null, 'One Cumberland sausage, two rashers of bacon, two fried eggs, mushrooms, black pudding, grilled tomatoes, a hash brown and baked beans.', 18.75],
-    ['Full English Breakfast', null, 'One Cumberland sausage, two rashers of bacon, two fried eggs, mushrooms, grilled tomatoes, a hash brown and baked beans.', 14.75, [], undefined, true, '/img/dishes/full-english.webp'],
+    ['Full English Breakfast', null, 'One Cumberland sausage, two rashers of bacon, two fried eggs, mushrooms, grilled tomatoes, a hash brown and baked beans.', 14.75, [], undefined, true, '/img/dishes/full-english-v2.webp'],
     ['Mini English Breakfast', null, 'One Cumberland sausage, one rasher of bacon, one fried egg, a hash brown and baked beans.', 10.5],
     ['Full Vegetarian Breakfast', null, 'Two fried eggs, spinach, mushrooms, a hash brown, baked beans and grilled tomatoes.', 13.75, ['v']],
     ['Mini Vegetarian Breakfast', null, 'One fried egg, mushrooms, a hash brown, baked beans and grilled tomatoes.', 10.5, ['v']],
   ]},
   { name: 'Eggs & toast', slug: 'eggs-and-toast', group: 'breakfast', note: 'Ask about our vegan and gluten-free bread.', items: [
-    ['Smashed Avocado on Toast', null, 'Smashed avocado on toasted sourdough.', 9.9, ['v'], 'Add a poached or fried egg, feta or halloumi £2.50 each', true, '/img/dishes/avocado.webp'],
+    ['Smashed Avocado on Toast', null, 'Smashed avocado on toasted sourdough.', 9.9, ['v'], 'Add a poached or fried egg, feta or halloumi £2.50 each', true, '/img/dishes/avocado-v2.webp'],
     ['Poached Eggs & Smoked Salmon', null, 'Two poached eggs and smoked salmon with a touch of hummus and fresh rocket.', 13.5],
     ['Scrambled Eggs on Toast', null, 'Scrambled, poached or fried eggs on toast.', 8.2, ['v']],
     ['Your Choice on Toast', null, 'Baked beans, mushrooms, tomatoes or cheese.', 7.5, ['v']],
@@ -25,8 +25,8 @@ export const MENU: C[] = [
     ['Turkish Benedict', null, 'With grilled Turkish sausage and halloumi.', 16.5],
   ]},
   { name: 'Turkish breakfast', slug: 'turkish-breakfast', group: 'turkish', note: 'Highly recommended extras: halloumi, Turkish sausage or meatballs £3.50 each.', items: [
-    ['Turkish Eggs', 'Çılbır', 'Poached eggs on savoury garlic yoghurt with warm chilli butter, served with simit.', 13.5, ['v'], undefined, true, '/img/dishes/cilbir.webp'],
-    ['Shakshuka with Eggs', 'Şakşuka', 'Poached eggs and feta in our homemade pepper and tomato sauce, with sourdough.', 13.5, ['v'], undefined, true, '/img/dishes/shakshuka.webp'],
+    ['Turkish Eggs', 'Çılbır', 'Poached eggs on savoury garlic yoghurt with warm chilli butter, served with simit.', 13.5, ['v'], undefined, true, '/img/dishes/cilbir-v2.webp'],
+    ['Shakshuka with Eggs', 'Şakşuka', 'Poached eggs and feta in our homemade pepper and tomato sauce, with sourdough.', 13.5, ['v'], undefined, true, '/img/dishes/shakshuka-v2.webp'],
     ['Istanbul Special Breakfast', null, 'Feta, honey, two fried eggs, grilled halloumi, olives, tomatoes, cucumber, Turkish beef sausage, sigara böreği, roasted vegetables and a whole simit.', 17.5, [], undefined, true, '/img/dishes/turkish.webp'],
     ['Mediterranean Breakfast', null, 'Feta, honey, one fried egg, olives, tomatoes, cucumber, Turkish beef sausage and sigara böreği.', 13.5],
     ['Simit Platter', null, 'Simit with feta, jam, olives, tomatoes and cucumber.', 9.5, ['v']],

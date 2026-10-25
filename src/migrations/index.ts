@@ -6,6 +6,7 @@ import * as migration_20261023_114734_v5_seasonal_photo from './20261023_114734_
 import * as migration_20261024_093150_v6_content_cms_hq from './20261024_093150_v6_content_cms_hq';
 import * as migration_20261024_100751_v7_careers_teaser from './20261024_100751_v7_careers_teaser';
 import * as migration_20261024_104045_v8_whatsapp from './20261024_104045_v8_whatsapp';
+import * as migration_20261025_121500_v9_dish_photos from './20261025_121500_v9_dish_photos';
 
 export const migrations = [
   {
@@ -47,5 +48,10 @@ export const migrations = [
     up: migration_20261024_104045_v8_whatsapp.up,
     down: migration_20261024_104045_v8_whatsapp.down,
     name: '20261024_104045_v8_whatsapp'
+  },
+  {
+    up: migration_20261025_121500_v9_dish_photos.up,
+    down: migration_20261025_121500_v9_dish_photos.down,
+    name: '20261025_121500_v9_dish_photos'
   },
 ];
