@@ -1,4 +1,5 @@
 import React from 'react'
+import { getSample } from './hq-sample'
 import Link from 'next/link'
 import type { Payload } from 'payload'
 
@@ -12,6 +13,7 @@ const Pill = ({ on, label }: { on: boolean; label: string }) => (
 )
 
 export async function Today({ payload }: Props) {
+  const hq = getSample()
   const startOfDay = new Date(); startOfDay.setUTCHours(0, 0, 0, 0)
   const [svc, items, events, themes, enq, orders] = await Promise.all([
     payload.findGlobal({ slug: 'service-control' }),
@@ -90,8 +92,8 @@ export async function Today({ payload }: Props) {
 
         <article className="nova-card nova-card--hq">
           <h2>Nova HQ</h2>
-          <p className="nova-big">AI team</p>
-          <p className="nova-muted">CFO, growth, menu, suppliers, social and reviews advisers — preview.</p>
+          <p className="nova-big">{hq.score}<small style={{ fontSize: '0.45em', opacity: 0.7 }}>/100 health</small></p>
+          <p className="nova-muted">{hq.urgent.filter((u) => u.level === 'critical' || u.level === 'serious').length} urgent · {hq.urgent.length} need you · {hq.insights.length} suggestions from your AI team (sample data)</p>
           <a className="nova-btn" href="/admin/hq">Open Nova HQ</a>
         </article>
 
